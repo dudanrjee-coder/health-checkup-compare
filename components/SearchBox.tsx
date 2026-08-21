@@ -8,6 +8,11 @@ interface SearchBoxProps {
   value: string;
   onChange: (value: string) => void;
   /**
+   * 엔터로 검색을 확정했을 때 호출된다. 지역명 판정(부분 일치 포함)은
+   * 타이핑 도중이 아니라 이 시점에만 이뤄진다.
+   */
+  onSubmit?: () => void;
+  /**
    * 입력창 DOM 참조. 지역명 자동 매칭으로 검색창을 비울 때 부모가 이 참조로
    * blur를 걸어 한글 IME의 조합(composition)을 먼저 확정시킨다.
    */
@@ -17,6 +22,7 @@ interface SearchBoxProps {
 export default function SearchBox({
   value,
   onChange,
+  onSubmit,
   inputRef,
 }: SearchBoxProps) {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -55,6 +61,15 @@ export default function SearchBox({
           type="search"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return;
+            // 한글 IME로 조합 중일 때 누른 엔터는 글자를 확정하는 키다.
+            // 이걸 검색 확정으로 받으면 "충청남도"의 마지막 글자를 확정하는
+            // 엔터가 곧바로 검색으로 넘어가 버린다. 조합 중에는 무시한다.
+            if (e.nativeEvent.isComposing) return;
+            e.preventDefault();
+            onSubmit?.();
+          }}
           placeholder="병원명 또는 지역 검색"
           className={`w-full rounded-lg border border-slate-300 bg-white py-2 pl-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
             hoverCapable ? "pr-16" : "pr-9"

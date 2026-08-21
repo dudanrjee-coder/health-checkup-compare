@@ -9,6 +9,7 @@ import SearchBox from "@/components/SearchBox";
 import { hasCoords, Sido, Tier } from "@/types/hospital";
 import {
   filterHospitals,
+  findExactSidoMatch,
   findUniqueSidoMatch,
   getSidosWithData,
   getTiersWithData,
@@ -32,8 +33,14 @@ export default function Home() {
   );
   const [searchInput, setSearchInput] = useState("");
   const [query, setQuery] = useState("");
+  /**
+   * 엔터로 확정했는데 지역명도 아니고 병원 검색 결과도 0건일 때만 켠다.
+   * 타이핑 도중에는 결과가 잠깐 0건이 되는 일이 흔하므로 그때는 켜지 않는다.
+   */
+  const [submittedNoMatch, setSubmittedNoMatch] = useState(false);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const refocusTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // 입력할 때마다 필터링하지 않도록 200ms 디바운스를 둔다.
   useEffect(() => {
@@ -68,35 +75,24 @@ export default function Home() {
     setSelectedHospitalId(null);
   }, [query]);
 
-  // 검색어가 시/도 이름 하나로만 좁혀지면(예: "부산") 지역 선택으로 넘기고
-  // 검색창을 비운다. 병원명 검색 등 지역으로 단정할 수 없는 검색어는 그대로 둔다.
+  // 검색어가 시/도 이름과 **정확히** 같아지면(예: "충청남도") 그때만 자동으로
+  // 지역 선택으로 넘긴다. 부분 일치("충청남")로는 전환하지 않는다.
+  //
+  // 예전에는 여기서 findUniqueSidoMatch(부분 일치)를 썼는데, "충청남도"를 치는
+  // 도중 "충청남"에서 이미 유일 매칭이 되어 전환이 먼저 터졌다. 그 순간 한글
+  // IME는 아직 "도"를 조합 중이라, 비워진 입력창에 조합 버퍼의 글자가 다시
+  // 들어가 검색창에 "도"가 남았다. 짧은 이름("부산")은 조합이 끝난 뒤에
+  // 매칭돼서 멀쩡해 보였고 긴 이름에서만 증상이 났다.
+  // 부분 일치 판정은 아래 handleSearchSubmit(엔터)으로 옮겼다.
   useEffect(() => {
-    const matchedSido = findUniqueSidoMatch(query);
+    const matchedSido = findExactSidoMatch(query);
     if (!matchedSido) return;
-
-    // 한글 IME로 "대전"을 치면 마지막 글자가 아직 조합(composition) 중이다.
-    // 그 상태에서 값만 ""로 바꾸면 IME가 조합 버퍼의 글자를 다시 밀어넣어
-    // 검색창에 글자가 그대로 남는다. blur로 조합을 먼저 확정시킨 뒤 비운다.
-    // (blur가 발생시키는 input 이벤트의 onChange보다 아래 setSearchInput("")이
-    //  나중에 반영되므로 최종 값은 빈 문자열이 된다.)
-    const input = searchInputRef.current;
-    const hadFocus = document.activeElement === input;
-    input?.blur();
-
-    setSelectedSido(matchedSido);
-    setSelectedTiers(new Set());
-    setSearchInput("");
-    setQuery("");
-
-    // 값이 비워진 뒤에 포커스를 돌려줘야 조합이 다시 붙지 않는다.
-    // requestAnimationFrame은 프레임이 그려지지 않는 환경(비활성 탭 등)에서
-    // 콜백이 돌지 않아 포커스가 영영 돌아오지 않는다(HospitalMap의 fadeAnimation과 같은 이유).
-    // setTimeout은 그런 환경에서도 실행되므로 이쪽을 쓴다.
-    if (hadFocus) {
-      const timer = setTimeout(() => searchInputRef.current?.focus(), 0);
-      return () => clearTimeout(timer);
-    }
+    switchToSido(matchedSido);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  // 언마운트될 때 남아 있는 포커스 복원 타이머를 정리한다.
+  useEffect(() => () => clearTimeout(refocusTimerRef.current), []);
 
   // 지도에서 마커를 고르면 해당 카드가 보이도록 스크롤한다.
   useEffect(() => {
@@ -107,10 +103,76 @@ export default function Home() {
     });
   }, [selectedHospitalId]);
 
+  /**
+   * 지역 선택으로 넘기고 검색창을 비운다.
+   *
+   * 한글 IME로 "대전"을 치면 마지막 글자가 아직 조합(composition) 중이다.
+   * 그 상태에서 값만 ""로 바꾸면 IME가 조합 버퍼의 글자를 다시 밀어넣어
+   * 검색창에 글자가 그대로 남는다. blur로 조합을 먼저 확정시킨 뒤 비운다.
+   * (blur가 발생시키는 input 이벤트의 onChange보다 아래 setSearchInput("")이
+   *  나중에 반영되므로 최종 값은 빈 문자열이 된다.)
+   */
+  function switchToSido(sido: Sido) {
+    const input = searchInputRef.current;
+    const hadFocus = document.activeElement === input;
+    input?.blur();
+
+    setSelectedSido(sido);
+    setSelectedTiers(new Set());
+    setSelectedHospitalId(null);
+    setSearchInput("");
+    setQuery("");
+    setSubmittedNoMatch(false);
+
+    // 값이 비워진 뒤에 포커스를 돌려줘야 조합이 다시 붙지 않는다.
+    // requestAnimationFrame은 프레임이 그려지지 않는 환경(비활성 탭 등)에서
+    // 콜백이 돌지 않아 포커스가 영영 돌아오지 않는다(HospitalMap의 fadeAnimation과 같은 이유).
+    // setTimeout은 그런 환경에서도 실행되므로 이쪽을 쓴다.
+    if (hadFocus) {
+      clearTimeout(refocusTimerRef.current);
+      refocusTimerRef.current = setTimeout(
+        () => searchInputRef.current?.focus(),
+        0
+      );
+    }
+  }
+
+  /**
+   * 엔터로 검색을 확정했을 때만 부분 일치까지 포함해 지역명을 판정한다.
+   * - "부산" → 부산광역시로 전환 (부분 일치지만 유일하게 좁혀짐)
+   * - "세브란스" → 지역이 아니므로 검색 상태 유지
+   * - "aaaaa" → 지역도 아니고 병원 결과도 0건이면 안내 문구
+   */
+  function handleSearchSubmit() {
+    const trimmed = searchInput.trim();
+    if (!trimmed) return;
+
+    const matchedSido = findUniqueSidoMatch(trimmed);
+    if (matchedSido) {
+      switchToSido(matchedSido);
+      return;
+    }
+
+    // 디바운스를 기다리지 않고 이 검색어로 즉시 확정한다.
+    setQuery(trimmed);
+    setSelectedHospitalId(null);
+    // 결과 판정은 results와 같은 기준(전국 + 등급 필터)으로 계산한다.
+    setSubmittedNoMatch(
+      filterHospitals(null, selectedTiers, trimmed).length === 0
+    );
+  }
+
+  function handleSearchChange(value: string) {
+    setSearchInput(value);
+    // 다시 입력하기 시작하면 이전 엔터의 안내 문구는 걷는다.
+    if (submittedNoMatch) setSubmittedNoMatch(false);
+  }
+
   function handleSidoChange(sido: Sido) {
     setSelectedSido(sido);
     setSelectedTiers(new Set());
     setSelectedHospitalId(null);
+    setSubmittedNoMatch(false);
   }
 
   function handleTierToggle(tier: Tier) {
@@ -139,10 +201,11 @@ export default function Home() {
           </p>
         </div>
         <SearchBox
-              value={searchInput}
-              onChange={setSearchInput}
-              inputRef={searchInputRef}
-            />
+          value={searchInput}
+          onChange={handleSearchChange}
+          onSubmit={handleSearchSubmit}
+          inputRef={searchInputRef}
+        />
       </header>
 
       <section className="mb-6 flex flex-col gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
@@ -177,8 +240,21 @@ export default function Home() {
             )}
           </p>
 
-          {isSearching && results.length === 0 && (
-            <p className="text-sm text-slate-500">검색 결과가 없습니다.</p>
+          {submittedNoMatch ? (
+            <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
+              <p className="text-sm font-medium text-slate-700">
+                일치하는 곳이 없습니다.
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                지역 이름(예: 부산, 충청남도)이나 병원 이름으로 다시 검색해
+                보세요.
+              </p>
+            </div>
+          ) : (
+            isSearching &&
+            results.length === 0 && (
+              <p className="text-sm text-slate-500">검색 결과가 없습니다.</p>
+            )
           )}
 
           {!isSearching && isPreparingRegion && (
