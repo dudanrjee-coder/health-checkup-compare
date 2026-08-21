@@ -67,9 +67,6 @@ export default function HospitalCard({
         <span className={`${BADGE_BASE} ${TIER_BADGE_STYLE[hospital.tier]}`}>
           {hospital.tier}
         </span>
-        <span className={`${BADGE_BASE} bg-violet-100 text-violet-800`}>
-          {hospital.category}
-        </span>
         {/* undefined(미확인)와 false(명단 확인 결과 미지정)를 구분해서 보여준다 */}
         {hospital.nationalScreeningDesignated === true && (
           <span className={`${BADGE_BASE} bg-emerald-100 text-emerald-800`}>

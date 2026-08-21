@@ -34,18 +34,6 @@ export const TIER_LIST = ["상급종합병원", "종합병원", "병원", "의�
 export type Tier = (typeof TIER_LIST)[number];
 
 /**
- * 병원의 성격 구분. 등급(Tier)과는 별개다.
- * - "대학병원": 대학 부속·협력 병원
- * - "일반종합병원": 대학 소속이 아닌 재단·의료법인 등이 운영하는 종합병원급
- *
- * SIDO_LIST / TIER_LIST와 같은 이유로 배열을 단일 소스로 두고 타입을 파생시킨다.
- * (이전에는 category가 자유 문자열이라 오타가 나도 컴파일 단계에서 걸리지 않았다)
- */
-export const CATEGORY_LIST = ["대학병원", "일반종합병원"] as const;
-
-export type Category = (typeof CATEGORY_LIST)[number];
-
-/**
  * 온라인 예약 페이지의 실제 성격.
  * - "자율예약": 달력에서 날짜·시간을 직접 골라 그 자리에서 예약이 확정된다.
  * - "예약신청": 이름·연락처만 남기면 상담원이 전화로 확정해 주는 콜백형.
@@ -58,8 +46,6 @@ export interface Hospital {
   name: string;
   region: { sido: Sido; sigungu: string };
   tier: Tier;
-  /** 병원 성격 구분. 값은 CATEGORY_LIST 참고 */
-  category: Category;
   affiliation?: string;
   /** 동 단위까지 포함한 상세주소. 검색과 지오코딩 정확도를 위해 쓴다 */
   address?: string;
