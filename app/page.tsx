@@ -5,6 +5,14 @@ import dynamic from "next/dynamic";
 import SidoSelect from "@/components/SidoSelect";
 import TierFilter from "@/components/TierFilter";
 import HospitalCard from "@/components/HospitalCard";
+import HospitalCardChips from "@/components/HospitalCardChips";
+
+/**
+ * 칩 클러스터형 카드 시안을 적용할 병원 id(42번 항목).
+ * 전체 적용 전에 한 곳만 새 스타일로 띄워 비교하려는 임시 스위치이며,
+ * 여기 없는 병원은 기존 HospitalCard 그대로다.
+ */
+const CHIP_PREVIEW_IDS = new Set(["seoul-hongik"]);
 import SearchBox from "@/components/SearchBox";
 import { hasCoords, Sido, Tier } from "@/types/hospital";
 import {
@@ -272,17 +280,22 @@ export default function Home() {
             </p>
           )}
 
-          {results.map((hospital) => (
-            <HospitalCard
-              key={hospital.id}
-              hospital={hospital}
-              selected={hospital.id === selectedHospitalId}
-              onSelect={() => setSelectedHospitalId(hospital.id)}
-              cardRef={(node) => {
-                cardRefs.current[hospital.id] = node;
-              }}
-            />
-          ))}
+          {results.map((hospital) => {
+            const Card = CHIP_PREVIEW_IDS.has(hospital.id)
+              ? HospitalCardChips
+              : HospitalCard;
+            return (
+              <Card
+                key={hospital.id}
+                hospital={hospital}
+                selected={hospital.id === selectedHospitalId}
+                onSelect={() => setSelectedHospitalId(hospital.id)}
+                cardRef={(node) => {
+                  cardRefs.current[hospital.id] = node;
+                }}
+              />
+            );
+          })}
         </section>
 
         <div className="order-1 h-[320px] sm:h-[420px] lg:sticky lg:top-6 lg:order-2 lg:h-[calc(100vh-8rem)]">
