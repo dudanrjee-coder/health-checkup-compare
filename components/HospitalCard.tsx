@@ -67,12 +67,16 @@ export default function HospitalCard({
         <span className={`${BADGE_BASE} ${TIER_BADGE_STYLE[hospital.tier]}`}>
           {hospital.tier}
         </span>
-        {/* undefined(미확인)와 false(명단 확인 결과 미지정)를 구분해서 보여준다 */}
-        {hospital.nationalScreeningDesignated === true && (
-          <span className={`${BADGE_BASE} bg-emerald-100 text-emerald-800`}>
-            국가검진 지정기관
-          </span>
-        )}
+        {/*
+          국가검진 배지는 false(명단·공지로 미지정이 확인된 경우)일 때만 띄운다.
+          지정(true)은 153곳 중 147곳이라 거의 모든 카드에 붙어 정보 가치가 낮았고,
+          undefined(미확인)는 원래부터 배지가 없다. 즉 "배지가 없다"는 것은
+          지정이거나 미확인이라는 뜻이지 미지정이라는 뜻이 아니다.
+
+          **이건 화면 표시 규칙일 뿐 데이터 판정 규칙이 아니다.** 세 상태를
+          구분해 저장하는 것과 CSV 명단·공식 공지로만 true/false를 정하는 원칙은
+          그대로다(데이터 입력 규칙 7번). 등급이나 다수결로 추정하지 않는다.
+        */}
         {hospital.nationalScreeningDesignated === false && (
           <span className={`${BADGE_BASE} bg-amber-100 text-amber-800`}>
             국가검진 미지정
