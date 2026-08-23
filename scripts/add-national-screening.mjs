@@ -439,12 +439,18 @@ function assertStrippable(maps) {
 assertStrippable({ NOT_DESIGNATED, UNDETERMINED, DESIGNATED_SENTENCE_BY_ID });
 assertStrippable({ DESIGNATED_SENTENCE: { _default: DESIGNATED_SENTENCE } });
 
+/**
+ * 국가검진 문구는 note의 **마지막 문단**으로 붙인다(40번 항목).
+ * 예전에는 공백 하나로 이어 붙였는데, 그러면 문단 구분을 넣어 둔 note를
+ * 이 스크립트가 한 번만 돌아도 국가검진 문구가 앞 문단에 흡수돼 버린다.
+ * 빈 줄(\n\n)로 이어 붙여야 재실행해도 문단 구성이 그대로 유지된다.
+ */
 function withSentence(note, sentence) {
   const base = stripObsolete(note);
   if (!base) return sentence;
   return base.endsWith(".") || base.endsWith("음")
-    ? `${base} ${sentence}`
-    : `${base}. ${sentence}`;
+    ? `${base}\n\n${sentence}`
+    : `${base}.\n\n${sentence}`;
 }
 
 /** region 객체는 원본 파일처럼 한 줄로 유지한다. */

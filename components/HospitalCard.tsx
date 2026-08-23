@@ -165,8 +165,14 @@ export default function HospitalCard({
               </div>
             )}
 
+            {/*
+              note는 주제별로 빈 줄(\n\n)을 넣어 문단을 나눠 둔다(40번 항목).
+              whitespace-pre-line이 있어야 그 줄바꿈이 화면에 반영된다 —
+              기본값(normal)이면 줄바꿈이 공백으로 접혀 한 덩어리로 보인다.
+              연속 공백은 계속 접히므로 들여쓰기 걱정 없이 문단만 갈린다.
+            */}
             {hospital.note && (
-              <p className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
+              <p className="whitespace-pre-line rounded-lg bg-slate-50 px-3 py-2 text-sm leading-relaxed text-slate-600">
                 {hospital.note}
               </p>
             )}
