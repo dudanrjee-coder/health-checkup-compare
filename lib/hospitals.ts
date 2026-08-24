@@ -18,27 +18,15 @@ export function getTiersWithData(sido: Sido | null): Set<Tier> {
 const MIN_SIDO_MATCH_LENGTH = 2;
 
 /**
- * 검색어가 시/도 이름과 **정확히** 같을 때만 그 시/도를 돌려준다.
- * - "충청남도" → 충청남도
- * - "충청남" → null (부분 일치는 잡지 않는다)
- *
- * 타이핑 도중 자동 전환에 쓰는 판정이다. 아래 `findUniqueSidoMatch`(부분 일치)를
- * 타이핑 중에 쓰면 "충청남도"를 치는 도중 "충청남"에서 이미 유일 매칭이 되어
- * 전환이 먼저 터지고, 한글 IME가 조합 중이던 "도"를 비워진 입력창에 다시
- * 밀어넣어 검색창에 글자가 남는다. 그래서 타이핑 중에는 정확 일치만 본다.
- */
-export function findExactSidoMatch(query: string): Sido | null {
-  const q = query.trim();
-  return SIDO_LIST.find((sido) => sido === q) ?? null;
-}
-
-/**
  * 검색어가 시/도 이름 하나로만 좁혀지면 그 시/도를 돌려준다.
  * - "부산" → 부산광역시 (부산광역시만 "부산"을 포함)
+ * - "충청남도" → 충청남도 (완전히 같아도 유일 매칭이므로 여기서 함께 잡힌다)
  * - "경상" → null (경상북도·경상남도 둘 다 해당하므로 단정할 수 없음)
  * - "부산광역시 서구" → null. 검색어가 시/도 이름보다 구체적이면 그대로 검색을 유지한다.
  *
- * 부분 일치까지 잡으므로 **사용자가 엔터로 확정했을 때만** 쓴다.
+ * **지역 판정에 쓰는 유일한 함수이고, 엔터(onSubmit)에서만 호출된다**(43번 항목).
+ * 예전에는 타이핑 중 자동 전환용으로 정확 일치만 보는 findExactSidoMatch가
+ * 따로 있었는데, 자동 전환 자체를 없애면서 이 함수 하나로 합쳤다.
  */
 export function findUniqueSidoMatch(query: string): Sido | null {
   const q = query.trim();

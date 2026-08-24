@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HangulKeyboard from "@/components/HangulKeyboard";
 import { useHoverCapable } from "@/lib/useHoverCapable";
 
@@ -8,22 +8,16 @@ interface SearchBoxProps {
   value: string;
   onChange: (value: string) => void;
   /**
-   * 엔터로 검색을 확정했을 때 호출된다. 지역명 판정(부분 일치 포함)은
-   * 타이핑 도중이 아니라 이 시점에만 이뤄진다.
+   * 엔터로 검색을 확정했을 때 호출된다.
+   * **지역명 판정은 오직 이 시점에만 이뤄진다**(43번 항목).
    */
   onSubmit?: () => void;
-  /**
-   * 입력창 DOM 참조. 지역명 자동 매칭으로 검색창을 비울 때 부모가 이 참조로
-   * blur를 걸어 한글 IME의 조합(composition)을 먼저 확정시킨다.
-   */
-  inputRef?: RefObject<HTMLInputElement>;
 }
 
 export default function SearchBox({
   value,
   onChange,
   onSubmit,
-  inputRef,
 }: SearchBoxProps) {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -57,7 +51,6 @@ export default function SearchBox({
       <div className="relative">
         <input
           id="hospital-search"
-          ref={inputRef}
           type="search"
           value={value}
           onChange={(e) => onChange(e.target.value)}

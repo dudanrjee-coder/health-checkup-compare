@@ -6,6 +6,14 @@ import SidoSelect from "@/components/SidoSelect";
 import TierFilter from "@/components/TierFilter";
 import HospitalCard from "@/components/HospitalCard";
 import HospitalCardChips from "@/components/HospitalCardChips";
+import SearchBox from "@/components/SearchBox";
+import { hasCoords, Sido, Tier } from "@/types/hospital";
+import {
+  filterHospitals,
+  findUniqueSidoMatch,
+  getSidosWithData,
+  getTiersWithData,
+} from "@/lib/hospitals";
 
 /**
  * 칩 클러스터형 카드 시안을 적용할 병원 id(42번 항목).
@@ -13,15 +21,6 @@ import HospitalCardChips from "@/components/HospitalCardChips";
  * 여기 없는 병원은 기존 HospitalCard 그대로다.
  */
 const CHIP_PREVIEW_IDS = new Set(["seoul-hongik"]);
-import SearchBox from "@/components/SearchBox";
-import { hasCoords, Sido, Tier } from "@/types/hospital";
-import {
-  filterHospitals,
-  findExactSidoMatch,
-  findUniqueSidoMatch,
-  getSidosWithData,
-  getTiersWithData,
-} from "@/lib/hospitals";
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
 const HospitalMap = dynamic(() => import("@/components/HospitalMap"), {
@@ -47,8 +46,6 @@ export default function Home() {
    */
   const [submittedNoMatch, setSubmittedNoMatch] = useState(false);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const refocusTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // 입력할 때마다 필터링하지 않도록 200ms 디바운스를 둔다.
   useEffect(() => {
@@ -83,25 +80,6 @@ export default function Home() {
     setSelectedHospitalId(null);
   }, [query]);
 
-  // 검색어가 시/도 이름과 **정확히** 같아지면(예: "충청남도") 그때만 자동으로
-  // 지역 선택으로 넘긴다. 부분 일치("충청남")로는 전환하지 않는다.
-  //
-  // 예전에는 여기서 findUniqueSidoMatch(부분 일치)를 썼는데, "충청남도"를 치는
-  // 도중 "충청남"에서 이미 유일 매칭이 되어 전환이 먼저 터졌다. 그 순간 한글
-  // IME는 아직 "도"를 조합 중이라, 비워진 입력창에 조합 버퍼의 글자가 다시
-  // 들어가 검색창에 "도"가 남았다. 짧은 이름("부산")은 조합이 끝난 뒤에
-  // 매칭돼서 멀쩡해 보였고 긴 이름에서만 증상이 났다.
-  // 부분 일치 판정은 아래 handleSearchSubmit(엔터)으로 옮겼다.
-  useEffect(() => {
-    const matchedSido = findExactSidoMatch(query);
-    if (!matchedSido) return;
-    switchToSido(matchedSido);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
-
-  // 언마운트될 때 남아 있는 포커스 복원 타이머를 정리한다.
-  useEffect(() => () => clearTimeout(refocusTimerRef.current), []);
-
   // 지도에서 마커를 고르면 해당 카드가 보이도록 스크롤한다.
   useEffect(() => {
     if (!selectedHospitalId) return;
@@ -114,35 +92,21 @@ export default function Home() {
   /**
    * 지역 선택으로 넘기고 검색창을 비운다.
    *
-   * 한글 IME로 "대전"을 치면 마지막 글자가 아직 조합(composition) 중이다.
-   * 그 상태에서 값만 ""로 바꾸면 IME가 조합 버퍼의 글자를 다시 밀어넣어
-   * 검색창에 글자가 그대로 남는다. blur로 조합을 먼저 확정시킨 뒤 비운다.
-   * (blur가 발생시키는 input 이벤트의 onChange보다 아래 setSearchInput("")이
-   *  나중에 반영되므로 최종 값은 빈 문자열이 된다.)
+   * **엔터(handleSearchSubmit)에서만 호출된다.** 타이핑 도중에는 어떤 경로로도
+   * 검색창 값을 프로그램이 건드리지 않으므로, 한글 IME 조합 상태와 부딪힐 일이
+   * 구조적으로 없다. SearchBox가 조합 중(isComposing)인 엔터를 무시하기 때문에
+   * 이 함수가 도는 시점에는 조합이 이미 확정돼 있다.
+   *
+   * 예전에는 타이핑 중 자동 전환 때문에 blur로 조합을 강제 확정시키고 포커스를
+   * 되돌리는 우회로가 있었는데, 자동 전환을 없애면서 함께 걷어냈다(43번 항목).
    */
   function switchToSido(sido: Sido) {
-    const input = searchInputRef.current;
-    const hadFocus = document.activeElement === input;
-    input?.blur();
-
     setSelectedSido(sido);
     setSelectedTiers(new Set());
     setSelectedHospitalId(null);
     setSearchInput("");
     setQuery("");
     setSubmittedNoMatch(false);
-
-    // 값이 비워진 뒤에 포커스를 돌려줘야 조합이 다시 붙지 않는다.
-    // requestAnimationFrame은 프레임이 그려지지 않는 환경(비활성 탭 등)에서
-    // 콜백이 돌지 않아 포커스가 영영 돌아오지 않는다(HospitalMap의 fadeAnimation과 같은 이유).
-    // setTimeout은 그런 환경에서도 실행되므로 이쪽을 쓴다.
-    if (hadFocus) {
-      clearTimeout(refocusTimerRef.current);
-      refocusTimerRef.current = setTimeout(
-        () => searchInputRef.current?.focus(),
-        0
-      );
-    }
   }
 
   /**
@@ -212,7 +176,6 @@ export default function Home() {
           value={searchInput}
           onChange={handleSearchChange}
           onSubmit={handleSearchSubmit}
-          inputRef={searchInputRef}
         />
       </header>
 
