@@ -2,12 +2,7 @@
 
 import { useId, useState } from "react";
 import { Hospital, Tier } from "@/types/hospital";
-import {
-  deriveChips,
-  splitAccessInfo,
-  splitNoteParagraphs,
-  ChipTone,
-} from "@/lib/noteChips";
+import { deriveChips, splitAccessInfo, ChipTone } from "@/lib/noteChips";
 
 /**
  * 칩 클러스터형 카드 — **미리보기용 시안**이다.
@@ -36,27 +31,27 @@ const CHIP_TONE_STYLE: Record<ChipTone, string> = {
 };
 
 /**
- * 펼친 상태의 6개 항목. **순서 고정이다.**
+ * 펼친 상태의 6개 항목. **순서 고정이고, 값이 없어도 행을 숨기지 않는다.**
  *
- * - `alwaysShow`가 true면 값이 없어도 행을 남기고 `emptyText`를 보여준다.
- *   검진비용은 "안 적혀 있음"과 "확인 못 함"이 사용자에게 같은 의미라서,
- *   숨기지 않고 "병원문의"라고 분명히 안내한다.
- * - 나머지는 값이 없으면 행 자체를 숨긴다.
- * - 마지막 `reserved` 칸은 앞으로 항목이 늘어날 자리다. 빈 줄이 보이면
- *   이상하므로 **렌더링하지 않는다**(아래 map에서 걸러낸다). 구조만 잡아 둔 것이라
- *   새 항목을 넣을 때는 이 자리에 key·label·icon만 채우면 된다.
+ * 값이 비어 있으면 `EMPTY_TEXT`("병원문의")를 흐린 글씨로 채운다. 행을 숨기면
+ * 카드마다 표 구성이 달라져 비교가 어렵고, "정보가 없다"와 "항목 자체가 없다"를
+ * 사용자가 구분할 수 없기 때문이다(45번 항목).
+ *
+ * 마지막 `reserved` 칸은 앞으로 항목이 늘어날 자리다. 빈 줄이 보이면 이상하므로
+ * **렌더링하지 않는다**(아래 filter에서 걸러낸다). 새 항목을 넣을 때는 이 자리에
+ * key·label·icon만 채우면 된다.
  */
 type DetailRow = {
   key: string;
   label: string;
   icon: string;
-  alwaysShow?: boolean;
-  emptyText?: string;
   reserved?: boolean;
 };
 
+const EMPTY_TEXT = "병원문의";
+
 const DETAIL_ROWS: DetailRow[] = [
-  { key: "price", label: "검진비용", icon: "💰", alwaysShow: true, emptyText: "병원문의" },
+  { key: "price", label: "검진비용", icon: "💰" },
   { key: "result", label: "결과통보", icon: "📄" },
   { key: "meal", label: "식사제공", icon: "🍚" },
   { key: "parking", label: "주차", icon: "🅿️" },
@@ -82,7 +77,6 @@ export default function HospitalCardChips({
   const detailId = useId();
 
   const chips = deriveChips(hospital);
-  const paragraphs = splitNoteParagraphs(hospital.note);
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
 
   const values: Record<string, string | undefined> = {
@@ -94,18 +88,8 @@ export default function HospitalCardChips({
     address: hospital.address,
   };
 
-  // 예비 칸은 렌더링하지 않는다. 값이 없는 행도 검진비용만 남기고 걸러낸다.
-  const rows = DETAIL_ROWS.filter(
-    (row) => !row.reserved && (row.alwaysShow || values[row.key])
-  );
-
-  /**
-   * 표에서 빠지는 note 맥락 중 **국가검진 근거**만 참고 줄로 남긴다.
-   * 39번에서 지정 배지를 없앤 뒤로 이 문구가 지정 여부를 확인할 유일한 수단이라,
-   * 표로 바뀌었다고 카드에서 통째로 사라지면 안 된다.
-   * (검진센터가 본원과 다른 건물이라는 맥락은 이미 접힌 상태의 칩에 있다.)
-   */
-  const nationalNote = paragraphs.find((p) => p.topic === "national")?.text;
+  // 예비 칸만 걸러낸다. 6개 항목은 값이 없어도 항상 보여 준다(45번 항목).
+  const rows = DETAIL_ROWS.filter((row) => !row.reserved);
 
   const nearbyFoodUrl = `https://map.kakao.com/?q=${encodeURIComponent(
     `${hospital.name} 맛집`
@@ -230,7 +214,7 @@ export default function HospitalCardChips({
                         isEmpty ? "text-slate-400" : "text-slate-700"
                       }`}
                     >
-                      {value ?? row.emptyText}
+                      {value || EMPTY_TEXT}
                     </dd>
                   </div>
                 );
@@ -275,15 +259,11 @@ export default function HospitalCardChips({
             </div>
 
             {/*
-              표에서 빠지는 note 맥락 중 국가검진 근거만 참고 줄로 남긴다.
-              나머지(창구별 번호, OSM 주소 불일치 등)는 칩과 위 표로 대체된다.
+              **이 카드는 note를 렌더링하지 않는다**(45번 항목).
+              44번에서 note 문단 3개를 표로 바꾸면서 국가검진 근거 한 문단만
+              "참고" 줄로 남겨 뒀는데, 흐린 글씨라 옛 note가 지워지지 않은 것처럼
+              보였다. 지금은 hospital.note를 어디서도 읽지 않는다.
             */}
-            {nationalNote && (
-              <p className="text-[11px] leading-relaxed text-slate-400">
-                <span className="font-medium">참고 </span>
-                {nationalNote}
-              </p>
-            )}
           </div>
         </div>
       </div>
