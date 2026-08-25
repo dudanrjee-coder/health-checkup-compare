@@ -2,7 +2,12 @@
 
 import { useId, useState } from "react";
 import { Hospital, Tier } from "@/types/hospital";
-import { deriveChips, splitNoteParagraphs, ChipTone } from "@/lib/noteChips";
+import {
+  deriveChips,
+  splitAccessInfo,
+  splitNoteParagraphs,
+  ChipTone,
+} from "@/lib/noteChips";
 
 /**
  * 칩 클러스터형 카드 — **미리보기용 시안**이다.
@@ -30,12 +35,34 @@ const CHIP_TONE_STYLE: Record<ChipTone, string> = {
   warn: "border-amber-200 bg-amber-50 text-amber-800",
 };
 
-const DETAIL_FIELDS: { key: keyof Hospital; label: string }[] = [
-  { key: "affiliation", label: "소속" },
-  { key: "priceRange", label: "가격대" },
-  { key: "waitingPeriod", label: "예약 대기" },
-  { key: "resultNotice", label: "결과 통보" },
-  { key: "accessInfo", label: "접근성" },
+/**
+ * 펼친 상태의 6개 항목. **순서 고정이다.**
+ *
+ * - `alwaysShow`가 true면 값이 없어도 행을 남기고 `emptyText`를 보여준다.
+ *   검진비용은 "안 적혀 있음"과 "확인 못 함"이 사용자에게 같은 의미라서,
+ *   숨기지 않고 "병원문의"라고 분명히 안내한다.
+ * - 나머지는 값이 없으면 행 자체를 숨긴다.
+ * - 마지막 `reserved` 칸은 앞으로 항목이 늘어날 자리다. 빈 줄이 보이면
+ *   이상하므로 **렌더링하지 않는다**(아래 map에서 걸러낸다). 구조만 잡아 둔 것이라
+ *   새 항목을 넣을 때는 이 자리에 key·label·icon만 채우면 된다.
+ */
+type DetailRow = {
+  key: string;
+  label: string;
+  icon: string;
+  alwaysShow?: boolean;
+  emptyText?: string;
+  reserved?: boolean;
+};
+
+const DETAIL_ROWS: DetailRow[] = [
+  { key: "price", label: "검진비용", icon: "💰", alwaysShow: true, emptyText: "병원문의" },
+  { key: "result", label: "결과통보", icon: "📄" },
+  { key: "meal", label: "식사제공", icon: "🍚" },
+  { key: "parking", label: "주차", icon: "🅿️" },
+  { key: "transit", label: "대중교통", icon: "🚇" },
+  { key: "address", label: "주소", icon: "📍" },
+  { key: "reserved", label: "", icon: "", reserved: true },
 ];
 
 interface Props {
@@ -56,8 +83,33 @@ export default function HospitalCardChips({
 
   const chips = deriveChips(hospital);
   const paragraphs = splitNoteParagraphs(hospital.note);
-  // 칩으로 이미 요약한 항목은 상세에서 빼지 않는다 — 칩은 결론, 문단은 근거다.
-  const details = DETAIL_FIELDS.filter(({ key }) => hospital[key]);
+  const { parking, transit } = splitAccessInfo(hospital.accessInfo);
+
+  const values: Record<string, string | undefined> = {
+    price: hospital.priceRange,
+    result: hospital.resultNotice,
+    meal: hospital.mealProvided,
+    parking,
+    transit,
+    address: hospital.address,
+  };
+
+  // 예비 칸은 렌더링하지 않는다. 값이 없는 행도 검진비용만 남기고 걸러낸다.
+  const rows = DETAIL_ROWS.filter(
+    (row) => !row.reserved && (row.alwaysShow || values[row.key])
+  );
+
+  /**
+   * 표에서 빠지는 note 맥락 중 **국가검진 근거**만 참고 줄로 남긴다.
+   * 39번에서 지정 배지를 없앤 뒤로 이 문구가 지정 여부를 확인할 유일한 수단이라,
+   * 표로 바뀌었다고 카드에서 통째로 사라지면 안 된다.
+   * (검진센터가 본원과 다른 건물이라는 맥락은 이미 접힌 상태의 칩에 있다.)
+   */
+  const nationalNote = paragraphs.find((p) => p.topic === "national")?.text;
+
+  const nearbyFoodUrl = `https://map.kakao.com/?q=${encodeURIComponent(
+    `${hospital.name} 맛집`
+  )}`;
 
   return (
     <div
@@ -159,23 +211,31 @@ export default function HospitalCardChips({
               expanded ? "visible" : "invisible delay-300"
             }`}
           >
-            <p className="text-xs leading-snug text-slate-600">
-              <span className="font-medium text-slate-500">예약 </span>
-              {hospital.reservationMethod}
-            </p>
-
-            {details.length > 0 && (
-              <dl className="flex flex-col gap-1 text-xs text-slate-600">
-                {details.map(({ key, label }) => (
-                  <div key={key} className="flex gap-2">
-                    <dt className="shrink-0 font-medium text-slate-500">
-                      {label}
+            {/*
+              6개 항목 표. 라벨 칸은 w-16 + whitespace-nowrap으로 고정해
+              "결과통보"·"대중교통" 같은 4글자 라벨이 두 줄로 깨지지 않게 한다.
+            */}
+            <dl className="flex flex-col divide-y divide-slate-100 rounded-lg border border-slate-100 bg-slate-50/60">
+              {rows.map((row) => {
+                const value = values[row.key];
+                const isEmpty = !value;
+                return (
+                  <div key={row.key} className="flex gap-2 px-3 py-1.5">
+                    <dt className="flex w-16 shrink-0 items-start gap-1 whitespace-nowrap text-xs font-medium text-slate-500">
+                      <span aria-hidden>{row.icon}</span>
+                      {row.label}
                     </dt>
-                    <dd>{String(hospital[key])}</dd>
+                    <dd
+                      className={`text-xs leading-relaxed ${
+                        isEmpty ? "text-slate-400" : "text-slate-700"
+                      }`}
+                    >
+                      {value ?? row.emptyText}
+                    </dd>
                   </div>
-                ))}
-              </dl>
-            )}
+                );
+              })}
+            </dl>
 
             {hospital.bookingUrl && (
               <a
@@ -189,18 +249,40 @@ export default function HospitalCardChips({
               </a>
             )}
 
-            {/* note는 41번 항목의 문단 구분을 그대로 살려 문단별로 렌더링한다 */}
-            {paragraphs.length > 0 && (
-              <div className="flex flex-col gap-2 rounded-lg bg-slate-50 px-3 py-2">
-                {paragraphs.map((p) => (
-                  <p
-                    key={p.text.slice(0, 24)}
-                    className="text-sm leading-relaxed text-slate-600"
-                  >
-                    {p.text}
-                  </p>
-                ))}
-              </div>
+            {/* 표 아래: 확인일 / 출처 / 주변 맛집 */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
+              <span>확인일 {hospital.verifiedAt}</span>
+              {hospital.sourceUrl && (
+                <a
+                  href={hospital.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => event.stopPropagation()}
+                  className="hover:text-slate-600 hover:underline"
+                >
+                  출처 보기 ↗
+                </a>
+              )}
+              <a
+                href={nearbyFoodUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(event) => event.stopPropagation()}
+                className="hover:text-slate-600 hover:underline"
+              >
+                주변 맛집 보기 ↗
+              </a>
+            </div>
+
+            {/*
+              표에서 빠지는 note 맥락 중 국가검진 근거만 참고 줄로 남긴다.
+              나머지(창구별 번호, OSM 주소 불일치 등)는 칩과 위 표로 대체된다.
+            */}
+            {nationalNote && (
+              <p className="text-[11px] leading-relaxed text-slate-400">
+                <span className="font-medium">참고 </span>
+                {nationalNote}
+              </p>
             )}
           </div>
         </div>

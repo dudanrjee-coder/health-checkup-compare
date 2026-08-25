@@ -91,6 +91,54 @@ function isSeparateBuilding(paragraphs: NoteParagraph[]): boolean {
 }
 
 /**
+ * accessInfo를 "주차"와 "대중교통"으로 나눈다.
+ *
+ * 두 내용이 한 필드에 섞여 있는 곳이 많아(예: "1호선 ○○역 도보 13분. 주차 최초
+ * 30분 무료…") 문장 단위로 가른다. **둘 다 내용이 잡힐 때만 나누고, 한쪽만
+ * 잡히면 쪼개지 않고 전부 주차 칸에 넣는다** — 억지로 나누면 문장이 잘린다.
+ */
+export function splitAccessInfo(accessInfo?: string): {
+  parking: string;
+  transit: string;
+} {
+  if (!accessInfo) return { parking: "", transit: "" };
+
+  const PARKING = /주차|주차장|요금|무료|정기권|\d+면/;
+  // 노선 이름만 나열하는 문장("간선 503·571과 지선 …가 경유한다")도 잡아야 한다.
+  const TRANSIT =
+    /호선|역|출구|도보|버스|셔틀|지하철|정류장|승강장|간선|지선|마을|광역|경유|노선/;
+
+  const parking: string[] = [];
+  const transit: string[] = [];
+  let last: "parking" | "transit" | null = null;
+
+  for (const raw of accessInfo.split(/(?<=\.)\s+/)) {
+    const s = raw.trim();
+    if (!s) continue;
+    if (PARKING.test(s)) {
+      parking.push(s);
+      last = "parking";
+    } else if (TRANSIT.test(s)) {
+      transit.push(s);
+      last = "transit";
+    } else if (last === "transit") {
+      // 앞 문장에 이어지는 설명이면 같은 칸에 붙인다.
+      transit.push(s);
+    } else {
+      parking.push(s);
+      last = "parking";
+    }
+  }
+
+  // 한쪽만 잡히면 쪼개지 않고 **그쪽 칸에** 통째로 넣는다.
+  // 교통 안내만 있는 값을 "주차"에 넣으면 라벨이 틀리게 된다.
+  if (transit.length === 0) return { parking: accessInfo, transit: "" };
+  if (parking.length === 0) return { parking: "", transit: accessInfo };
+
+  return { parking: parking.join(" "), transit: transit.join(" ") };
+}
+
+/**
  * 카드 상단에 띄울 칩을 만든다.
  * 데이터 필드(phone·bookingType·nationalScreeningDesignated 등)를 1차 근거로 쓰고,
  * note 문단에서는 필드에 없는 것(검진센터 위치, 창구 이름)만 보충한다.
