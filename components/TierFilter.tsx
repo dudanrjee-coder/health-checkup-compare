@@ -1,5 +1,6 @@
 "use client";
 
+import { CSSProperties } from "react";
 import { TIER_LIST, Tier } from "@/types/hospital";
 import { TIER_COLORS } from "@/lib/tierColors";
 
@@ -12,12 +13,13 @@ interface TierFilterProps {
 /**
  * 등급 필터. 색은 지도 마커·카드 배지와 같은 `TIER_COLORS`에서 가져온다.
  *
- * 버튼마다 **마커와 같은 색의 점**을 붙여, 고르지 않은 상태에서도 "이 등급이
- * 지도에서 무슨 색인가"를 읽을 수 있게 했다. 필터가 지도 범례 역할을 겸한다.
+ * **버튼 전체가 등급 색을 띤다.** 고르지 않은 상태에서도 테두리·글자가 등급
+ * 색이라, 필터가 지도 범례를 겸한다. 처음에는 작은 색 점만 붙였는데 색이
+ * 점에만 갇혀 눈에 띄지 않았다(50번 항목).
  *
- * 선택된 버튼은 마커 색을 그대로 칠하지 않고 **배지 색(연한 배경 + 진한 글자)**을
- * 쓴다. 마커 색을 배경으로 깔면 `병원`(노랑 `#eab308`) 위의 흰 글자가 대비
- * 1.9:1로 읽히지 않는다. 배지 색 조합은 4종 모두 AA(4.5:1)를 넘는다(49번 항목).
+ * 고른 상태는 **채움**, 안 고른 상태는 **외곽선**으로 가른다. 배경에 마커 색을
+ * 깔지 않는 이유는 `병원`의 노랑(`#eab308`) 위 흰 글자가 대비 1.9:1로 읽히지
+ * 않기 때문이다. 대신 테두리에 마커 색을 써서 지도 색과 이어지게 한다.
  */
 export default function TierFilter({
   selected,
@@ -33,6 +35,28 @@ export default function TierFilter({
           const isActive = selected.has(tier);
           const color = TIER_COLORS[tier];
 
+          // 데이터가 없는 등급은 지도에 마커도 없으므로 등급 색을 쓰지 않고
+          // 통째로 회색으로 둔다. 고를 수 없다는 것이 먼저 읽혀야 한다.
+          let style: CSSProperties | undefined;
+          if (hasData && isActive) {
+            style = {
+              backgroundColor: color.badgeBg,
+              color: color.badgeText,
+              borderColor: color.marker,
+              // 테두리를 2px로 키우면 글자가 1px 밀린다. 안쪽 그림자로 굵어
+              // 보이게만 해서 고른 상태를 또렷하게 하고 레이아웃은 건드리지 않는다.
+              boxShadow: `inset 0 0 0 1px ${color.marker}`,
+            };
+          } else if (hasData) {
+            style = {
+              color: color.badgeText,
+              borderColor: color.marker,
+              // 호버 배경을 등급 색으로 주려면 인라인 style로는 안 되므로
+              // CSS 변수로 넘기고 클래스에서 받는다.
+              ["--tier-tint" as string]: color.badgeBg,
+            };
+          }
+
           return (
             <button
               key={tier}
@@ -40,32 +64,15 @@ export default function TierFilter({
               disabled={!hasData}
               onClick={() => onToggle(tier)}
               className={[
-                "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
+                "rounded-full border px-3 py-1.5 text-sm transition-colors",
                 !hasData
                   ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
                   : isActive
                   ? "font-medium"
-                  : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50",
+                  : "bg-white hover:bg-[var(--tier-tint)]",
               ].join(" ")}
-              style={
-                hasData && isActive
-                  ? {
-                      backgroundColor: color.badgeBg,
-                      color: color.badgeText,
-                      borderColor: color.marker,
-                    }
-                  : undefined
-              }
+              style={style}
             >
-              <span
-                aria-hidden
-                className="h-2 w-2 shrink-0 rounded-full"
-                style={{
-                  backgroundColor: color.marker,
-                  // 데이터가 없어 못 고르는 등급은 점도 흐리게 둬서 버튼 상태와 어긋나지 않게 한다.
-                  opacity: hasData ? 1 : 0.4,
-                }}
-              />
               {tier}
             </button>
           );
