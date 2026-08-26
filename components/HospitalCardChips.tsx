@@ -1,8 +1,9 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Hospital, Tier } from "@/types/hospital";
+import { Hospital } from "@/types/hospital";
 import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
+import { tierBadgeStyle } from "@/lib/tierColors";
 
 /**
  * 칩 클러스터형 카드 — **미리보기용 시안**이다(46번 항목이 최종 사양).
@@ -13,13 +14,6 @@ import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
  *
  * **이 카드는 hospital.note를 렌더링하지 않는다.** 요약은 칩, 상세는 6줄 표다.
  */
-
-const TIER_BADGE_STYLE: Record<Tier, string> = {
-  상급종합병원: "bg-blue-100 text-blue-800",
-  종합병원: "bg-teal-100 text-teal-800",
-  병원: "bg-amber-100 text-amber-800",
-  의원: "bg-slate-100 text-slate-800",
-};
 
 const CHIP_BASE =
   "inline-block rounded-full px-2.5 py-1 text-xs font-medium transition-colors";
@@ -114,9 +108,8 @@ export default function HospitalCardChips({
           {hospital.name}
         </h3>
         <span
-          className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
-            TIER_BADGE_STYLE[hospital.tier]
-          }`}
+          className="rounded-full px-2 py-0.5 text-[11px] font-medium"
+          style={tierBadgeStyle(hospital.tier)}
         >
           {hospital.tier}
         </span>

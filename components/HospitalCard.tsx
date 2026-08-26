@@ -1,15 +1,10 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Hospital, Tier } from "@/types/hospital";
+import { Hospital } from "@/types/hospital";
+import { tierBadgeStyle } from "@/lib/tierColors";
 
-const TIER_BADGE_STYLE: Record<Tier, string> = {
-  상급종합병원: "bg-blue-100 text-blue-800",
-  종합병원: "bg-teal-100 text-teal-800",
-  병원: "bg-amber-100 text-amber-800",
-  의원: "bg-slate-100 text-slate-800",
-};
-
+/** 배지 모양. 색은 tier별로 달라지므로 여기 두지 않는다(lib/tierColors.ts). */
 const BADGE_BASE = "rounded-full px-2 py-0.5 text-[11px] font-medium";
 
 const DETAIL_FIELDS: { key: keyof Hospital; label: string }[] = [
@@ -64,7 +59,7 @@ export default function HospitalCard({
         <h3 className="text-base font-semibold leading-tight text-slate-900">
           {hospital.name}
         </h3>
-        <span className={`${BADGE_BASE} ${TIER_BADGE_STYLE[hospital.tier]}`}>
+        <span className={BADGE_BASE} style={tierBadgeStyle(hospital.tier)}>
           {hospital.tier}
         </span>
         {/*

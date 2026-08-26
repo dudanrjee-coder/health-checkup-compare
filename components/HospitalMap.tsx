@@ -4,19 +4,29 @@ import { useEffect, useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MappableHospital, Sido } from "@/types/hospital";
+import { MappableHospital, Sido, Tier } from "@/types/hospital";
+import { TIER_COLORS } from "@/lib/tierColors";
 import { NATIONWIDE_VIEW, SIDO_VIEW } from "@/lib/regions";
 import { useHoverCapable } from "@/lib/useHoverCapable";
 
 /** 선택한 병원으로 이동하는 애니메이션 길이(초) */
 const FLY_DURATION_SEC = 0.6;
 
+/** 선택된 마커의 테두리색. 채움은 tier가 정하므로 선택 표시는 테두리로 한다. */
+const SELECTED_STROKE = "#2563eb";
+
 /**
  * 번들러 환경에서 Leaflet 기본 마커 이미지 경로가 깨지므로 divIcon(인라인 SVG)을 쓴다.
- * 선택된 마커는 색과 크기를 다르게 해서 강조한다.
+ *
+ * **채움색은 tier가 정한다**(`TIER_COLORS` — 카드 배지와 같은 값을 본다).
+ * 예전에는 채움색이 선택 여부를 나타냈지만, 이제 그 자리를 tier가 쓰므로
+ * 선택 표시는 **크기(30→40) + 파란 테두리**로 옮겼다. 선택된 마커도 등급 색을
+ * 그대로 유지해야 지도에서 등급이 끊기지 않는다.
  */
-function createPinIcon(selected: boolean) {
-  const fill = selected ? "#2563eb" : "#64748b";
+function createPinIcon(tier: Tier, selected: boolean) {
+  const fill = TIER_COLORS[tier].marker;
+  const stroke = selected ? SELECTED_STROKE : "#ffffff";
+  const strokeWidth = selected ? 2.5 : 1.5;
   const size = selected ? 40 : 30;
   const height = size * 1.3;
 
@@ -24,7 +34,7 @@ function createPinIcon(selected: boolean) {
     className: "",
     html: `<svg width="${size}" height="${height}" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 0C5.7 0 0.6 5.1 0.6 11.4 0.6 20 12 32 12 32s11.4-12 11.4-20.6C23.4 5.1 18.3 0 12 0z"
-        fill="${fill}" stroke="#ffffff" stroke-width="1.5" />
+        fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" />
       <circle cx="12" cy="11.4" r="4.2" fill="#ffffff" />
     </svg>`,
     iconSize: [size, height],
@@ -211,7 +221,7 @@ export default function HospitalMap({
           <Marker
             key={hospital.id}
             position={[hospital.lat, hospital.lng]}
-            icon={createPinIcon(hospital.id === selectedId)}
+            icon={createPinIcon(hospital.tier, hospital.id === selectedId)}
             zIndexOffset={hospital.id === selectedId ? 1000 : 0}
             ref={(marker) => {
               markerRefs.current[hospital.id] = marker;
