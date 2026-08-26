@@ -17,10 +17,13 @@ import {
 
 /**
  * 칩 클러스터형 카드 시안을 적용할 병원 id(42번 항목).
- * 전체 적용 전에 한 곳만 새 스타일로 띄워 비교하려는 임시 스위치이며,
+ * 전체 적용 전에 몇 곳만 새 스타일로 띄워 비교하려는 임시 스위치이며,
  * 여기 없는 병원은 기존 HospitalCard 그대로다.
+ *
+ * - seoul-hongik: 온라인 예약이 없고 표가 거의 비어 있는 쪽(46번 항목)
+ * - daejeon-chungnam-univ: 온라인 예약이 있고 표가 채워져 있는 쪽(47번 항목)
  */
-const CHIP_PREVIEW_IDS = new Set(["seoul-hongik"]);
+const CHIP_PREVIEW_IDS = new Set(["seoul-hongik", "daejeon-chungnam-univ"]);
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
 const HospitalMap = dynamic(() => import("@/components/HospitalMap"), {
