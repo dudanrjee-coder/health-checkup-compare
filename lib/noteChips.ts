@@ -1,20 +1,38 @@
 import { Hospital } from "@/types/hospital";
 
 /**
- * note를 주제별 문단으로 나누고, 거기서 카드 상단에 띄울 "칩"을 뽑는다.
+ * 칩 클러스터형 카드(HospitalCardChips)가 쓰는 파생 로직.
  *
- * 41번 항목에서 note에 이미 주제별 문단 구분(\n\n)을 넣어 두었으므로
- * 문단을 다시 계산하지 않고 그대로 쓴다. 주제 판별에 쓰는 정규식도
- * scripts 쪽 문단 분리와 같은 기준(주소 → 연락처 → 예약 → 국가검진)이다.
+ * 41번 항목에서 note에 넣어 둔 **주제별 문단 구분(\n\n)을 그대로 재사용**해,
+ * 필드에 없는 값(검진센터 위치)만 note에서 보충한다. 문단을 다시 계산하지 않는다.
  */
 
-export type ChipTone = "default" | "national" | "warn";
+export type NoteTopic = "addr" | "phone" | "booking" | "national" | "etc";
+
+export interface NoteParagraph {
+  topic: NoteTopic;
+  text: string;
+}
+
+/**
+ * 칩 종류. 화면에서 시각적으로 확실히 구분된다(46번 항목).
+ * - `reservation` 예약 수단. 쓸 수 있으면 초록으로 채우고, 없으면 회색 비활성.
+ * - `info` 상태 개념이 없는 사실. 점선 테두리 + 투명 배경이라 예약 칩과 헷갈리지 않는다.
+ * - `national` 국가검진 지정 여부. 채워진 초록/주황.
+ */
+export type ChipKind = "reservation" | "info" | "national";
 
 export interface Chip {
+  key: string;
   label: string;
-  tone: ChipTone;
-  /** 전화 칩만 tel: 링크로 만든다 */
+  kind: ChipKind;
+  /** reservation 전용. false면 회색 비활성이고 링크가 아니다. */
+  active?: boolean;
+  /** national 전용. 지정이면 green, 미지정이면 amber. */
+  tone?: "green" | "amber";
   href?: string;
+  /** 호버·탭 시 보여줄 짧은 설명 */
+  tooltip?: string;
 }
 
 const NATIONAL_MARKERS = [
@@ -39,13 +57,6 @@ const TOPIC_RE: [NoteTopic, RegExp][] = [
   ],
 ];
 
-export type NoteTopic = "addr" | "phone" | "booking" | "national" | "etc";
-
-export interface NoteParagraph {
-  topic: NoteTopic;
-  text: string;
-}
-
 /** note를 문단 단위로 쪼개고 각 문단의 주제를 붙인다. */
 export function splitNoteParagraphs(note?: string): NoteParagraph[] {
   if (!note) return [];
@@ -62,40 +73,12 @@ export function splitNoteParagraphs(note?: string): NoteParagraph[] {
     });
 }
 
-/** "건강증진센터 대표번호(...)" 같은 문장 머리에서 창구 이름만 떼어낸다. */
-function centerName(paragraphs: NoteParagraph[]): string | undefined {
-  const p = paragraphs.find((x) => x.topic === "phone");
-  if (!p) return undefined;
-  const m = p.text.match(
-    /^((?:종합|개인|일반)?(?:건강)?(?:증진|검진|건진|의학)?센터|[가-힣]*(?:센터|과|실))\s*(?:전용\s*)?(?:대표\s*)?(?:예약\s*)?(?:직통\s*)?번호/
-  );
-  return m?.[1];
-}
-
-/** 검진센터가 있는 건물·층 표기를 뽑는다. */
-function centerPlace(paragraphs: NoteParagraph[]): string | undefined {
-  const text = paragraphs
-    .filter((x) => x.topic === "addr")
-    .map((x) => x.text)
-    .join(" ");
-  if (!text) return undefined;
-  const m = text.match(
-    /((?:본관|별관|후관|신관|목동관|미래관|다정관|생명관|암병원|서관|동관|삼성본관)\s*(?:지하\s*)?B?\d*\s*층)/
-  );
-  return m?.[1]?.replace(/\s+/g, " ");
-}
-
-/** 검진센터가 본원과 다른 건물인지 */
-function isSeparateBuilding(paragraphs: NoteParagraph[]): boolean {
-  return paragraphs.some((x) => x.text.includes("본원과 다른 건물"));
-}
-
 /**
  * accessInfo를 "주차"와 "대중교통"으로 나눈다.
  *
  * 두 내용이 한 필드에 섞여 있는 곳이 많아(예: "1호선 ○○역 도보 13분. 주차 최초
- * 30분 무료…") 문장 단위로 가른다. **둘 다 내용이 잡힐 때만 나누고, 한쪽만
- * 잡히면 쪼개지 않고 전부 주차 칸에 넣는다** — 억지로 나누면 문장이 잘린다.
+ * 30분 무료…") 문장 단위로 가른다. 한쪽만 잡히면 쪼개지 않고 **그쪽 칸에** 통째로
+ * 넣는다 — 교통 안내만 있는 값을 "주차"로 라벨링하면 틀린 정보가 된다.
  */
 export function splitAccessInfo(accessInfo?: string): {
   parking: string;
@@ -122,7 +105,6 @@ export function splitAccessInfo(accessInfo?: string): {
       transit.push(s);
       last = "transit";
     } else if (last === "transit") {
-      // 앞 문장에 이어지는 설명이면 같은 칸에 붙인다.
       transit.push(s);
     } else {
       parking.push(s);
@@ -130,69 +112,118 @@ export function splitAccessInfo(accessInfo?: string): {
     }
   }
 
-  // 한쪽만 잡히면 쪼개지 않고 **그쪽 칸에** 통째로 넣는다.
-  // 교통 안내만 있는 값을 "주차"에 넣으면 라벨이 틀리게 된다.
   if (transit.length === 0) return { parking: accessInfo, transit: "" };
   if (parking.length === 0) return { parking: "", transit: accessInfo };
 
   return { parking: parking.join(" "), transit: transit.join(" ") };
 }
 
+/** 검진센터가 있는 건물·층 표기를 note에서 뽑는다. */
+function centerPlace(paragraphs: NoteParagraph[]): string | undefined {
+  const text = paragraphs
+    .filter((x) => x.topic === "addr")
+    .map((x) => x.text)
+    .join(" ");
+  if (!text) return undefined;
+  const m = text.match(
+    /((?:본관|별관|후관|신관|목동관|미래관|다정관|생명관|암병원|서관|동관|삼성본관)\s*(?:지하\s*)?B?\d*\s*층)/
+  );
+  return m?.[1]?.replace(/\s+/g, " ");
+}
+
+/** 검진센터가 본원과 다른 건물인지 */
+function isSeparateBuilding(paragraphs: NoteParagraph[]): boolean {
+  return paragraphs.some((x) => x.text.includes("본원과 다른 건물"));
+}
+
 /**
- * 카드 상단에 띄울 칩을 만든다.
- * 데이터 필드(phone·bookingType·nationalScreeningDesignated 등)를 1차 근거로 쓰고,
- * note 문단에서는 필드에 없는 것(검진센터 위치, 창구 이름)만 보충한다.
+ * 카드 상단 칩을 만든다.
+ *
+ * **예약 칩 2개는 값이 없어도 항상 만든다.** "온라인 예약이 없다"는 것 자체가
+ * 사용자에게 필요한 정보라, 칩을 빼 버리면 확인하지 못한 것과 구분되지 않는다.
  */
 export function deriveChips(hospital: Hospital): Chip[] {
   const paragraphs = splitNoteParagraphs(hospital.note);
   const chips: Chip[] = [];
 
-  // 1) 전화번호 — 창구 이름을 알면 함께 보여준다
-  if (hospital.phone) {
-    const name = centerName(paragraphs);
-    chips.push({
-      label: name ? `${name} ${hospital.phone}` : hospital.phone,
-      tone: "default",
-      href: `tel:${hospital.phone}`,
-    });
-  } else {
-    chips.push({ label: "전화번호 확인 필요", tone: "warn" });
-  }
+  // (A) 예약 수단 — 항상 둘 다
+  chips.push(
+    hospital.bookingUrl
+      ? {
+          key: "online",
+          kind: "reservation",
+          active: true,
+          label: "온라인예약 바로가기 ↗",
+          href: hospital.bookingUrl,
+          tooltip:
+            hospital.bookingType === "예약신청"
+              ? "신청 후 상담원이 전화로 확정합니다"
+              : "달력에서 날짜를 골라 바로 확정합니다",
+        }
+      : {
+          key: "online",
+          kind: "reservation",
+          active: false,
+          label: "온라인예약 (미제공)",
+        }
+  );
 
-  // 2) 검진센터 위치 — 본원과 다른 건물이면 그 사실을 강조한다
+  chips.push(
+    hospital.phone
+      ? {
+          key: "phone",
+          kind: "reservation",
+          active: true,
+          label: `전화 ${hospital.phone}`,
+          href: `tel:${hospital.phone}`,
+        }
+      : {
+          key: "phone",
+          kind: "reservation",
+          active: false,
+          label: "전화번호 미확인",
+        }
+  );
+
+  // (B) 순수 정보 — 상태 개념이 없다
   const place = centerPlace(paragraphs);
   const separate = isSeparateBuilding(paragraphs);
   if (place) {
     chips.push({
-      label: separate ? `검진센터 ${place}(본원과 다른 건물)` : `검진센터 ${place}`,
-      tone: separate ? "warn" : "default",
+      key: "place",
+      kind: "info",
+      label: separate
+        ? `검진센터 ${place}(본원과 다른 건물)`
+        : `검진센터 ${place}`,
     });
   } else if (separate) {
-    chips.push({ label: "검진센터가 본원과 다른 건물", tone: "warn" });
-  }
-
-  // 3) 온라인 예약 가능 여부
-  if (hospital.bookingUrl) {
     chips.push({
-      label:
-        hospital.bookingType === "예약신청"
-          ? "온라인 예약(상담원 콜백)"
-          : "온라인 예약",
-      tone: "default",
+      key: "place",
+      kind: "info",
+      label: "검진센터가 본원과 다른 건물",
     });
-  } else {
-    chips.push({ label: "전화·방문 예약만", tone: "default" });
   }
 
-  // 4) 채워져 있을 때만 붙이는 부가 칩
-  if (hospital.duration) chips.push({ label: `소요 ${hospital.duration}`, tone: "default" });
-  if (hospital.mealProvided) chips.push({ label: `식사 ${hospital.mealProvided}`, tone: "default" });
+  if (hospital.duration)
+    chips.push({ key: "duration", kind: "info", label: `소요 ${hospital.duration}` });
 
-  // 5) 국가검진 — 지정은 초록으로 강조, 미지정은 주황
+  // (C) 국가검진 — 호버·탭하면 확인일만 보여 준다
   if (hospital.nationalScreeningDesignated === true)
-    chips.push({ label: "국가검진 지정기관", tone: "national" });
+    chips.push({
+      key: "national",
+      kind: "national",
+      tone: "green",
+      label: "국가검진 지정기관",
+      tooltip: `확인일: ${hospital.verifiedAt}`,
+    });
   else if (hospital.nationalScreeningDesignated === false)
-    chips.push({ label: "국가검진 미지정", tone: "warn" });
+    chips.push({
+      key: "national",
+      kind: "national",
+      tone: "amber",
+      label: "국가검진 미지정",
+      tooltip: `확인일: ${hospital.verifiedAt}`,
+    });
 
   return chips;
 }
