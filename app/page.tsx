@@ -20,10 +20,20 @@ import {
  * 전체 적용 전에 몇 곳만 새 스타일로 띄워 비교하려는 임시 스위치이며,
  * 여기 없는 병원은 기존 HospitalCard 그대로다.
  *
+ * 두 곳(46·47번)은 사양을 굳히려고 고른 시안이고, 그 뒤로는 **0번 원칙으로
+ * 재조사를 끝낸 병원을 그때그때 여기 추가한다**(52번 항목). 재조사와 카드 전환을
+ * 한 세트로 묶는 것이라, 아직 재조사하지 않은 병원은 기존 HospitalCard 그대로다.
+ *
  * - seoul-hongik: 온라인 예약이 없고 표가 거의 비어 있는 쪽(46번 항목)
  * - daejeon-chungnam-univ: 온라인 예약이 있고 표가 채워져 있는 쪽(47번 항목)
+ * - daegu-keimyung-dongsan, gwangju-chosun: 재조사 배치 1 완료(52번 항목)
  */
-const CHIP_PREVIEW_IDS = new Set(["seoul-hongik", "daejeon-chungnam-univ"]);
+const CHIP_PREVIEW_IDS = new Set([
+  "seoul-hongik",
+  "daejeon-chungnam-univ",
+  "daegu-keimyung-dongsan",
+  "gwangju-chosun",
+]);
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
 const HospitalMap = dynamic(() => import("@/components/HospitalMap"), {
