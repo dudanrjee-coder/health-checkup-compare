@@ -29,6 +29,7 @@ import {
  * - daegu-keimyung-dongsan, gwangju-chosun: 재조사 배치 1 완료(52번 항목)
  * - ulsan-uuh: 재조사 배치 2(55번 항목)
  * - seoul-ewha-mokdong: 재조사 배치 3(56번 항목)
+ * - 부산·광주 상급종합병원: 재조사 배치 4(63번 항목)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -37,6 +38,11 @@ const CHIP_PREVIEW_IDS = new Set([
   "gwangju-chosun",
   "ulsan-uuh",
   "seoul-ewha-mokdong",
+  "busan-pnu",
+  "busan-inje-paik",
+  "busan-donga",
+  "gwangju-jnu",
+  "jeonnam-hwasun-cnu",
 ]);
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
