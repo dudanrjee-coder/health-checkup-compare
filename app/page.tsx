@@ -32,6 +32,7 @@ import {
  * - 부산·광주 상급종합병원: 재조사 배치 4(63번 항목)
  * - 서울·경기 외 나머지 상급종합병원: 재조사 배치 5(64번 항목)
  * - 강원·충북·충남 종합병원 3곳: 종합병원 재조사 배치 1(70번 항목)
+ * - 전북·제주 종합병원 3곳: 종합병원 재조사 배치 2(71번 항목)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -75,6 +76,9 @@ const CHIP_PREVIEW_IDS = new Set([
   "gangwon-knu",
   "chungbuk-cheongju-hana",
   "chungnam-cheonan-chungmu",
+  "jeonbuk-jeonju-jesus",
+  "jeju-jnu",
+  "jeju-halla",
 ]);
 
 export default function Home() {
