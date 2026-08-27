@@ -62,6 +62,11 @@ const CHIP_PREVIEW_IDS = new Set([
   "jeonbuk-wonkwang",
   "gyeongnam-gnuh-jinju",
   "gangwon-gangneung-asan",
+  "seoul-kangbuk-samsung",
+  "seoul-konkuk-univ",
+  "seoul-kyunghee-univ",
+  "seoul-korea-guro",
+  "seoul-samsung-medical",
 ]);
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
