@@ -23,7 +23,8 @@ npm run dev
 - `components/SearchBox.tsx` — 병원명·지역 통합 검색창. 마우스 환경에서는 화면 키보드 아이콘(⌨)이 함께 나온다.
 - `components/HangulKeyboard.tsx` — 두벌식 화면 키보드. 한글 조합은 `hangul-js`의 `disassemble`/`assemble`로 처리한다.
 - `lib/useHoverCapable.ts` — 마우스 환경 여부 판별 훅(지도 호버 팝업과 화면 키보드가 함께 쓴다).
-- `components/HospitalMap.tsx` — Leaflet + OpenStreetMap 지도(마커·팝업·선택 연동). Leaflet이 `window`에 의존하므로 `app/page.tsx`에서 `next/dynamic`의 `ssr: false`로 불러옵니다.
+- `components/HospitalMap.tsx` — Leaflet + OpenStreetMap 지도(마커·팝업·선택 연동). Leaflet이 `window`에 의존하므로 `next/dynamic`의 `ssr: false`로 불러옵니다.
+- `components/HospitalMapLazy.tsx` — 위 지도를 `ssr: false`로 감싸는 전용 모듈. **`dynamic()` 호출을 페이지가 아니라 이 파일에 둔다.** 페이지 모듈에 두면 페이지를 고칠 때마다(개발 모드 Fast Refresh) 지도 컴포넌트 타입이 새로 만들어져 `Map container is already initialized.`로 지도가 죽는다([70번 항목](#70-map-container-is-already-initialized--원인은-strictmode가-아니라-fast-refresh였다-2026-08-27)).
 - `scripts/geocode.mjs` — Nominatim으로 병원 좌표를 조회해 `hospitals.json`에 `lat`/`lng`로 캐싱하는 스크립트.
 - `app/page.tsx` — 메인 페이지(상태 관리 및 화면 조합, 리스트/지도 좌우 분할 레이아웃).
 
@@ -1210,6 +1211,8 @@ CSV 대조 결과 **18곳 모두 명단에 정확히 1건씩** 있어 `true`로 
 #### 지금 코드에서는 개발 모드에서도 재현되지 않았다
 
 `.next`를 지우고 개발 서버를 새로 띄운 뒤 다음을 모두 시도했으나 오류가 나오지 않았다. **최초 로드 / 새로고침 반복 / 코드 수정으로 Fast Refresh 재렌더 / 훅을 바꿔 Fast Refresh 재마운트 / 시도 전환 / 검색 / 마커 클릭.** 24번 항목에 적힌 그 오류를 이번 확인에서는 한 번도 보지 못했다(그때 어떤 상태에서 시작됐는지는 알 수 없다).
+
+> **재현 조건은 [70번 항목](#70-map-container-is-already-initialized--원인은-strictmode가-아니라-fast-refresh였다-2026-08-27)에서 찾았다(2026-08-27).** 여기서 놓친 이유는 "코드 수정으로 Fast Refresh"를 **지도 컴포넌트 쪽에서** 시도했기 때문으로 보인다. 계측해 보면 `components/HospitalMap.tsx`를 고치는 것으로는 재현되지 않고, **`app/page.tsx`를 고쳐야** 재현된다 — 그때 `dynamic()` 호출이 페이지 모듈에 있어 지도의 컴포넌트 타입이 새로 만들어지기 때문이다.
 
 다만 **원인으로 지목된 동작 자체는 그대로 있다.** 임시 프로브를 넣어 확인한 결과는 이렇다.
 
@@ -3376,4 +3379,77 @@ for (const chk of [1,2,3,4,5]) for (const sex of [1,2]) {
 | 변경 범위 | 배치마다 해당 병원 외 변경 0건 |
 | `add-national-screening.mjs` | 배치마다 3회 실행 바이트 동일 |
 | `tsc --noEmit` | 통과 |
-| 콘솔 | `HospitalMap`의 `Map container is already initialized`(react-leaflet 개발 모드 이중 마운트)가 뜨는데 **이번 작업과 무관한 기존 문제**다 — 좌표와 지도 컴포넌트를 한 줄도 건드리지 않았고, 변경을 `git stash`한 상태에서도 같은 오류가 재현된다. 지도는 정상 렌더된다 |
+| 콘솔 | ~~`HospitalMap`의 `Map container is already initialized`(react-leaflet 개발 모드 이중 마운트)가 뜨는데 **이번 작업과 무관한 기존 문제**다. 지도는 정상 렌더된다~~ — **이번 작업과 무관한 기존 문제라는 것만 맞고 원인과 영향은 틀렸다.** StrictMode가 아니라 Fast Refresh가 원인이고 그때 지도는 정상이 아니라 죽는다. [70번 항목](#70-map-container-is-already-initialized--원인은-strictmode가-아니라-fast-refresh였다-2026-08-27)에서 재현·계측하고 고쳤다 |
+
+### 70. `Map container is already initialized.` — 원인은 StrictMode가 아니라 Fast Refresh였다 (2026-08-27)
+
+69번 검증표에 "react-leaflet 개발 모드 이중 마운트로 보이며 지도는 정상 렌더된다"고 적어 둔 콘솔 오류를 파고들었다. **두 가지 다 틀렸다** — 원인은 StrictMode가 아니라 **Fast Refresh(HMR)**였고, 지도는 정상이 아니라 **그 시점에 죽었다.**
+
+#### 먼저 측정 방법을 고쳤다
+
+처음에는 "StrictMode를 꺼도 재현된다"고 판단했는데, 그것이 오판이었다. 브라우저 콘솔을 읽는 도구가 **오래된 것부터** 돌려주고 버퍼가 페이지 이동 뒤에도 남아 있어서, 개수를 적게 잡고 읽으면 **직전 로드의 잔여 오류**를 새 오류로 착각하게 된다. 센티널 로그를 찍어 경계를 표시하고 나서야 구분이 됐고, 이후로는 **콘솔이 비어 있는 새 탭**에서만 판정했다.
+
+| 조건 | 결과 |
+| --- | --- |
+| 원본 코드 · StrictMode 켬 · 새 탭 · 새로고침 | 오류 **0건**, 지도 정상(마커 144개) |
+| 원본 코드 · 새 탭 · **`app/page.tsx`를 한 번 저장(HMR)** | 오류 **9건**, `.leaflet-container` **0개**, 마커 **0개** |
+
+즉 **평소 로드에서는 나지 않고, 개발 중 파일을 저장할 때마다 났다.** 재조사 배치를 돌리는 내내 `app/page.tsx`(`CHIP_PREVIEW_IDS`)와 데이터를 고쳤으니 계속 보였던 것이다.
+
+#### 계측으로 확인한 실제 순서
+
+`L.Map.prototype.initialize`를 감싸 컨테이너 상태를 찍어 봤다.
+
+```
+{ ev: "new L.Map", connected: true,  ok: true }        // 최초 로드 — 깨끗한 div
+{ ev: "inner mount",   n: 1, id: 3 }
+{ ev: "inner UNMOUNT", n: 1, connected: true, id: 3 }  // StrictMode의 가짜 언마운트
+{ ev: "inner mount",   n: 2, id: 3 }
+--- 여기서 app/page.tsx 저장(HMR) ---
+{ ev: "new L.Map", connected: true, leafletId: 3,
+  threw: "Map container is already initialized." }     // 같은 div에 두 번째 지도 시도
+{ ev: "inner UNMOUNT", n: 2, connected: false }        // 오류 뒤에야 트리가 내려간다
+```
+
+- **StrictMode의 이중 마운트는 `new L.Map`을 한 번만 부른다.** 파일 위 `MapCleanup` 주석이 적어 둔 대로 ref가 다시 붙지 않기 때문이다. StrictMode는 무죄다.
+- 문제의 호출은 **`_leaflet_id`가 이미 박혀 있고 문서에 그대로 붙어 있는(`connected: true`) 같은 `<div>`** 에 들어온다. react-leaflet v4의 `MapContainer`는 `mapRef`를 `useCallback(…, [])`로 만들어 최초 렌더의 `context(=null)`를 계속 물고 있어서, ref가 다시 붙으면 지도를 한 번 더 만들려 한다.
+- **정리(cleanup)로는 막을 수 없다.** 위 로그대로 두 번째 생성이 언마운트보다 **먼저** 일어난다. 26번이 넣은 `MapCleanup`을 아무리 손봐도 순서상 늦는다. `MapCleanup`은 여전히 필요한 코드이지만(진짜 언마운트에서 남는 지도를 지운다) 이 오류의 해결책은 아니다.
+
+**26번이 재현하지 못한 이유도 여기서 설명된다.** 이번에 계측해 보니 `components/HospitalMap.tsx`를 고치는 것으로는 재현되지 않고 **`app/page.tsx`를 고쳐야** 재현된다. 26번은 "코드 수정으로 Fast Refresh"를 지도 컴포넌트 쪽에서 시도한 것으로 보인다.
+
+#### 고친 것 — `dynamic()` 호출을 페이지 밖으로 뺐다
+
+`dynamic()`은 **부를 때마다 새 컴포넌트 타입을 만든다.** 그 호출이 `app/page.tsx`의 모듈 스코프에 있으면 페이지 파일을 저장할 때마다 지도의 컴포넌트 타입이 새로 만들어지고, 그 과정에서 위의 ref 재부착이 일어난다.
+
+호출을 전용 모듈 `components/HospitalMapLazy.tsx`로 옮겼다. 이 모듈은 페이지와 함께 바뀌지 않으므로 페이지를 고쳐도 지도 컴포넌트 타입이 그대로 유지된다.
+
+```diff
+- import dynamic from "next/dynamic";
++ import HospitalMap from "@/components/HospitalMapLazy";
+...
+- const HospitalMap = dynamic(() => import("@/components/HospitalMap"), { ssr: false, loading: … });
+```
+
+**지도 렌더링 로직은 한 줄도 건드리지 않았다.** `HospitalMap.tsx`(`MapController`·`MapCleanup`·마커·팝업)는 그대로다.
+
+#### 검증
+
+| 확인 | 결과 |
+| --- | --- |
+| 새 탭 초기 로드 | 오류 0건, 마커 144개 |
+| HMR 4회(`app/page.tsx` 2회, `components/HospitalMap.tsx` 1회, `lib/regions.ts` 1회) | 오류 **0건**, 매번 `.leaflet-container` 1개·마커 144개 유지 |
+| 마커 클릭 → 팝업 | 열림, 내용 정상(`충남대학교병원 / 상급종합병원 · 대전광역시 중구 / 042-280-7878`) |
+| 지역 선택(`MapController`의 `fitBounds`) | 부산 16개, 제주 2개로 정상 축소 |
+| 줌 버튼 | 정상, 타일 다시 로드됨 |
+| `npm run build` | 성공(`/` 103 kB, First Load JS 190 kB — 수정 전과 동일) |
+| 프로덕션(3001) 실행 | 오류 0건, 마커 144개, 팝업 정상 |
+| `tsc --noEmit` / `next lint` | 통과 / 경고 0 |
+| 변경 범위 | `app/page.tsx`(import 한 줄 + `dynamic` 블록 삭제)와 신규 `components/HospitalMapLazy.tsx` **둘뿐**. 데이터·다른 컴포넌트 변경 0건 |
+
+#### 프로덕션에는 원래 영향이 없었다
+
+Fast Refresh는 개발 서버에만 있으므로 **이 오류는 배포본에서 난 적이 없다.** 그래도 고친 이유는 개발 중에 지도가 실제로 죽어서, 데이터를 고칠 때마다 새로고침을 해야 지도를 볼 수 있었기 때문이다.
+
+#### 69번 검증표 정정
+
+69번 표의 콘솔 항목은 "StrictMode 개발 모드 이중 마운트 / 지도는 정상 렌더된다"고 적었는데 **원인도 영향도 틀렸다.** 그 줄은 이 항목으로 대체한다. 로그는 고치지 않고 남긴다 — 그때 그렇게 판단했다는 것도 기록이다.

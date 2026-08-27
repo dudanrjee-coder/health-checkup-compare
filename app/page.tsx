@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import HospitalMap from "@/components/HospitalMapLazy";
 import SidoSelect from "@/components/SidoSelect";
 import TierFilter from "@/components/TierFilter";
 import HospitalCard from "@/components/HospitalCard";
@@ -72,16 +72,6 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-chungang-univ",
   "seoul-hanyang-univ",
 ]);
-
-// Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
-const HospitalMap = dynamic(() => import("@/components/HospitalMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full min-h-[320px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-400">
-      지도를 불러오는 중…
-    </div>
-  ),
-});
 
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
