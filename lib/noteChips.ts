@@ -74,6 +74,27 @@ export function splitNoteParagraphs(note?: string): NoteParagraph[] {
 }
 
 /**
+ * bookingUrl이 비어 있을 때, 그것이 **"온라인 예약이 없다"인지 "있는데 회원
+ * 전용이라 확인하지 못했다"인지** 가른다(53번 항목).
+ *
+ * 8번 규칙은 로그인해야만 보이는 회원 전용 예약을 기준으로 삼지 않으므로 두 경우
+ * 모두 `bookingUrl`이 빈 문자열이다. 그래서 필드만으로는 구분되지 않는다. 8번
+ * 규칙이 **"확인하지 못한 회원 경로가 따로 있다면 note에 남긴다"**고 정해 둔 만큼
+ * 그 note가 유일한 신호이며, 42번의 "필드에 없는 것만 note에서 보충한다"는 원칙에
+ * 그대로 해당한다.
+ *
+ * 미게시로 확정한 문단(`"온라인 예약 경로는 홈페이지에 미게시…"`)은 제외한다.
+ */
+const MEMBER_ONLY_RE = /로그인|회원 전용|비회원|본인인증/;
+
+export function isOnlineBookingMemberOnly(hospital: Hospital): boolean {
+  if (hospital.bookingUrl) return false;
+  return splitNoteParagraphs(hospital.note)
+    .filter((p) => p.topic === "booking")
+    .some((p) => MEMBER_ONLY_RE.test(p.text) && !p.text.includes("미게시"));
+}
+
+/**
  * accessInfo를 "주차"와 "대중교통"으로 나눈다.
  *
  * 두 내용이 한 필드에 섞여 있는 곳이 많아(예: "1호선 ○○역 도보 13분. 주차 최초
@@ -147,26 +168,36 @@ export function deriveChips(hospital: Hospital): Chip[] {
   const chips: Chip[] = [];
 
   // (A) 예약 수단 — 항상 둘 다
-  chips.push(
-    hospital.bookingUrl
-      ? {
-          key: "online",
-          kind: "reservation",
-          active: true,
-          label: "온라인예약 바로가기 ↗",
-          href: hospital.bookingUrl,
-          tooltip:
-            hospital.bookingType === "예약신청"
-              ? "신청 후 상담원이 전화로 확정합니다"
-              : "달력에서 날짜를 골라 바로 확정합니다",
-        }
-      : {
-          key: "online",
-          kind: "reservation",
-          active: false,
-          label: "온라인예약 (미제공)",
-        }
-  );
+  // 세 갈래다 — 쓸 수 있음 / 아예 없음 / 있지만 회원 전용이라 확인 못 함.
+  // 뒤의 둘을 "미제공" 하나로 묶으면 카드가 "없다"고 단정해 버린다(53번 항목).
+  if (hospital.bookingUrl) {
+    chips.push({
+      key: "online",
+      kind: "reservation",
+      active: true,
+      label: "온라인예약 바로가기 ↗",
+      href: hospital.bookingUrl,
+      tooltip:
+        hospital.bookingType === "예약신청"
+          ? "신청 후 상담원이 전화로 확정합니다"
+          : "달력에서 날짜를 골라 바로 확정합니다",
+    });
+  } else if (isOnlineBookingMemberOnly(hospital)) {
+    chips.push({
+      key: "online",
+      kind: "reservation",
+      active: false,
+      label: "온라인예약 (회원 전용·확인 불가)",
+      tooltip: "로그인해야 보이는 경로라 예약 방식을 확인하지 못했습니다",
+    });
+  } else {
+    chips.push({
+      key: "online",
+      kind: "reservation",
+      active: false,
+      label: "온라인예약 (미제공)",
+    });
+  }
 
   chips.push(
     hospital.phone
