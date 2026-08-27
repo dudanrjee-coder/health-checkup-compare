@@ -54,6 +54,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-severance",
   "seoul-korea-anam",
   "seoul-catholic-seoul-st-marys",
+  "gyeonggi-ajou",
+  "gyeonggi-snubh",
+  "gyeonggi-korea-ansan",
+  "chungnam-dankook",
 ]);
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
