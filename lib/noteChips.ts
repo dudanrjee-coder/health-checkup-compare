@@ -177,10 +177,14 @@ export function deriveChips(hospital: Hospital): Chip[] {
       active: true,
       label: "온라인예약 바로가기 ↗",
       href: hospital.bookingUrl,
+      // bookingType이 비어 있으면 "달력에서 바로 확정"으로 단정하면 안 된다.
+      // 페이지는 열리는데 뒷단계를 확인하지 못한 경우가 있다(54번 항목과 같은 계열).
       tooltip:
         hospital.bookingType === "예약신청"
           ? "신청 후 상담원이 전화로 확정합니다"
-          : "달력에서 날짜를 골라 바로 확정합니다",
+          : hospital.bookingType === "자율예약"
+          ? "달력에서 날짜를 골라 바로 확정합니다"
+          : "예약 방식(즉시 확정/상담원 확정)은 확인하지 못했습니다",
     });
   } else if (isOnlineBookingMemberOnly(hospital)) {
     chips.push({

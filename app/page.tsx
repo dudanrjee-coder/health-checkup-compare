@@ -27,12 +27,14 @@ import {
  * - seoul-hongik: 온라인 예약이 없고 표가 거의 비어 있는 쪽(46번 항목)
  * - daejeon-chungnam-univ: 온라인 예약이 있고 표가 채워져 있는 쪽(47번 항목)
  * - daegu-keimyung-dongsan, gwangju-chosun: 재조사 배치 1 완료(52번 항목)
+ * - ulsan-uuh: 재조사 배치 2(55번 항목)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
   "daejeon-chungnam-univ",
   "daegu-keimyung-dongsan",
   "gwangju-chosun",
+  "ulsan-uuh",
 ]);
 
 // Leaflet은 window에 의존하므로 서버 렌더링에서 제외한다.
