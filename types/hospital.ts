@@ -63,8 +63,6 @@ export interface Hospital {
   waitingPeriod?: string;
   /** 주차/대중교통 접근성 정보 */
   accessInfo?: string;
-  /** 검진 소요시간 */
-  duration?: string;
   /** 결과 통보 방식 */
   resultNotice?: string;
   /** 검진 후 식사 제공 여부 (예: "제공(빵/우유 등 간단식)", "미제공") */

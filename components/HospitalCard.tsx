@@ -10,7 +10,6 @@ const BADGE_BASE = "rounded-full px-2 py-0.5 text-[11px] font-medium";
 const DETAIL_FIELDS: { key: keyof Hospital; label: string }[] = [
   { key: "affiliation", label: "소속" },
   { key: "priceRange", label: "가격대" },
-  { key: "duration", label: "소요시간" },
   { key: "waitingPeriod", label: "예약 대기" },
   { key: "resultNotice", label: "결과 통보" },
   { key: "mealProvided", label: "식사 제공" },

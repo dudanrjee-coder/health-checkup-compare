@@ -261,9 +261,6 @@ export function deriveChips(hospital: Hospital): Chip[] {
     });
   }
 
-  if (hospital.duration)
-    chips.push({ key: "duration", kind: "info", label: `소요 ${hospital.duration}` });
-
   // (C) 국가검진 — 호버·탭하면 확인일만 보여 준다
   if (hospital.nationalScreeningDesignated === true)
     chips.push({
