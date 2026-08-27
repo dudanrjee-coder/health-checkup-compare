@@ -86,12 +86,26 @@ export function splitNoteParagraphs(note?: string): NoteParagraph[] {
  * 미게시로 확정한 문단(`"온라인 예약 경로는 홈페이지에 미게시…"`)은 제외한다.
  */
 const MEMBER_ONLY_RE = /로그인|회원 전용|비회원|본인인증/;
+/** 경로는 있는데 어디로 가는지 확인하지 못한 경우(55번 항목의 이대목동 유형) */
+const UNVERIFIED_RE = /확인하지 못|확인 불가|확인되지 않/;
 
-export function isOnlineBookingMemberOnly(hospital: Hospital): boolean {
-  if (hospital.bookingUrl) return false;
-  return splitNoteParagraphs(hospital.note)
+export type OnlineBookingState = "available" | "memberOnly" | "unverified" | "none";
+
+/**
+ * 온라인 예약 칩이 어느 갈래인지 정한다.
+ *
+ * `bookingUrl`이 비어 있다고 해서 "온라인 예약이 없다"는 뜻은 아니다. 8번 규칙이
+ * 로그인 전용 경로와 확인하지 못한 경로를 모두 비우게 하기 때문이다. 셋을 한
+ * 칩으로 묶으면 카드가 "없다"고 단정한다(53·54번 항목).
+ */
+export function onlineBookingState(hospital: Hospital): OnlineBookingState {
+  if (hospital.bookingUrl) return "available";
+  const booking = splitNoteParagraphs(hospital.note)
     .filter((p) => p.topic === "booking")
-    .some((p) => MEMBER_ONLY_RE.test(p.text) && !p.text.includes("미게시"));
+    .filter((p) => !p.text.includes("미게시"));
+  if (booking.some((p) => MEMBER_ONLY_RE.test(p.text))) return "memberOnly";
+  if (booking.some((p) => UNVERIFIED_RE.test(p.text))) return "unverified";
+  return "none";
 }
 
 /**
@@ -186,13 +200,21 @@ export function deriveChips(hospital: Hospital): Chip[] {
           ? "달력에서 날짜를 골라 바로 확정합니다"
           : "예약 방식(즉시 확정/상담원 확정)은 확인하지 못했습니다",
     });
-  } else if (isOnlineBookingMemberOnly(hospital)) {
+  } else if (onlineBookingState(hospital) === "memberOnly") {
     chips.push({
       key: "online",
       kind: "reservation",
       active: false,
       label: "온라인예약 (회원 전용·확인 불가)",
       tooltip: "로그인해야 보이는 경로라 예약 방식을 확인하지 못했습니다",
+    });
+  } else if (onlineBookingState(hospital) === "unverified") {
+    chips.push({
+      key: "online",
+      kind: "reservation",
+      active: false,
+      label: "온라인예약 (확인 불가)",
+      tooltip: "예약 버튼은 있으나 연결되는 경로를 확인하지 못했습니다",
     });
   } else {
     chips.push({
