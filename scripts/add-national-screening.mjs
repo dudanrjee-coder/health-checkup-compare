@@ -36,8 +36,24 @@ const NOT_DESIGNATED = {
 };
 
 /** 명단에서 확인된 병원에 붙일 기본 문구(2026-08-18 CSV 대조분) */
-const DESIGNATED_SENTENCE =
-  "국가건강검진 지정기관(국민건강보험공단 검진기관 명단 확인, 2026-08-18 기준). 정부가 상급종합병원의 국가검진 참여 범위를 중장기 검토 중이라 향후 변경될 수 있음.";
+const DESIGNATED_SENTENCE_BASE =
+  "국가건강검진 지정기관(국민건강보험공단 검진기관 명단 확인, 2026-08-18 기준).";
+
+/**
+ * 이 단서는 말 그대로 상급종합병원 이야기라 종합병원에는 사실이 아니다.
+ * 예전에는 기본 문구에 이 절이 붙어 있어서, 개별 문구가 없는 종합병원까지
+ * 싸잡아 달고 있었다(2026-08-28에 종합병원 5곳에서 발견해 정정).
+ * 그래서 기본 문구를 tier에 따라 조립하도록 바꿨다 — 앞으로 개별 문구 없이
+ * 추가되는 종합병원도 이 절을 받지 않는다.
+ */
+const TERTIARY_ONLY_CAVEAT =
+  "정부가 상급종합병원의 국가검진 참여 범위를 중장기 검토 중이라 향후 변경될 수 있음.";
+
+function defaultDesignatedSentence(hospital) {
+  return hospital.tier === "상급종합병원"
+    ? `${DESIGNATED_SENTENCE_BASE} ${TERTIARY_ONLY_CAVEAT}`
+    : DESIGNATED_SENTENCE_BASE;
+}
 
 /**
  * 대조 시점·근거가 다른 병원은 여기서 문구를 따로 지정한다.
@@ -446,7 +462,13 @@ function assertStrippable(maps) {
 }
 
 assertStrippable({ NOT_DESIGNATED, UNDETERMINED, DESIGNATED_SENTENCE_BY_ID });
-assertStrippable({ DESIGNATED_SENTENCE: { _default: DESIGNATED_SENTENCE } });
+// 기본 문구는 tier에 따라 두 형태로 조립되므로 둘 다 걷어내지는지 확인한다.
+assertStrippable({
+  DESIGNATED_SENTENCE: {
+    _default_general: defaultDesignatedSentence({ tier: "종합병원" }),
+    _default_tertiary: defaultDesignatedSentence({ tier: "상급종합병원" }),
+  },
+});
 
 /**
  * 국가검진 문구는 note의 **마지막 문단**으로 붙인다(40번 항목).
@@ -502,7 +524,7 @@ async function main() {
     hospital.nationalScreeningDesignated = true;
     hospital.note = withSentence(
       hospital.note,
-      DESIGNATED_SENTENCE_BY_ID[hospital.id] ?? DESIGNATED_SENTENCE
+      DESIGNATED_SENTENCE_BY_ID[hospital.id] ?? defaultDesignatedSentence(hospital)
     );
     designated += 1;
   }
