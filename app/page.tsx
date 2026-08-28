@@ -35,6 +35,7 @@ import {
  * - 전북·제주 종합병원 3곳: 종합병원 재조사 배치 2(71번 항목)
  * - 세종 종합병원 2곳: 종합병원 재조사 배치 3(72번 항목)
  * - 경남 종합병원 2곳: 종합병원 재조사 배치 4(73번 항목)
+ * - 경기 종합병원 3곳: 종합병원 재조사 배치 5(74번 항목)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -85,6 +86,9 @@ const CHIP_PREVIEW_IDS = new Set([
   "sejong-nk",
   "gyeongnam-gnuch-changwon",
   "gyeongnam-changwon-fatima",
+  "gyeonggi-bundang-jesaeng",
+  "gyeonggi-dongsuwon",
+  "gyeonggi-bucheon-sejong",
 ]);
 
 export default function Home() {
