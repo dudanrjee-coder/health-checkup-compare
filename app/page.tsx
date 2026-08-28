@@ -126,6 +126,11 @@ const CHIP_PREVIEW_IDS = new Set([
   "busan-sungmo",
   "busan-maryknoll",
   "busan-good-moonhwa",
+  "busan-dongrae-bongseng",
+  "busan-centum",
+  "busan-medical-center",
+  "busan-bohun",
+  "busan-dongeui",
 ]);
 
 export default function Home() {
