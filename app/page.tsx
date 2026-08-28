@@ -135,6 +135,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "incheon-sarang",
   "incheon-medical-center",
   "incheon-christian",
+  "incheon-paik",
+  "incheon-uvis",
+  "incheon-nasaret",
+  "incheon-redcross",
 ]);
 
 export default function Home() {
