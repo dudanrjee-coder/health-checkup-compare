@@ -156,6 +156,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "gwangju-hanam-sungshim",
   "gwangju-ks",
   "gwangju-central",
+  "gwangju-city",
+  "gwangju-donga",
+  "gwangju-gwangju-hosp",
+  "gwangju-ilgok",
 ]);
 
 export default function Home() {
