@@ -131,6 +131,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "busan-medical-center",
   "busan-bohun",
   "busan-dongeui",
+  "incheon-naeun",
+  "incheon-sarang",
+  "incheon-medical-center",
+  "incheon-christian",
 ]);
 
 export default function Home() {
