@@ -118,6 +118,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "daejeon-daecheong",
   "daejeon-bohun",
   "daejeon-comwel",
+  "busan-good-samsun",
+  "busan-samyook",
+  "busan-good-gangan",
+  "busan-on",
 ]);
 
 export default function Home() {
