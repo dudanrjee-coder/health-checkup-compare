@@ -160,6 +160,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "gwangju-donga",
   "gwangju-gwangju-hosp",
   "gwangju-ilgok",
+  "gwangju-hyundae",
+  "gwangju-heemang",
+  "gwangju-unam-hanguk",
+  "gwangju-happyview",
 ]);
 
 export default function Home() {
