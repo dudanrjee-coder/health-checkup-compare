@@ -40,6 +40,7 @@ import {
  * - 울산 종합병원 4곳: 종합병원 재조사 배치 7(76번 항목)
  * - 대구 종합병원 4곳: 종합병원 재조사 배치 8(77번 항목)
  * - 대구 종합병원 나머지 4곳: 종합병원 재조사 배치 9(78번 항목)
+ * - 대전 종합병원 4곳: 종합병원 재조사 배치 10(79번 항목)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -108,6 +109,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "daegu-kwak",
   "daegu-gangnam",
   "daegu-cheonju-seongsam",
+  "daejeon-eulji-univ",
+  "daejeon-catholic-daejeon-st-marys",
+  "daejeon-sun",
+  "daejeon-yuseong-sun",
 ]);
 
 export default function Home() {
