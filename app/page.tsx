@@ -148,6 +148,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "incheon-himchan",
   "incheon-bupyeong-serim",
   "incheon-comwel",
+  "gwangju-christian",
+  "jeonnam-suncheon-carollo",
+  "gwangju-suwan",
+  "gwangju-singa",
 ]);
 
 export default function Home() {
