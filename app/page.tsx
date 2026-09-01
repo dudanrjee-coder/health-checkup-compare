@@ -58,6 +58,7 @@ import {
  *   대림성모병원: 서울 재조사 배치(5곳). 국립중앙의료원은 검진절차
  *   안내 페이지 자체가 "서비스 준비중"이라 priceRange·resultNotice
  *   등 다수 필드를 미게시로 남겼다.
+ * - 명지성모병원·성애병원: 서울 재조사 배치(2곳).
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -199,6 +200,8 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-geumgang-asan",
   "seoul-nmc",
   "seoul-daerim-sungmo",
+  "seoul-myongji-sungmo",
+  "seoul-sungae",
 ]);
 
 export default function Home() {
