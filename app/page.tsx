@@ -67,6 +67,11 @@ import {
  *   자바스크립트로 렌더링돼 WebFetch로 본문을 읽지 못해 대부분 필드를
  *   미게시로 남겼다. 서남병원은 요금표 추출이 두 차례 서로 다른 값을
  *   내놓아(요약 도구 신뢰도 문제) priceRange를 채우지 않았다.
+ * - 녹색병원·서울의료원: 서울 재조사 배치(2곳). 남은 병원 중
+ *   동부제일병원(dbjeil.co.kr, 인증서 오류로 접속 불가)과
+ *   청구성심병원·구로성심병원(WebFetch 403 차단)은 사이트 자체에
+ *   접근하지 못해 데이터를 건드리지 않고 보류했다 — 153곳 중 이
+ *   세 곳만 아직 0번 체크리스트를 완료하지 못한 상태다.
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -217,6 +222,8 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-seonam",
   "seoul-redcross",
   "seoul-seran",
+  "seoul-green",
+  "seoul-medical-center",
 ]);
 
 export default function Home() {
