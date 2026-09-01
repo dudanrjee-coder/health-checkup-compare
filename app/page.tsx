@@ -62,6 +62,11 @@ import {
  * - 서울성심병원·서울특별시동부병원: 서울 재조사 배치(2곳). 동부병원은
  *   찾아오시는 길 페이지의 요약 추출이 공식 주소와 어긋나(강남구로
  *   잘못 표시) accessInfo를 채우지 않고 비워 두었다.
+ * - 미즈메디병원·서울부민병원·서울특별시서남병원·서울적십자병원·
+ *   세란병원: 서울 재조사 배치(5곳). 미즈메디병원은 하위 페이지가
+ *   자바스크립트로 렌더링돼 WebFetch로 본문을 읽지 못해 대부분 필드를
+ *   미게시로 남겼다. 서남병원은 요금표 추출이 두 차례 서로 다른 값을
+ *   내놓아(요약 도구 신뢰도 문제) priceRange를 채우지 않았다.
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -207,6 +212,11 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-sungae",
   "seoul-sungsim",
   "seoul-dongbu",
+  "seoul-mizmedi",
+  "seoul-bumin",
+  "seoul-seonam",
+  "seoul-redcross",
+  "seoul-seran",
 ]);
 
 export default function Home() {
