@@ -54,6 +54,10 @@ import {
  * - 대한병원·혜민병원·희명병원·원자력병원: 서울 재조사 배치(4곳). 같은
  *   배치에서 시도한 청구성심병원·구로성심병원은 검진센터 도메인이
  *   WebFetch를 403으로 차단해 보류했다.
+ * - 서울특별시보라매병원·동신병원·금강아산병원·국립중앙의료원·
+ *   대림성모병원: 서울 재조사 배치(5곳). 국립중앙의료원은 검진절차
+ *   안내 페이지 자체가 "서비스 준비중"이라 priceRange·resultNotice
+ *   등 다수 필드를 미게시로 남겼다.
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -190,6 +194,11 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-hyemin",
   "seoul-heemyoung",
   "seoul-atomic",
+  "seoul-boramae",
+  "seoul-dongshin",
+  "seoul-geumgang-asan",
+  "seoul-nmc",
+  "seoul-daerim-sungmo",
 ]);
 
 export default function Home() {
