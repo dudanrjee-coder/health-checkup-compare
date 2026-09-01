@@ -59,6 +59,9 @@ import {
  *   안내 페이지 자체가 "서비스 준비중"이라 priceRange·resultNotice
  *   등 다수 필드를 미게시로 남겼다.
  * - 명지성모병원·성애병원: 서울 재조사 배치(2곳).
+ * - 서울성심병원·서울특별시동부병원: 서울 재조사 배치(2곳). 동부병원은
+ *   찾아오시는 길 페이지의 요약 추출이 공식 주소와 어긋나(강남구로
+ *   잘못 표시) accessInfo를 채우지 않고 비워 두었다.
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -202,6 +205,8 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-daerim-sungmo",
   "seoul-myongji-sungmo",
   "seoul-sungae",
+  "seoul-sungsim",
+  "seoul-dongbu",
 ]);
 
 export default function Home() {
