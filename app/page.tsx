@@ -42,6 +42,11 @@ import {
  * - 대구 종합병원 나머지 4곳: 종합병원 재조사 배치 9(78번 항목)
  * - 대전 종합병원 4곳: 종합병원 재조사 배치 10(79번 항목)
  * - 대전 종합병원 나머지 4곳: 종합병원 재조사 배치 11(80번 항목)
+ *
+ * 배치 12~23(부산·인천·광주)은 이 목록에 따로 적지 않았다. 어느 배치에서
+ * 들어왔는지는 커밋 로그로 따라가는 편이 정확하다.
+ *
+ * - 삼육서울병원·에이치플러스 양지병원: 서울 재조사 시작(배치 번호 없이 2곳)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -168,6 +173,8 @@ const CHIP_PREVIEW_IDS = new Set([
   "gwangju-mirae21",
   "gwangju-sangmoo",
   "gwangju-seogwang",
+  "seoul-sahmyook",
+  "seoul-hplus-yangji",
 ]);
 
 export default function Home() {
