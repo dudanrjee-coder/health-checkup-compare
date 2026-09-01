@@ -50,6 +50,7 @@ import {
  * - 한일병원: 서울 재조사(단독 1곳)
  * - 기쁨병원: 서울 재조사(단독 1곳, 0번 체크리스트 이전 데이터 재확인)
  * - 국립경찰병원: 서울 재조사(단독 1곳, 0번 체크리스트 이전 데이터 재확인)
+ * - 중앙보훈병원: 서울 재조사(단독 1곳, 검진 메뉴 부재를 재확인)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -181,6 +182,7 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-hanil",
   "seoul-gibbeum",
   "seoul-police",
+  "seoul-jungang-bohun",
 ]);
 
 export default function Home() {
