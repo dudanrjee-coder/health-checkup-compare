@@ -47,6 +47,7 @@ import {
  * 들어왔는지는 커밋 로그로 따라가는 편이 정확하다.
  *
  * - 삼육서울병원·에이치플러스 양지병원: 서울 재조사 시작(배치 번호 없이 2곳)
+ * - 한일병원: 서울 재조사(단독 1곳)
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -175,6 +176,7 @@ const CHIP_PREVIEW_IDS = new Set([
   "gwangju-seogwang",
   "seoul-sahmyook",
   "seoul-hplus-yangji",
+  "seoul-hanil",
 ]);
 
 export default function Home() {
