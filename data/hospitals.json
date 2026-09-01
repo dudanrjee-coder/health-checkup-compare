@@ -1239,7 +1239,9 @@
     "accessInfo": "파티마병원 정류장 하차 — 창원공고·도로교통공단 방면은 지선 10~14·30~32·34·35·213·214·224, 간선 103·110·111·151, 좌석 58·3001이 서고, 종합터미널 방면은 지선 224·좌석 58이 선다. 검진 차량은 검진 완료 시까지 주차 무료(진료과 접수데스크 또는 중앙안내에 차량 등록, 환자·보호자 1대).",
     "resultNotice": "내원 상담·우편발송·E-MAIL·모바일 중 선택. 내원상담은 검진 10일 이후 전문의와 상담하고, 우편은 검진 10일 이후 등기로 발송한다. 검진이력·결과조회는 홈페이지에서 본인인증 후 가능",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 35.2372930,
+    "lng": 128.6459130
   },
   {
     "id": "jeju-halla",
@@ -1323,7 +1325,9 @@
     "accessInfo": "급행버스 2번, 간선버스 701·706번, 지선버스 611·614·615·617·711번 이용",
     "resultNotice": "",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 36.3683976,
+    "lng": 127.4285488
   },
   {
     "id": "busan-good-gangan",
@@ -1579,7 +1583,9 @@
     "mealProvided": "",
     "bookingUrl": "http://www.dreamh.co.kr/front/reservation/reservation.php?tit_reserv=%EA%B1%B4%EA%B0%95%EA%B2%80%EC%A7%84%EC%98%88%EC%95%BD",
     "bookingType": "예약신청",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 35.8395584,
+    "lng": 128.5744911
   },
   {
     "id": "daegu-koo",
@@ -1684,7 +1690,9 @@
     "accessInfo": "지하철 1호선 중앙로역 4번 출구에서 도보 10분, 2호선 반월당역 15번 출구에서 도보 15분. 곽병원앞1·곽병원앞2·곽병원건너 정류장 하차(간선 156·232·240·309·425·501·623·707·동구1-1, 급행 급행1·급행3·급행5). 종합검진 수진자는 주차 무료(진료비 영수증 확인).",
     "resultNotice": "종합결과는 방문 상담 또는 일반우편으로 통보",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 35.8710213,
+    "lng": 128.5885849
   },
   {
     "id": "daegu-gangnam",
@@ -1724,7 +1732,9 @@
     "accessInfo": "지하철 2호선 신매역 5번 출구에서 도보 1분. 신매광장앞·신매광장건너 정류장에서 도보 5분(간선 100·100-1·309·349·399·449·509·649·724·840·909·990·991, 지선 수성2), 신매역 3·4번 출구는 간선 937. 종합검진 수진자는 당일 주차 무료(종합검진실 확인 + 주차권).",
     "resultNotice": "각종 검사결과는 전산시스템 종합처리로 4~5일 내에 판정되며, 결과에 따라 각과 전문의 협진으로 치료를 연계한다",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 35.8402518,
+    "lng": 128.7057102
   },
   {
     "id": "ulsan-joongang",
@@ -1850,7 +1860,9 @@
     "accessInfo": "동인천역 북광장에서 112·28번 송현주공 하차(506·24번은 서흥초교 하차). 주차장 외래·검진·응급실 8시간 무료.",
     "resultNotice": "검진결과는 15일 이내에 우편으로 발송되며, 1차 검진 유소견 시 2차 검진 실시 및 진료 안내",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 37.4817037,
+    "lng": 126.6458376
   },
   {
     "id": "incheon-uvis",
@@ -1957,7 +1969,9 @@
     "accessInfo": "인천1호선 작전역 6번 출구에서 간선 2-1번을 타고 동보아파트 하차. 종합검진·일반검진 6시간 주차 무료.",
     "resultNotice": "",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 37.5324735,
+    "lng": 126.7368717
   },
   {
     "id": "incheon-new-sungmin",
@@ -2169,7 +2183,9 @@
     "accessInfo": "첨단병원입구 정류장 하차(송정33), 쌍암공원 정류장(첨단09·풍암16·첨단193), 광주교통방송국 정류장(문흥39·첨단40). 종합검진 고객 12시간 주차 무료(종합검진센터에서 주차권 인증).",
     "resultNotice": "종합건강검진 결과는 홈페이지에 가입·로그인한 뒤 '종합건강검진 결과보기'에서 조회한다(의료정보통신망법 강화로 로그인이 필요하다고 병원이 안내). 우편·방문 등 다른 통보 방법은 미게시",
     "mealProvided": "",
-    "nationalScreeningDesignated": true
+    "nationalScreeningDesignated": true,
+    "lat": 35.2211088,
+    "lng": 126.8453041
   },
   {
     "id": "gwangju-hanam-sungshim",
@@ -2210,7 +2226,9 @@
     "resultNotice": "종합검진 결과는 검진 후 2주 뒤 우편 발송되며, 궁금한 점은 전문간호사와 전화상담이 가능하다. 내원 결과상담은 예약제(09:00~16:00)로 운영하고, 공단검진 결과는 검진기관에서 15일 이내 발송",
     "mealProvided": "",
     "nationalScreeningDesignated": true,
-    "bookingUrl": "https://www.lifer.co.kr/www/Hsp/GoodsList?id=kshosp&gt=2"
+    "bookingUrl": "https://www.lifer.co.kr/www/Hsp/GoodsList?id=kshosp&gt=2",
+    "lat": 35.1979238,
+    "lng": 126.8331484
   },
   {
     "id": "gwangju-central",
