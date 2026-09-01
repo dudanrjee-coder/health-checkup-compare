@@ -51,6 +51,9 @@ import {
  * - 기쁨병원: 서울 재조사(단독 1곳, 0번 체크리스트 이전 데이터 재확인)
  * - 국립경찰병원: 서울 재조사(단독 1곳, 0번 체크리스트 이전 데이터 재확인)
  * - 중앙보훈병원: 서울 재조사(단독 1곳, 검진 메뉴 부재를 재확인)
+ * - 대한병원·혜민병원·희명병원·원자력병원: 서울 재조사 배치(4곳). 같은
+ *   배치에서 시도한 청구성심병원·구로성심병원은 검진센터 도메인이
+ *   WebFetch를 403으로 차단해 보류했다.
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -183,6 +186,10 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-gibbeum",
   "seoul-police",
   "seoul-jungang-bohun",
+  "seoul-daehan",
+  "seoul-hyemin",
+  "seoul-heemyoung",
+  "seoul-atomic",
 ]);
 
 export default function Home() {
