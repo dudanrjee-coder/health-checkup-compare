@@ -86,6 +86,20 @@ export function splitNoteParagraphs(note?: string): NoteParagraph[] {
  * 미게시로 확정한 문단(`"온라인 예약 경로는 홈페이지에 미게시…"`)은 제외한다.
  */
 const MEMBER_ONLY_RE = /로그인|회원 전용|비회원|본인인증/;
+/**
+ * **"로그인이 필요 없다"까지 회원 전용으로 잡히던 것을 막는다.**
+ *
+ * `MEMBER_ONLY_RE`가 단어만 보기 때문에 `"로그인은 필요 없으나 검진용 경로가
+ * 아니다"`처럼 **로그인을 부정하는 문장이 오히려 회원 전용 근거로 뒤집혔다**
+ * (삼육서울병원). 칩이 "온라인예약 (회원 전용·확인 불가)"로 나오는데 실제로는
+ * 로그인 없이 들어갈 수 있고 검진 예약 경로 자체가 없는 경우였다.
+ *
+ * 그래서 회원 전용 여부를 따지기 전에 이런 **부정 표현을 먼저 지운다.** 지우는
+ * 대상은 로그인을 부정하는 구절뿐이라, 같은 문단에 진짜 회원 전용 안내가 함께
+ * 있으면 그것은 그대로 남아 memberOnly로 잡힌다.
+ */
+const NEGATED_LOGIN_RE =
+  /로그인(은|이)? ?(필요 ?없|불필요|안 ?해도|하지 ?않아도)|로그인 ?없이|회원가입 ?없이/g;
 /** 경로는 있는데 어디로 가는지 확인하지 못한 경우(55번 항목의 이대목동 유형) */
 const UNVERIFIED_RE = /확인하지 못|확인 불가|확인되지 않/;
 
@@ -103,7 +117,8 @@ export function onlineBookingState(hospital: Hospital): OnlineBookingState {
   const booking = splitNoteParagraphs(hospital.note)
     .filter((p) => p.topic === "booking")
     .filter((p) => !p.text.includes("미게시"));
-  if (booking.some((p) => MEMBER_ONLY_RE.test(p.text))) return "memberOnly";
+  if (booking.some((p) => MEMBER_ONLY_RE.test(p.text.replace(NEGATED_LOGIN_RE, ""))))
+    return "memberOnly";
   if (booking.some((p) => UNVERIFIED_RE.test(p.text))) return "unverified";
   return "none";
 }
