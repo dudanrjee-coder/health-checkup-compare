@@ -41,6 +41,18 @@ export function getHeaderStats() {
   };
 }
 
+/**
+ * "최근 업데이트" 표시용. 153곳의 verifiedAt(YYYY-MM-DD, 시간 정보 없음) 중
+ * 가장 최근 값을 찾는다. 값이 없는 병원은 제외하고, 하나도 없으면 null.
+ */
+export function getLatestVerifiedAt(): string | null {
+  const dates = hospitals
+    .map((h) => h.verifiedAt)
+    .filter((v): v is string => Boolean(v && v.trim()));
+  if (dates.length === 0) return null;
+  return dates.reduce((latest, current) => (current > latest ? current : latest));
+}
+
 /** 한 글자만으로 지역이 단정되는 것을 막는다("구" → 대구광역시 같은 오작동 방지) */
 const MIN_SIDO_MATCH_LENGTH = 2;
 

@@ -13,6 +13,7 @@ import {
   filterHospitals,
   findUniqueSidoMatch,
   getHeaderStats,
+  getLatestVerifiedAt,
   getSidosWithData,
   getTierCounts,
   getTiersWithData,
@@ -263,6 +264,18 @@ export default function Home() {
 
   const sidosWithData = useMemo(() => getSidosWithData(), []);
   const headerStats = useMemo(() => getHeaderStats(), []);
+  /**
+   * "최근 업데이트" 표시. hospitals.json의 verifiedAt은 날짜만 있고 시각이
+   * 없어서(예: "2026-09-02"), 시안의 "MM/DD HH:mm" 중 날짜 부분만 실제
+   * 데이터로 채우고 시각은 표시하지 않는다 — 없는 시각을 지어내지 않기
+   * 위해서다.
+   */
+  const latestVerifiedAtLabel = useMemo(() => {
+    const latest = getLatestVerifiedAt();
+    if (!latest) return null;
+    const [, month, day] = latest.split("-");
+    return `${month}/${day}`;
+  }, []);
   // 검색 중에는 지역 선택을 무시하므로 등급 목록도 전국 기준으로 계산한다.
   const tiersWithData = useMemo(
     () => getTiersWithData(isSearching ? null : selectedSido),
@@ -388,13 +401,50 @@ export default function Home() {
           콘텐츠만 max-w-7xl로 가운데 정렬한다. */}
       <header className="bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-6">
+          {/*
+            상단 네비게이션 — 시안에만 있는 디자인 목업용 요소다. 병원
+            찾기/검진 항목/비용 비교/이용 안내 페이지도, 검진예약 기능도
+            실제로는 없다. 실제 페이지가 생기기 전까지는 눌러도 아무 동작을
+            하지 않는 순수 시각 요소로만 둔다(href 없음, onClick 없음).
+          */}
+          <nav className="grid grid-cols-2 items-center gap-3 sm:grid-cols-3">
+            <span className="text-sm font-semibold text-slate-900">
+              전국 건강검진 병원
+            </span>
+            <ul className="col-span-2 hidden items-center justify-center gap-6 text-sm text-slate-600 sm:col-span-1 sm:flex">
+              <li>병원 찾기</li>
+              <li>검진 항목</li>
+              <li>비용 비교</li>
+              <li>이용 안내</li>
+            </ul>
+            <div className="justify-self-end">
+              <button
+                type="button"
+                className="rounded-full bg-[#0c1425] px-4 py-1.5 text-xs font-semibold text-white"
+              >
+                검진예약
+              </button>
+            </div>
+          </nav>
+
           {/* 시계는 시안의 위치(헤더 오른쪽 위 구석)를 그대로 따르되, 제목
               블록이 가운데 정렬이라 같은 줄에 나란히 두면 어색해서 이렇게
-              별도 줄로 뺐다. 시안에 있는 "실시간 진료 가능 여부 반영"·
-              "최근 업데이트" 문구는 우리가 갖고 있지 않은 데이터라 넣지
-              않았다. */}
-          <div className="flex justify-end">
+              별도 줄로 뺐다. 시안의 "실시간 진료 가능 여부 반영" 문구는
+              우리가 갖고 있지 않은 데이터라 넣지 않았다. "최근 업데이트"는
+              hospitals.json 153곳의 verifiedAt 중 가장 최근 날짜를 실제로
+              계산해 넣었다(시각 정보는 데이터에 없어 날짜만 표시). */}
+          <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1">
             <DateTimeClock />
+            {latestVerifiedAtLabel && (
+              <>
+                <span aria-hidden="true" className="text-xs text-slate-400">
+                  ·
+                </span>
+                <span className="text-xs text-slate-500">
+                  최근 업데이트 {latestVerifiedAtLabel}
+                </span>
+              </>
+            )}
           </div>
 
           <div className="flex flex-col items-center gap-4 text-center">

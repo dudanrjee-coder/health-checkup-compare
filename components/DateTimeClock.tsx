@@ -32,7 +32,7 @@ export default function DateTimeClock() {
   if (!now) return null;
 
   return (
-    <p className="flex items-center gap-3 text-xs text-slate-500">
+    <p className="flex items-center gap-3 whitespace-nowrap text-xs text-slate-500">
       <span className="flex items-center gap-1">
         <svg
           aria-hidden="true"
