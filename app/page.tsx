@@ -427,26 +427,6 @@ export default function Home() {
             </div>
           </nav>
 
-          {/* 시계는 시안의 위치(헤더 오른쪽 위 구석)를 그대로 따르되, 제목
-              블록이 가운데 정렬이라 같은 줄에 나란히 두면 어색해서 이렇게
-              별도 줄로 뺐다. 시안의 "실시간 진료 가능 여부 반영" 문구는
-              우리가 갖고 있지 않은 데이터라 넣지 않았다. "최근 업데이트"는
-              hospitals.json 153곳의 verifiedAt 중 가장 최근 날짜를 실제로
-              계산해 넣었다(시각 정보는 데이터에 없어 날짜만 표시). */}
-          <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1">
-            <DateTimeClock />
-            {latestVerifiedAtLabel && (
-              <>
-                <span aria-hidden="true" className="text-xs text-slate-400">
-                  ·
-                </span>
-                <span className="text-xs text-slate-500">
-                  최근 업데이트 {latestVerifiedAtLabel}
-                </span>
-              </>
-            )}
-          </div>
-
           <div className="flex flex-col items-center gap-4 text-center">
             <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
               2026 국가건강검진 시즌
@@ -481,6 +461,36 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-8">
+        {/*
+          그라디언트 헤더와 검색 카드 사이의 흰 배경 줄. 시안 레이아웃과
+          다르게, 왼쪽엔 상태 문구만 두고 날짜·시계·최근 업데이트는 오른쪽에
+          모았다(사용자 지시).
+        */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-slate-500">
+          <span className="flex items-center gap-1.5">
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full bg-emerald-500"
+            />
+            {/* 실제로 실시간 진료 가능 여부를 반영하는 기능은 없다. 시안
+                문구를 그대로 가져온 것이라 오해 소지가 있다 — 나중에 실제
+                기능을 붙이거나, 그 전까지는 문구를 바꿔야 한다. */}
+            실시간 진료 가능 여부 반영
+          </span>
+
+          <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1">
+            <DateTimeClock />
+            {latestVerifiedAtLabel && (
+              <>
+                <span aria-hidden="true" className="text-slate-400">
+                  ·
+                </span>
+                <span>최근 업데이트 {latestVerifiedAtLabel}</span>
+              </>
+            )}
+          </div>
+        </div>
+
         <section className="mb-6 flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-lg shadow-slate-200/60">
           {/* 검색창(넓게) + 지역 선택(좁게) + 검색 버튼을 한 줄에 배치한다.
               지역 드롭다운은 고르는 즉시 바로 필터링되고, 검색 버튼은 검색창
