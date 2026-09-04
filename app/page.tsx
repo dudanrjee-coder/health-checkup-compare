@@ -13,7 +13,6 @@ import {
   filterHospitals,
   findUniqueSidoMatch,
   getHeaderStats,
-  getLatestVerifiedAt,
   getSidosWithData,
   getTierCounts,
   getTiersWithData,
@@ -265,16 +264,16 @@ export default function Home() {
   const sidosWithData = useMemo(() => getSidosWithData(), []);
   const headerStats = useMemo(() => getHeaderStats(), []);
   /**
-   * "최근 업데이트" 표시. hospitals.json의 verifiedAt은 날짜만 있고 시각이
-   * 없어서(예: "2026-09-02"), 시안의 "MM/DD HH:mm" 중 날짜 부분만 실제
-   * 데이터로 채우고 시각은 표시하지 않는다 — 없는 시각을 지어내지 않기
-   * 위해서다.
+   * "조회 기준일" 표시. 데이터 검증 시점(verifiedAt)이 아니라 사용자가
+   * 이 페이지를 연 날짜(MM/DD)다. 서버 렌더링 시점엔 알 수 없으므로
+   * 마운트 후에만 채운다(hydration mismatch 방지 — DateTimeClock과 같은
+   * 이유).
    */
-  const latestVerifiedAtLabel = useMemo(() => {
-    const latest = getLatestVerifiedAt();
-    if (!latest) return null;
-    const [, month, day] = latest.split("-");
-    return `${month}/${day}`;
+  const [todayLabel, setTodayLabel] = useState<string | null>(null);
+  useEffect(() => {
+    const today = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setTodayLabel(`${pad(today.getMonth() + 1)}/${pad(today.getDate())}`);
   }, []);
   // 검색 중에는 지역 선택을 무시하므로 등급 목록도 전국 기준으로 계산한다.
   const tiersWithData = useMemo(
@@ -463,13 +462,14 @@ export default function Home() {
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-8">
         {/* 그라디언트 헤더와 검색 카드 사이의 흰 배경 줄. 왼쪽은 시안과
             동일하게 DateTimeClock 하나로 통일했다(점·날짜·시간·상태 문구가
-            전부 그 컴포넌트 안에 있다). "최근 업데이트"만 오른쪽에 별도로
-            둔다. */}
+            전부 그 컴포넌트 안에 있다). 오른쪽엔 "조회 기준일"만 별도로
+            둔다 — 병원 데이터가 검증된 날짜(verifiedAt)가 아니라 사용자가
+            이 페이지를 조회한 날짜라는 뜻을 분명히 하려고 라벨을 바꿨다. */}
         <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <DateTimeClock />
-          {latestVerifiedAtLabel && (
+          {todayLabel && (
             <span className="text-xs text-slate-500">
-              최근 업데이트 {latestVerifiedAtLabel}
+              조회 기준일 {todayLabel}
             </span>
           )}
         </div>
