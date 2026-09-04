@@ -246,6 +246,11 @@ export default function Home() {
    * 타이핑 도중에는 결과가 잠깐 0건이 되는 일이 흔하므로 그때는 켜지 않는다.
    */
   const [submittedNoMatch, setSubmittedNoMatch] = useState(false);
+  /**
+   * "국가검진 지정만" 토글의 시각적 상태만 들고 있다. 아직 results 필터링에는
+   * 연결하지 않았다 — 실제 필터 로직은 다음 작업에서 붙일 예정이다.
+   */
+  const [nationalOnly, setNationalOnly] = useState(false);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // 입력할 때마다 필터링하지 않도록 200ms 디바운스를 둔다.
@@ -267,6 +272,11 @@ export default function Home() {
   const tierCounts = useMemo(
     () => getTierCounts(isSearching ? null : selectedSido),
     [isSearching, selectedSido]
+  );
+  // "전체" 버튼 숫자는 tierCounts 총합과 항상 같은 범위로 맞춘다.
+  const allCount = useMemo(
+    () => Object.values(tierCounts).reduce((sum, n) => sum + n, 0),
+    [tierCounts]
   );
 
   // 아직 데이터가 없는 지역을 고른 경우(현재는 없지만 시/도가 늘어나면 발생)
@@ -367,6 +377,11 @@ export default function Home() {
     });
   }
 
+  function handleClearTiers() {
+    setSelectedHospitalId(null);
+    setSelectedTiers(new Set());
+  }
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
       <header className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
@@ -408,7 +423,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="mb-6 flex flex-col gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
+      <section className="mb-6 flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-lg shadow-slate-200/60">
         {/* 검색창(넓게) + 지역 선택(좁게) + 검색 버튼을 한 줄에 배치한다.
             지역 드롭다운은 고르는 즉시 바로 필터링되고, 검색 버튼은 검색창
             엔터(handleSearchSubmit)와 같은 동작을 하는 시각적 트리거다. */}
@@ -430,18 +445,47 @@ export default function Home() {
           <button
             type="button"
             onClick={handleSearchSubmit}
-            className="shrink-0 rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+            className="shrink-0 rounded-lg bg-[#0c1425] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
           >
             검색
           </button>
         </div>
 
-        <TierFilter
-          selected={selectedTiers}
-          onToggle={handleTierToggle}
-          tiersWithData={tiersWithData}
-          tierCounts={tierCounts}
-        />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <TierFilter
+            selected={selectedTiers}
+            onToggle={handleTierToggle}
+            tiersWithData={tiersWithData}
+            tierCounts={tierCounts}
+            allCount={allCount}
+            onClearAll={handleClearTiers}
+          />
+
+          {/*
+            "국가검진 지정만" 토글 — 지금은 시각적 상태만 켜고 끈다.
+            results 필터링에는 아직 연결하지 않았다. 다음 작업에서
+            nationalOnly 값을 filterHospitals 쪽 조건에 실제로 반영할 예정이다.
+          */}
+          <label className="ml-auto flex shrink-0 cursor-pointer select-none items-center gap-2 text-xs font-medium text-slate-500">
+            국가검진 지정만
+            <button
+              type="button"
+              role="switch"
+              aria-checked={nationalOnly}
+              onClick={() => setNationalOnly((prev) => !prev)}
+              className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+                nationalOnly ? "bg-blue-600" : "bg-slate-300"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                  nationalOnly ? "translate-x-4" : "translate-x-0.5"
+                }`}
+              />
+            </button>
+          </label>
+        </div>
+
         {isSearching && (
           <p className="text-xs text-slate-500">
             검색 중에는 지역 선택을 무시하고 전국에서 찾습니다. 등급 필터는 함께
@@ -453,31 +497,46 @@ export default function Home() {
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         {/* 모바일에서는 지도가 위, 데스크톱에서는 리스트가 왼쪽 */}
         <section className="order-2 flex flex-col gap-4 lg:order-1 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-1">
-          <p className="text-sm text-slate-500">
-            {isSearching ? (
-              <>
-                <span className="font-medium text-slate-700">
-                  &quot;{query.trim()}&quot; 검색
-                </span>{" "}
-                병원 {results.length}곳
-              </>
-            ) : selectedSido ? (
-              <>
-                <span className="font-medium text-slate-700">
-                  {selectedSido}
-                </span>{" "}
-                검진병원 {results.length}곳
-              </>
-            ) : (
-              <>
-                <span className="font-medium text-slate-700">전국</span> 병원{" "}
-                {results.length}곳
-              </>
-            )}
-            {results.length > 0 && (
-              <> · 지도 표시 {mappableResults.length}곳</>
-            )}
-          </p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm text-slate-500">
+              {isSearching ? (
+                <>
+                  <span className="font-medium text-slate-700">
+                    &quot;{query.trim()}&quot; 검색
+                  </span>{" "}
+                  병원 {results.length}곳
+                </>
+              ) : selectedSido ? (
+                <>
+                  <span className="font-medium text-slate-700">
+                    {selectedSido}
+                  </span>{" "}
+                  검진병원 {results.length}곳
+                </>
+              ) : (
+                <>
+                  <span className="font-medium text-slate-700">전국</span>{" "}
+                  병원 {results.length}곳
+                </>
+              )}
+              {results.length > 0 && (
+                <> · 지도 표시 {mappableResults.length}곳</>
+              )}
+            </p>
+
+            {/*
+              정렬 드롭다운 — 지금은 자리만 잡아둔 시각적 placeholder다.
+              옵션이 "추천순" 하나뿐이라 골라도 목록 순서는 바뀌지 않는다.
+              실제 정렬 기준·로직은 다음 작업에서 정해서 연결할 예정이다.
+            */}
+            <select
+              aria-label="정렬 기준"
+              defaultValue="recommended"
+              className="shrink-0 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="recommended">추천순</option>
+            </select>
+          </div>
 
           {submittedNoMatch ? (
             <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">

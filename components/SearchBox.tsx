@@ -49,6 +49,20 @@ export default function SearchBox({
         병원명 또는 지역 검색
       </label>
       <div className="relative">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400"
+        >
+          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.6" />
+            <path
+              d="M13.5 13.5L17 17"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
         <input
           id="hospital-search"
           type="search"
@@ -64,7 +78,7 @@ export default function SearchBox({
             onSubmit?.();
           }}
           placeholder="병원명 또는 지역 검색"
-          className={`w-full rounded-lg border border-slate-300 bg-white py-2 pl-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+          className={`w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-9 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${
             hoverCapable ? "pr-16" : "pr-9"
           }`}
         />

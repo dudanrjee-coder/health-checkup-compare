@@ -10,6 +10,10 @@ interface TierFilterProps {
   tiersWithData: Set<Tier>;
   /** 버튼 옆에 표시할 실제 개수(hospitals.json 기준, lib/hospitals.ts의 getTierCounts) */
   tierCounts: Record<Tier, number>;
+  /** "전체" 버튼에 표시할 합계(tierCounts 총합) */
+  allCount: number;
+  /** "전체" 버튼을 누르면 등급 필터를 모두 해제한다 */
+  onClearAll: () => void;
 }
 
 /**
@@ -28,59 +32,79 @@ export default function TierFilter({
   onToggle,
   tiersWithData,
   tierCounts,
+  allCount,
+  onClearAll,
 }: TierFilterProps) {
+  const isAllActive = selected.size === 0;
+
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="text-sm font-medium text-slate-700">등급 필터</span>
-      <div className="flex flex-wrap gap-2">
-        {TIER_LIST.map((tier) => {
-          const hasData = tiersWithData.has(tier);
-          const isActive = selected.has(tier);
-          const color = TIER_COLORS[tier];
+    <div className="flex flex-wrap items-center gap-2">
+      {/* 시안에는 "등급 필터" 같은 굵은 섹션 라벨이 없고, 버튼 줄 왼쪽에
+          작은 회색 라벨만 있다. */}
+      <span className="mr-1 shrink-0 text-xs font-medium text-slate-400">
+        등급
+      </span>
 
-          // 데이터가 없는 등급은 지도에 마커도 없으므로 등급 색을 쓰지 않고
-          // 통째로 회색으로 둔다. 고를 수 없다는 것이 먼저 읽혀야 한다.
-          let style: CSSProperties | undefined;
-          if (hasData && isActive) {
-            style = {
-              backgroundColor: color.badgeBg,
-              color: color.badgeText,
-              borderColor: color.marker,
-              // 테두리를 2px로 키우면 글자가 1px 밀린다. 안쪽 그림자로 굵어
-              // 보이게만 해서 고른 상태를 또렷하게 하고 레이아웃은 건드리지 않는다.
-              boxShadow: `inset 0 0 0 1px ${color.marker}`,
-            };
-          } else if (hasData) {
-            style = {
-              color: color.badgeText,
-              borderColor: color.marker,
-              // 호버 배경을 등급 색으로 주려면 인라인 style로는 안 되므로
-              // CSS 변수로 넘기고 클래스에서 받는다.
-              ["--tier-tint" as string]: color.badgeBg,
-            };
-          }
+      <button
+        type="button"
+        onClick={onClearAll}
+        className={[
+          "rounded-full border px-3 py-1.5 text-sm transition-colors",
+          isAllActive
+            ? "border-blue-600 bg-blue-600 font-medium text-white"
+            : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+        ].join(" ")}
+      >
+        전체 {allCount}
+      </button>
 
-          return (
-            <button
-              key={tier}
-              type="button"
-              disabled={!hasData}
-              onClick={() => onToggle(tier)}
-              className={[
-                "rounded-full border px-3 py-1.5 text-sm transition-colors",
-                !hasData
-                  ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
-                  : isActive
-                  ? "font-medium"
-                  : "bg-white hover:bg-[var(--tier-tint)]",
-              ].join(" ")}
-              style={style}
-            >
-              {tier} {tierCounts[tier]}
-            </button>
-          );
-        })}
-      </div>
+      {TIER_LIST.map((tier) => {
+        const hasData = tiersWithData.has(tier);
+        const isActive = selected.has(tier);
+        const color = TIER_COLORS[tier];
+
+        // 데이터가 없는 등급은 지도에 마커도 없으므로 등급 색을 쓰지 않고
+        // 통째로 회색으로 둔다. 고를 수 없다는 것이 먼저 읽혀야 한다.
+        let style: CSSProperties | undefined;
+        if (hasData && isActive) {
+          style = {
+            backgroundColor: color.badgeBg,
+            color: color.badgeText,
+            borderColor: color.marker,
+            // 테두리를 2px로 키우면 글자가 1px 밀린다. 안쪽 그림자로 굵어
+            // 보이게만 해서 고른 상태를 또렷하게 하고 레이아웃은 건드리지 않는다.
+            boxShadow: `inset 0 0 0 1px ${color.marker}`,
+          };
+        } else if (hasData) {
+          style = {
+            color: color.badgeText,
+            borderColor: color.marker,
+            // 호버 배경을 등급 색으로 주려면 인라인 style로는 안 되므로
+            // CSS 변수로 넘기고 클래스에서 받는다.
+            ["--tier-tint" as string]: color.badgeBg,
+          };
+        }
+
+        return (
+          <button
+            key={tier}
+            type="button"
+            disabled={!hasData}
+            onClick={() => onToggle(tier)}
+            className={[
+              "rounded-full border px-3 py-1.5 text-sm transition-colors",
+              !hasData
+                ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+                : isActive
+                ? "font-medium"
+                : "bg-white hover:bg-[var(--tier-tint)]",
+            ].join(" ")}
+            style={style}
+          >
+            {tier} {tierCounts[tier]}
+          </button>
+        );
+      })}
     </div>
   );
 }
