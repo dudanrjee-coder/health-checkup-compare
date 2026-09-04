@@ -18,9 +18,10 @@ export interface TierColor {
 }
 
 export const TIER_COLORS: Record<Tier, TierColor> = {
-  상급종합병원: { marker: "#7c3aed", badgeBg: "#ddd6fe", badgeText: "#4c1d95" },
-  종합병원: { marker: "#16a34a", badgeBg: "#bbf7d0", badgeText: "#14532d" },
-  병원: { marker: "#eab308", badgeBg: "#fef08a", badgeText: "#713f12" },
+  // 헤더의 하늘색->인디고->핑크 그라디언트와 어울리도록 채도를 낮췄다.
+  상급종합병원: { marker: "#6366f1", badgeBg: "#e0e7ff", badgeText: "#3730a3" },
+  종합병원: { marker: "#10b981", badgeBg: "#d1fae5", badgeText: "#065f46" },
+  병원: { marker: "#f59e0b", badgeBg: "#fef3c7", badgeText: "#92400e" },
   /**
    * 의원은 색이 아직 정해지지 않았다. **별도 지시가 있을 때까지 건드리지 않는다.**
    * 아래 값은 새로 고른 색이 아니라 기존 화면 색을 hex로 옮겨 적은 것이다

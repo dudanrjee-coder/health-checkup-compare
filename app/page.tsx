@@ -471,12 +471,20 @@ export default function Home() {
             </p>
           )}
 
-          {results.map((hospital) => {
-            const Card = CHIP_PREVIEW_IDS.has(hospital.id)
-              ? HospitalCardChips
-              : HospitalCard;
-            return (
-              <Card
+          {results.map((hospital, index) =>
+            CHIP_PREVIEW_IDS.has(hospital.id) ? (
+              <HospitalCardChips
+                key={hospital.id}
+                hospital={hospital}
+                index={index}
+                selected={hospital.id === selectedHospitalId}
+                onSelect={() => setSelectedHospitalId(hospital.id)}
+                cardRef={(node) => {
+                  cardRefs.current[hospital.id] = node;
+                }}
+              />
+            ) : (
+              <HospitalCard
                 key={hospital.id}
                 hospital={hospital}
                 selected={hospital.id === selectedHospitalId}
@@ -485,8 +493,8 @@ export default function Home() {
                   cardRefs.current[hospital.id] = node;
                 }}
               />
-            );
-          })}
+            )
+          )}
         </section>
 
         <div className="order-1 h-[320px] sm:h-[420px] lg:sticky lg:top-6 lg:order-2 lg:h-[calc(100vh-8rem)]">

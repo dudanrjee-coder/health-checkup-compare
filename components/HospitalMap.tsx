@@ -200,8 +200,16 @@ export default function HospitalMap({
         zoom={NATIONWIDE_VIEW.zoom}
         scrollWheelZoom
         fadeAnimation={false}
-        className="h-full min-h-[320px] w-full rounded-xl border border-slate-200"
+        className="h-full min-h-[320px] w-full rounded-xl border border-slate-200 saturate-[0.35] brightness-110 contrast-[0.95]"
       >
+        {/* 대체 타일을 두 가지 더 시도했으나 둘 다 실패를 직접 스크린샷으로
+            확인했다 — CartoDB Positron은 지금 API 키를 요구해 워터마크가
+            찍히고, Esri World Light Gray Canvas는 한국 지역이 확대(줌 15+)
+            에서 "Map data not yet available"만 나온다(커버리지 없음). 그래서
+            검증된 OSM 타일을 그대로 쓰고, 채도만 낮추는 CSS filter를
+            `.leaflet-container`(바깥 래퍼)에 걸었다 — 이 안쪽의
+            `.leaflet-tile-pane`에 걸면 타일이 아예 그려지지 않는 별개의
+            버그가 있어(역시 스크린샷으로 확인) 반드시 바깥에 걸어야 한다. */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
