@@ -14,8 +14,10 @@ export default function SidoSelect({
   sidosWithData,
 }: SidoSelectProps) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="sido-select" className="text-sm font-medium text-slate-700">
+    <div className="w-full">
+      {/* 검색창·검색 버튼과 한 줄에 나란히 놓이므로, 라벨은 화면에는 숨기고
+          접근성 트리를 위해서만 남긴다(검색창의 sr-only 라벨과 같은 방식). */}
+      <label htmlFor="sido-select" className="sr-only">
         지역 선택
       </label>
       <select

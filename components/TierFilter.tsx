@@ -8,6 +8,8 @@ interface TierFilterProps {
   selected: Set<Tier>;
   onToggle: (tier: Tier) => void;
   tiersWithData: Set<Tier>;
+  /** 버튼 옆에 표시할 실제 개수(hospitals.json 기준, lib/hospitals.ts의 getTierCounts) */
+  tierCounts: Record<Tier, number>;
 }
 
 /**
@@ -25,6 +27,7 @@ export default function TierFilter({
   selected,
   onToggle,
   tiersWithData,
+  tierCounts,
 }: TierFilterProps) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -73,7 +76,7 @@ export default function TierFilter({
               ].join(" ")}
               style={style}
             >
-              {tier}
+              {tier} {tierCounts[tier]}
             </button>
           );
         })}

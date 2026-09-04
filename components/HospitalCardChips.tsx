@@ -114,44 +114,28 @@ export default function HospitalCardChips({
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-        {/* 헤더: 병원명·tier 배지·검진센터 바로가기(좌) / 검진비용(우) */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-            <h3 className="text-base font-semibold leading-tight text-slate-900">
-              {hospital.name}
-            </h3>
-            <span
-              className="rounded-full px-2 py-0.5 text-[11px] font-medium"
-              style={tierBadgeStyle(hospital.tier)}
+        {/* 헤더: 병원명 + tier 배지 + 검진센터 바로가기 */}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <h3 className="text-base font-semibold leading-tight text-slate-900">
+            {hospital.name}
+          </h3>
+          <span
+            className="rounded-full px-2 py-0.5 text-[11px] font-medium"
+            style={tierBadgeStyle(hospital.tier)}
+          >
+            {hospital.tier}
+          </span>
+          {hospital.sourceUrl && (
+            <a
+              href={hospital.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={stop}
+              className="rounded-full border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-600 hover:border-slate-400 hover:text-slate-800"
             >
-              {hospital.tier}
-            </span>
-            {hospital.sourceUrl && (
-              <a
-                href={hospital.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={stop}
-                className="rounded-full border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-600 hover:border-slate-400 hover:text-slate-800"
-              >
-                🔗 병원 바로가기(검진센터)
-              </a>
-            )}
-          </div>
-
-          {/* priceRange는 있는 그대로만 보여준다. 값이 없다고 숫자를 짐작해
-              채우지 않고, "가격정보 없음"이라고 정직하게 표시한다. */}
-          <div className="sm:max-w-[45%] sm:shrink-0 sm:text-right">
-            {hospital.priceRange ? (
-              <span className="inline-block rounded-lg bg-blue-50 px-2.5 py-1 text-sm font-bold leading-snug text-blue-700">
-                {hospital.priceRange}
-              </span>
-            ) : (
-              <span className="inline-block rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-400">
-                가격정보 없음
-              </span>
-            )}
-          </div>
+              🔗 병원 바로가기(검진센터)
+            </a>
+          )}
         </div>
 
         <p className="text-sm leading-snug text-slate-500">

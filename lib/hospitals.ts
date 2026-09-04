@@ -1,5 +1,5 @@
 import rawHospitals from "@/data/hospitals.json";
-import { Hospital, Sido, SIDO_LIST, Tier } from "@/types/hospital";
+import { Hospital, Sido, SIDO_LIST, Tier, TIER_LIST } from "@/types/hospital";
 
 export const hospitals: Hospital[] = rawHospitals as Hospital[];
 
@@ -12,6 +12,22 @@ export function getTiersWithData(sido: Sido | null): Set<Tier> {
     ? hospitals.filter((h) => h.region.sido === sido)
     : hospitals;
   return new Set(scoped.map((h) => h.tier));
+}
+
+/**
+ * 등급 필터 버튼 옆에 붙일 실제 개수. 하드코딩 없이 매번 hospitals.json에서
+ * 계산한다. sido를 주면 그 지역으로 좁혀서 센다(tiersWithData와 같은 범위).
+ */
+export function getTierCounts(sido: Sido | null): Record<Tier, number> {
+  const scoped = sido
+    ? hospitals.filter((h) => h.region.sido === sido)
+    : hospitals;
+  const counts = Object.fromEntries(TIER_LIST.map((t) => [t, 0])) as Record<
+    Tier,
+    number
+  >;
+  for (const h of scoped) counts[h.tier] += 1;
+  return counts;
 }
 
 /** 헤더 통계 배지용 집계. 하드코딩 없이 매번 hospitals.json에서 계산한다 */

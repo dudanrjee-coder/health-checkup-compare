@@ -44,7 +44,7 @@ export default function SearchBox({
   }, [hoverCapable]);
 
   return (
-    <div ref={wrapperRef} className="relative w-full sm:w-72">
+    <div ref={wrapperRef} className="relative w-full">
       <label htmlFor="hospital-search" className="sr-only">
         병원명 또는 지역 검색
       </label>

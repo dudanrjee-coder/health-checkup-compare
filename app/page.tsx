@@ -14,6 +14,7 @@ import {
   findUniqueSidoMatch,
   getHeaderStats,
   getSidosWithData,
+  getTierCounts,
   getTiersWithData,
 } from "@/lib/hospitals";
 
@@ -262,6 +263,11 @@ export default function Home() {
     () => getTiersWithData(isSearching ? null : selectedSido),
     [isSearching, selectedSido]
   );
+  // 등급 필터 옆 개수 배지도 같은 범위(검색 중엔 전국)로 맞춘다.
+  const tierCounts = useMemo(
+    () => getTierCounts(isSearching ? null : selectedSido),
+    [isSearching, selectedSido]
+  );
 
   // 아직 데이터가 없는 지역을 고른 경우(현재는 없지만 시/도가 늘어나면 발생)
   const isPreparingRegion = selectedSido
@@ -398,25 +404,43 @@ export default function Home() {
 
           <div className="flex flex-col items-end gap-1.5">
             <DateTimeClock />
+          </div>
+        </div>
+      </header>
+
+      <section className="mb-6 flex flex-col gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
+        {/* 검색창(넓게) + 지역 선택(좁게) + 검색 버튼을 한 줄에 배치한다.
+            지역 드롭다운은 고르는 즉시 바로 필터링되고, 검색 버튼은 검색창
+            엔터(handleSearchSubmit)와 같은 동작을 하는 시각적 트리거다. */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex-1">
             <SearchBox
               value={searchInput}
               onChange={handleSearchChange}
               onSubmit={handleSearchSubmit}
             />
           </div>
+          <div className="sm:w-56 sm:shrink-0">
+            <SidoSelect
+              value={selectedSido}
+              onChange={handleSidoChange}
+              sidosWithData={sidosWithData}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleSearchSubmit}
+            className="shrink-0 rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          >
+            검색
+          </button>
         </div>
-      </header>
 
-      <section className="mb-6 flex flex-col gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
-        <SidoSelect
-          value={selectedSido}
-          onChange={handleSidoChange}
-          sidosWithData={sidosWithData}
-        />
         <TierFilter
           selected={selectedTiers}
           onToggle={handleTierToggle}
           tiersWithData={tiersWithData}
+          tierCounts={tierCounts}
         />
         {isSearching && (
           <p className="text-xs text-slate-500">
@@ -430,10 +454,26 @@ export default function Home() {
         {/* 모바일에서는 지도가 위, 데스크톱에서는 리스트가 왼쪽 */}
         <section className="order-2 flex flex-col gap-4 lg:order-1 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-1">
           <p className="text-sm text-slate-500">
-            <span className="font-medium text-slate-700">
-              {isSearching ? `"${query.trim()}" 검색` : (selectedSido ?? "전국")}
-            </span>{" "}
-            병원 {results.length}곳
+            {isSearching ? (
+              <>
+                <span className="font-medium text-slate-700">
+                  &quot;{query.trim()}&quot; 검색
+                </span>{" "}
+                병원 {results.length}곳
+              </>
+            ) : selectedSido ? (
+              <>
+                <span className="font-medium text-slate-700">
+                  {selectedSido}
+                </span>{" "}
+                검진병원 {results.length}곳
+              </>
+            ) : (
+              <>
+                <span className="font-medium text-slate-700">전국</span> 병원{" "}
+                {results.length}곳
+              </>
+            )}
             {results.length > 0 && (
               <> · 지도 표시 {mappableResults.length}곳</>
             )}
