@@ -14,6 +14,17 @@ export function getTiersWithData(sido: Sido | null): Set<Tier> {
   return new Set(scoped.map((h) => h.tier));
 }
 
+/** 헤더 통계 배지용 집계. 하드코딩 없이 매번 hospitals.json에서 계산한다 */
+export function getHeaderStats() {
+  return {
+    totalHospitals: hospitals.length,
+    sidoCount: new Set(hospitals.map((h) => h.region.sido)).size,
+    nationalDesignatedCount: hospitals.filter(
+      (h) => h.nationalScreeningDesignated === true
+    ).length,
+  };
+}
+
 /** 한 글자만으로 지역이 단정되는 것을 막는다("구" → 대구광역시 같은 오작동 방지) */
 const MIN_SIDO_MATCH_LENGTH = 2;
 

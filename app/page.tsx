@@ -12,6 +12,7 @@ import { hasCoords, Sido, Tier } from "@/types/hospital";
 import {
   filterHospitals,
   findUniqueSidoMatch,
+  getHeaderStats,
   getSidosWithData,
   getTiersWithData,
 } from "@/lib/hospitals";
@@ -255,6 +256,7 @@ export default function Home() {
   const isSearching = query.trim().length > 0;
 
   const sidosWithData = useMemo(() => getSidosWithData(), []);
+  const headerStats = useMemo(() => getHeaderStats(), []);
   // 검색 중에는 지역 선택을 무시하므로 등급 목록도 전국 기준으로 계산한다.
   const tiersWithData = useMemo(
     () => getTiersWithData(isSearching ? null : selectedSido),
@@ -361,22 +363,47 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
-      <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            전국 건강검진 병원
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            지역별 검진병원 정보를 한눈에 비교하세요
-          </p>
-        </div>
-        <div className="flex flex-col items-end gap-1.5">
-          <DateTimeClock />
-          <SearchBox
-            value={searchInput}
-            onChange={handleSearchChange}
-            onSubmit={handleSearchSubmit}
-          />
+      <header className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-4">
+            <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+              2026 국가건강검진 시즌
+            </span>
+            <div>
+              <h1 className="break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                전국 건강검진 병원
+              </h1>
+              <p className="mt-2 text-sm text-slate-600 sm:text-base">
+                지역별 검진병원 정보를 한눈에 비교하세요
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "전국 병원", value: headerStats.totalHospitals },
+                { label: "시·도", value: headerStats.sidoCount },
+                {
+                  label: "국가검진 지정",
+                  value: headerStats.nationalDesignatedCount,
+                },
+              ].map((stat) => (
+                <span
+                  key={stat.label}
+                  className="rounded-full border border-white/60 bg-white/70 px-4 py-1.5 text-sm font-medium text-slate-700 shadow-sm backdrop-blur"
+                >
+                  {stat.label} {stat.value}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-1.5">
+            <DateTimeClock />
+            <SearchBox
+              value={searchInput}
+              onChange={handleSearchChange}
+              onSubmit={handleSearchSubmit}
+            />
+          </div>
         </div>
       </header>
 
