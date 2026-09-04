@@ -7,6 +7,7 @@ import TierFilter from "@/components/TierFilter";
 import HospitalCard from "@/components/HospitalCard";
 import HospitalCardChips from "@/components/HospitalCardChips";
 import SearchBox from "@/components/SearchBox";
+import DateTimeClock from "@/components/DateTimeClock";
 import { hasCoords, Sido, Tier } from "@/types/hospital";
 import {
   filterHospitals,
@@ -363,18 +364,20 @@ export default function Home() {
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">
-            전국 건강검진 예약 비교
+            전국 건강검진 병원
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            지도에서 병원을 찾아보거나, 지역과 등급으로 좁혀서 예약 정보를
-            확인할 수 있습니다.
+            지역별 검진병원 정보를 한눈에 비교하세요
           </p>
         </div>
-        <SearchBox
-          value={searchInput}
-          onChange={handleSearchChange}
-          onSubmit={handleSearchSubmit}
-        />
+        <div className="flex flex-col items-end gap-1.5">
+          <DateTimeClock />
+          <SearchBox
+            value={searchInput}
+            onChange={handleSearchChange}
+            onSubmit={handleSearchSubmit}
+          />
+        </div>
       </header>
 
       <section className="mb-6 flex flex-col gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
