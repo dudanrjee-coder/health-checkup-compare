@@ -383,10 +383,21 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-10">
-      <header className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-4">
+    <main>
+      {/* 시안처럼 좌우 여백 없이 화면 끝까지 채우는 풀블리드 배너다. 안쪽
+          콘텐츠만 max-w-7xl로 가운데 정렬한다. */}
+      <header className="bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+          {/* 시계는 시안의 위치(헤더 오른쪽 위 구석)를 그대로 따르되, 제목
+              블록이 가운데 정렬이라 같은 줄에 나란히 두면 어색해서 이렇게
+              별도 줄로 뺐다. 시안에 있는 "실시간 진료 가능 여부 반영"·
+              "최근 업데이트" 문구는 우리가 갖고 있지 않은 데이터라 넣지
+              않았다. */}
+          <div className="flex justify-end">
+            <DateTimeClock />
+          </div>
+
+          <div className="flex flex-col items-center gap-4 text-center">
             <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
               2026 국가건강검진 시즌
             </span>
@@ -398,7 +409,7 @@ export default function Home() {
                 지역별 검진병원 정보를 한눈에 비교하세요
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap justify-center gap-2">
               {[
                 { label: "전국 병원", value: headerStats.totalHospitals },
                 { label: "시·도", value: headerStats.sidoCount },
@@ -416,194 +427,192 @@ export default function Home() {
               ))}
             </div>
           </div>
-
-          <div className="flex flex-col items-end gap-1.5">
-            <DateTimeClock />
-          </div>
         </div>
       </header>
 
-      <section className="mb-6 flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-lg shadow-slate-200/60">
-        {/* 검색창(넓게) + 지역 선택(좁게) + 검색 버튼을 한 줄에 배치한다.
-            지역 드롭다운은 고르는 즉시 바로 필터링되고, 검색 버튼은 검색창
-            엔터(handleSearchSubmit)와 같은 동작을 하는 시각적 트리거다. */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex-1">
-            <SearchBox
-              value={searchInput}
-              onChange={handleSearchChange}
-              onSubmit={handleSearchSubmit}
-            />
-          </div>
-          <div className="sm:w-56 sm:shrink-0">
-            <SidoSelect
-              value={selectedSido}
-              onChange={handleSidoChange}
-              sidosWithData={sidosWithData}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={handleSearchSubmit}
-            className="shrink-0 rounded-lg bg-[#0c1425] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
-          >
-            검색
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <TierFilter
-            selected={selectedTiers}
-            onToggle={handleTierToggle}
-            tiersWithData={tiersWithData}
-            tierCounts={tierCounts}
-            allCount={allCount}
-            onClearAll={handleClearTiers}
-          />
-
-          {/*
-            "국가검진 지정만" 토글 — 지금은 시각적 상태만 켜고 끈다.
-            results 필터링에는 아직 연결하지 않았다. 다음 작업에서
-            nationalOnly 값을 filterHospitals 쪽 조건에 실제로 반영할 예정이다.
-          */}
-          <label className="ml-auto flex shrink-0 cursor-pointer select-none items-center gap-2 text-xs font-medium text-slate-500">
-            국가검진 지정만
+      <div className="mx-auto max-w-7xl px-4 pb-10 pt-8">
+        <section className="mb-6 flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-lg shadow-slate-200/60">
+          {/* 검색창(넓게) + 지역 선택(좁게) + 검색 버튼을 한 줄에 배치한다.
+              지역 드롭다운은 고르는 즉시 바로 필터링되고, 검색 버튼은 검색창
+              엔터(handleSearchSubmit)와 같은 동작을 하는 시각적 트리거다. */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex-1">
+              <SearchBox
+                value={searchInput}
+                onChange={handleSearchChange}
+                onSubmit={handleSearchSubmit}
+              />
+            </div>
+            <div className="sm:w-56 sm:shrink-0">
+              <SidoSelect
+                value={selectedSido}
+                onChange={handleSidoChange}
+                sidosWithData={sidosWithData}
+              />
+            </div>
             <button
               type="button"
-              role="switch"
-              aria-checked={nationalOnly}
-              onClick={() => setNationalOnly((prev) => !prev)}
-              className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                nationalOnly ? "bg-blue-600" : "bg-slate-300"
-              }`}
+              onClick={handleSearchSubmit}
+              className="shrink-0 rounded-lg bg-[#0c1425] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
             >
-              <span
-                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                  nationalOnly ? "translate-x-4" : "translate-x-0.5"
-                }`}
-              />
+              검색
             </button>
-          </label>
-        </div>
-
-        {isSearching && (
-          <p className="text-xs text-slate-500">
-            검색 중에는 지역 선택을 무시하고 전국에서 찾습니다. 등급 필터는 함께
-            적용됩니다.
-          </p>
-        )}
-      </section>
-
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
-        {/* 모바일에서는 지도가 위, 데스크톱에서는 리스트가 왼쪽 */}
-        <section className="order-2 flex flex-col gap-4 lg:order-1 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-1">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm text-slate-500">
-              {isSearching ? (
-                <>
-                  <span className="font-medium text-slate-700">
-                    &quot;{query.trim()}&quot; 검색
-                  </span>{" "}
-                  병원 {results.length}곳
-                </>
-              ) : selectedSido ? (
-                <>
-                  <span className="font-medium text-slate-700">
-                    {selectedSido}
-                  </span>{" "}
-                  검진병원 {results.length}곳
-                </>
-              ) : (
-                <>
-                  <span className="font-medium text-slate-700">전국</span>{" "}
-                  병원 {results.length}곳
-                </>
-              )}
-              {results.length > 0 && (
-                <> · 지도 표시 {mappableResults.length}곳</>
-              )}
-            </p>
-
-            {/*
-              정렬 드롭다운 — 지금은 자리만 잡아둔 시각적 placeholder다.
-              옵션이 "추천순" 하나뿐이라 골라도 목록 순서는 바뀌지 않는다.
-              실제 정렬 기준·로직은 다음 작업에서 정해서 연결할 예정이다.
-            */}
-            <select
-              aria-label="정렬 기준"
-              defaultValue="recommended"
-              className="shrink-0 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="recommended">추천순</option>
-            </select>
           </div>
 
-          {submittedNoMatch ? (
-            <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
-              <p className="text-sm font-medium text-slate-700">
-                일치하는 곳이 없습니다.
-              </p>
-              <p className="mt-1 text-xs text-slate-500">
-                지역 이름(예: 부산, 충청남도)이나 병원 이름으로 다시 검색해
-                보세요.
-              </p>
-            </div>
-          ) : (
-            isSearching &&
-            results.length === 0 && (
-              <p className="text-sm text-slate-500">검색 결과가 없습니다.</p>
-            )
-          )}
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <TierFilter
+              selected={selectedTiers}
+              onToggle={handleTierToggle}
+              tiersWithData={tiersWithData}
+              tierCounts={tierCounts}
+              allCount={allCount}
+              onClearAll={handleClearTiers}
+            />
 
-          {!isSearching && isPreparingRegion && (
-            <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
-              <p className="font-medium text-slate-700">
-                {selectedSido}은(는) 준비 중입니다.
-              </p>
-              <p className="mt-1">데이터가 추가되는 대로 안내해 드릴게요.</p>
-            </div>
-          )}
+            {/*
+              "국가검진 지정만" 토글 — 지금은 시각적 상태만 켜고 끈다.
+              results 필터링에는 아직 연결하지 않았다. 다음 작업에서
+              nationalOnly 값을 filterHospitals 쪽 조건에 실제로 반영할 예정이다.
+            */}
+            <label className="ml-auto flex shrink-0 cursor-pointer select-none items-center gap-2 text-xs font-medium text-slate-500">
+              국가검진 지정만
+              <button
+                type="button"
+                role="switch"
+                aria-checked={nationalOnly}
+                onClick={() => setNationalOnly((prev) => !prev)}
+                className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+                  nationalOnly ? "bg-blue-600" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                    nationalOnly ? "translate-x-4" : "translate-x-0.5"
+                  }`}
+                />
+              </button>
+            </label>
+          </div>
 
-          {!isSearching && !isPreparingRegion && results.length === 0 && (
-            <p className="text-sm text-slate-500">
-              선택한 조건에 맞는 병원이 없습니다.
+          {isSearching && (
+            <p className="text-xs text-slate-500">
+              검색 중에는 지역 선택을 무시하고 전국에서 찾습니다. 등급 필터는
+              함께 적용됩니다.
             </p>
-          )}
-
-          {results.map((hospital, index) =>
-            CHIP_PREVIEW_IDS.has(hospital.id) ? (
-              <HospitalCardChips
-                key={hospital.id}
-                hospital={hospital}
-                index={index}
-                selected={hospital.id === selectedHospitalId}
-                onSelect={() => setSelectedHospitalId(hospital.id)}
-                cardRef={(node) => {
-                  cardRefs.current[hospital.id] = node;
-                }}
-              />
-            ) : (
-              <HospitalCard
-                key={hospital.id}
-                hospital={hospital}
-                selected={hospital.id === selectedHospitalId}
-                onSelect={() => setSelectedHospitalId(hospital.id)}
-                cardRef={(node) => {
-                  cardRefs.current[hospital.id] = node;
-                }}
-              />
-            )
           )}
         </section>
 
-        <div className="order-1 h-[320px] sm:h-[420px] lg:sticky lg:top-6 lg:order-2 lg:h-[calc(100vh-8rem)]">
-          <HospitalMap
-            hospitals={mappableResults}
-            selectedSido={isSearching ? null : selectedSido}
-            searchActive={isSearching}
-            selectedId={selectedHospitalId}
-            onSelect={setSelectedHospitalId}
-          />
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+          {/* 모바일에서는 지도가 위, 데스크톱에서는 리스트가 왼쪽 */}
+          <section className="order-2 flex flex-col gap-4 lg:order-1 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-1">
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-sm text-slate-500">
+                {isSearching ? (
+                  <>
+                    <span className="font-medium text-slate-700">
+                      &quot;{query.trim()}&quot; 검색
+                    </span>{" "}
+                    병원 {results.length}곳
+                  </>
+                ) : selectedSido ? (
+                  <>
+                    <span className="font-medium text-slate-700">
+                      {selectedSido}
+                    </span>{" "}
+                    검진병원 {results.length}곳
+                  </>
+                ) : (
+                  <>
+                    <span className="font-medium text-slate-700">전국</span>{" "}
+                    병원 {results.length}곳
+                  </>
+                )}
+                {results.length > 0 && (
+                  <> · 지도 표시 {mappableResults.length}곳</>
+                )}
+              </p>
+
+              {/*
+                정렬 드롭다운 — 지금은 자리만 잡아둔 시각적 placeholder다.
+                옵션이 "추천순" 하나뿐이라 골라도 목록 순서는 바뀌지 않는다.
+                실제 정렬 기준·로직은 다음 작업에서 정해서 연결할 예정이다.
+              */}
+              <select
+                aria-label="정렬 기준"
+                defaultValue="recommended"
+                className="shrink-0 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="recommended">추천순</option>
+              </select>
+            </div>
+
+            {submittedNoMatch ? (
+              <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
+                <p className="text-sm font-medium text-slate-700">
+                  일치하는 곳이 없습니다.
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  지역 이름(예: 부산, 충청남도)이나 병원 이름으로 다시 검색해
+                  보세요.
+                </p>
+              </div>
+            ) : (
+              isSearching &&
+              results.length === 0 && (
+                <p className="text-sm text-slate-500">검색 결과가 없습니다.</p>
+              )
+            )}
+
+            {!isSearching && isPreparingRegion && (
+              <div className="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+                <p className="font-medium text-slate-700">
+                  {selectedSido}은(는) 준비 중입니다.
+                </p>
+                <p className="mt-1">데이터가 추가되는 대로 안내해 드릴게요.</p>
+              </div>
+            )}
+
+            {!isSearching && !isPreparingRegion && results.length === 0 && (
+              <p className="text-sm text-slate-500">
+                선택한 조건에 맞는 병원이 없습니다.
+              </p>
+            )}
+
+            {results.map((hospital, index) =>
+              CHIP_PREVIEW_IDS.has(hospital.id) ? (
+                <HospitalCardChips
+                  key={hospital.id}
+                  hospital={hospital}
+                  index={index}
+                  selected={hospital.id === selectedHospitalId}
+                  onSelect={() => setSelectedHospitalId(hospital.id)}
+                  cardRef={(node) => {
+                    cardRefs.current[hospital.id] = node;
+                  }}
+                />
+              ) : (
+                <HospitalCard
+                  key={hospital.id}
+                  hospital={hospital}
+                  selected={hospital.id === selectedHospitalId}
+                  onSelect={() => setSelectedHospitalId(hospital.id)}
+                  cardRef={(node) => {
+                    cardRefs.current[hospital.id] = node;
+                  }}
+                />
+              )
+            )}
+          </section>
+
+          <div className="order-1 h-[320px] sm:h-[420px] lg:sticky lg:top-6 lg:order-2 lg:h-[calc(100vh-8rem)]">
+            <HospitalMap
+              hospitals={mappableResults}
+              selectedSido={isSearching ? null : selectedSido}
+              searchActive={isSearching}
+              selectedId={selectedHospitalId}
+              onSelect={setSelectedHospitalId}
+            />
+          </div>
         </div>
       </div>
     </main>
