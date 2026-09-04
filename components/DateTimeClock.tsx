@@ -2,19 +2,23 @@
 
 import { useEffect, useState } from "react";
 
-const dateFormatter = new Intl.DateTimeFormat("ko-KR", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  weekday: "long",
-});
+const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
-const timeFormatter = new Intl.DateTimeFormat("ko-KR", {
-  hour: "numeric",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: true,
-});
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+/** "2026.09.04 (금)" */
+function formatDate(d: Date) {
+  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} (${
+    WEEKDAYS[d.getDay()]
+  })`;
+}
+
+/** "20:15:20" (24시간제) */
+function formatTime(d: Date) {
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
 
 /**
  * 서버 렌더링 시점에는 시간을 알 수 없으므로, 마운트 전에는 아무것도
@@ -32,61 +36,21 @@ export default function DateTimeClock() {
   if (!now) return null;
 
   return (
-    <p className="flex items-center gap-3 whitespace-nowrap text-xs text-slate-500">
-      <span className="flex items-center gap-1">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 20 20"
-          fill="none"
-          className="h-3.5 w-3.5 shrink-0"
-        >
-          <rect
-            x="3"
-            y="4"
-            width="14"
-            height="13"
-            rx="2"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M3 8H17"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M6.5 2.5V5.5M13.5 2.5V5.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
-        {dateFormatter.format(now)}
+    <p className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+      <span
+        aria-hidden="true"
+        className="h-2 w-2 shrink-0 rounded-full bg-emerald-500"
+      />
+      <span className="whitespace-nowrap">{formatDate(now)}</span>
+      <span className="whitespace-nowrap font-bold text-slate-900">
+        {formatTime(now)}
       </span>
       <span aria-hidden="true">·</span>
-      <span className="flex items-center gap-1">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 20 20"
-          fill="none"
-          className="h-3.5 w-3.5 shrink-0"
-        >
-          <circle
-            cx="10"
-            cy="10"
-            r="7"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M10 6V10L12.5 12"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {timeFormatter.format(now)}
+      {/* 실제로 실시간 진료 가능 여부를 반영하는 기능은 없다. Claude Design
+          시안의 문구를 그대로 가져온 것이라 오해 소지가 있다 — 나중에 실제
+          기능을 붙이거나, 그 전까지는 문구를 바꿔야 한다. */}
+      <span className="whitespace-nowrap text-slate-400">
+        실시간 진료 가능 여부 반영
       </span>
     </p>
   );

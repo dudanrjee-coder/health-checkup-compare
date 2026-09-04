@@ -461,34 +461,17 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 pb-10 pt-8">
-        {/*
-          그라디언트 헤더와 검색 카드 사이의 흰 배경 줄. 시안 레이아웃과
-          다르게, 왼쪽엔 상태 문구만 두고 날짜·시계·최근 업데이트는 오른쪽에
-          모았다(사용자 지시).
-        */}
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-slate-500">
-          <span className="flex items-center gap-1.5">
-            <span
-              aria-hidden="true"
-              className="h-2 w-2 rounded-full bg-emerald-500"
-            />
-            {/* 실제로 실시간 진료 가능 여부를 반영하는 기능은 없다. 시안
-                문구를 그대로 가져온 것이라 오해 소지가 있다 — 나중에 실제
-                기능을 붙이거나, 그 전까지는 문구를 바꿔야 한다. */}
-            실시간 진료 가능 여부 반영
-          </span>
-
-          <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-1">
-            <DateTimeClock />
-            {latestVerifiedAtLabel && (
-              <>
-                <span aria-hidden="true" className="text-slate-400">
-                  ·
-                </span>
-                <span>최근 업데이트 {latestVerifiedAtLabel}</span>
-              </>
-            )}
-          </div>
+        {/* 그라디언트 헤더와 검색 카드 사이의 흰 배경 줄. 왼쪽은 시안과
+            동일하게 DateTimeClock 하나로 통일했다(점·날짜·시간·상태 문구가
+            전부 그 컴포넌트 안에 있다). "최근 업데이트"만 오른쪽에 별도로
+            둔다. */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <DateTimeClock />
+          {latestVerifiedAtLabel && (
+            <span className="text-xs text-slate-500">
+              최근 업데이트 {latestVerifiedAtLabel}
+            </span>
+          )}
         </div>
 
         <section className="mb-6 flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-lg shadow-slate-200/60">
