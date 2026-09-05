@@ -410,6 +410,23 @@ const QUERIES = {
   ],
   "jeonnam-goheung-general": ["고흥종합병원", "전라남도 고흥군 고흥읍 고흥로 1935"],
   "jeonnam-haenam-general": ["해남종합병원", "전라남도 해남군 해남읍 해남로 45"],
+  // 2026-09-05 CSV 병원명에 "종합병원"이 들어가는 미등록 16곳 조사분(3차 4곳).
+  "chungnam-dangjin-general": [
+    "당진종합병원",
+    "충청남도 당진시 반촌로 5-15",
+  ],
+  "gyeonggi-bucheon-daniel-general": [
+    "다니엘종합병원",
+    "경기도 부천시 원미구 중동로 361",
+  ],
+  "gyeonggi-hwaseong-jungang-general": [
+    "화성중앙종합병원",
+    "경기도 화성시 향남읍 발안로 5",
+  ],
+  "gyeonggi-hwaseong-wonkwang-general": [
+    "원광종합병원 화성",
+    "경기도 화성시 화산북로 21",
+  ],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
