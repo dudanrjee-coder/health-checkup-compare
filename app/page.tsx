@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import HospitalMap from "@/components/HospitalMapLazy";
 import SidoSelect from "@/components/SidoSelect";
 import TierFilter from "@/components/TierFilter";
-import HospitalCard from "@/components/HospitalCard";
 import HospitalCardChips from "@/components/HospitalCardChips";
 import SearchBox from "@/components/SearchBox";
 import DateTimeClock from "@/components/DateTimeClock";
@@ -18,233 +17,6 @@ import {
   getTierCounts,
   getTiersWithData,
 } from "@/lib/hospitals";
-
-/**
- * 칩 클러스터형 카드 시안을 적용할 병원 id(42번 항목).
- * 전체 적용 전에 몇 곳만 새 스타일로 띄워 비교하려는 임시 스위치이며,
- * 여기 없는 병원은 기존 HospitalCard 그대로다.
- *
- * 두 곳(46·47번)은 사양을 굳히려고 고른 시안이고, 그 뒤로는 **0번 원칙으로
- * 재조사를 끝낸 병원을 그때그때 여기 추가한다**(52번 항목). 재조사와 카드 전환을
- * 한 세트로 묶는 것이라, 아직 재조사하지 않은 병원은 기존 HospitalCard 그대로다.
- *
- * - seoul-hongik: 온라인 예약이 없고 표가 거의 비어 있는 쪽(46번 항목)
- * - daejeon-chungnam-univ: 온라인 예약이 있고 표가 채워져 있는 쪽(47번 항목)
- * - daegu-keimyung-dongsan, gwangju-chosun: 재조사 배치 1 완료(52번 항목)
- * - ulsan-uuh: 재조사 배치 2(55번 항목)
- * - seoul-ewha-mokdong: 재조사 배치 3(56번 항목)
- * - 부산·광주 상급종합병원: 재조사 배치 4(63번 항목)
- * - 서울·경기 외 나머지 상급종합병원: 재조사 배치 5(64번 항목)
- * - 강원·충북·충남 종합병원 3곳: 종합병원 재조사 배치 1(70번 항목)
- * - 전북·제주 종합병원 3곳: 종합병원 재조사 배치 2(71번 항목)
- * - 세종 종합병원 2곳: 종합병원 재조사 배치 3(72번 항목)
- * - 경남 종합병원 2곳: 종합병원 재조사 배치 4(73번 항목)
- * - 경기 종합병원 3곳: 종합병원 재조사 배치 5(74번 항목)
- * - 경북 종합병원 3곳: 종합병원 재조사 배치 6(75번 항목)
- * - 울산 종합병원 4곳: 종합병원 재조사 배치 7(76번 항목)
- * - 대구 종합병원 4곳: 종합병원 재조사 배치 8(77번 항목)
- * - 대구 종합병원 나머지 4곳: 종합병원 재조사 배치 9(78번 항목)
- * - 대전 종합병원 4곳: 종합병원 재조사 배치 10(79번 항목)
- * - 대전 종합병원 나머지 4곳: 종합병원 재조사 배치 11(80번 항목)
- *
- * 배치 12~23(부산·인천·광주)은 이 목록에 따로 적지 않았다. 어느 배치에서
- * 들어왔는지는 커밋 로그로 따라가는 편이 정확하다.
- *
- * - 삼육서울병원·에이치플러스 양지병원: 서울 재조사 시작(배치 번호 없이 2곳)
- * - 한일병원: 서울 재조사(단독 1곳)
- * - 기쁨병원: 서울 재조사(단독 1곳, 0번 체크리스트 이전 데이터 재확인)
- * - 국립경찰병원: 서울 재조사(단독 1곳, 0번 체크리스트 이전 데이터 재확인)
- * - 중앙보훈병원: 서울 재조사(단독 1곳, 검진 메뉴 부재를 재확인)
- * - 대한병원·혜민병원·희명병원·원자력병원: 서울 재조사 배치(4곳). 같은
- *   배치에서 시도한 청구성심병원·구로성심병원은 검진센터 도메인이
- *   WebFetch를 403으로 차단해 보류했다.
- * - 서울특별시보라매병원·동신병원·금강아산병원·국립중앙의료원·
- *   대림성모병원: 서울 재조사 배치(5곳). 국립중앙의료원은 검진절차
- *   안내 페이지 자체가 "서비스 준비중"이라 priceRange·resultNotice
- *   등 다수 필드를 미게시로 남겼다.
- * - 명지성모병원·성애병원: 서울 재조사 배치(2곳).
- * - 서울성심병원·서울특별시동부병원: 서울 재조사 배치(2곳). 동부병원은
- *   찾아오시는 길 페이지의 요약 추출이 공식 주소와 어긋나(강남구로
- *   잘못 표시) accessInfo를 채우지 않고 비워 두었다.
- * - 미즈메디병원·서울부민병원·서울특별시서남병원·서울적십자병원·
- *   세란병원: 서울 재조사 배치(5곳). 미즈메디병원은 하위 페이지가
- *   자바스크립트로 렌더링돼 WebFetch로 본문을 읽지 못해 대부분 필드를
- *   미게시로 남겼다. 서남병원은 요금표 추출이 두 차례 서로 다른 값을
- *   내놓아(요약 도구 신뢰도 문제) priceRange를 채우지 않았다.
- * - 녹색병원·서울의료원: 서울 재조사 배치(2곳). 남은 세 곳
- *   (동부제일병원 — dbjeil.co.kr 인증서 오류, 청구성심병원·구로성심병원 —
- *   WebFetch 403 차단)은 자동 접속이 막혀 보류했었다.
- * - 청구성심병원·구로성심병원·동부제일병원: 자동 접속이 막혀 있던 마지막
- *   3곳을 사용자가 직접 브라우저로 접속해 확인(2026-09-02)했다. 이로써
- *   153곳 전체가 0번 체크리스트 재조사 및 카드 전환을 마쳤다.
- * - 순천향대학교 서울·천안·부천병원, 노원·강남·의정부을지대학교병원,
- *   영남대학교병원, 대구가톨릭대학교병원: 2026-09-05 신규 등록 8곳.
- *   등록 당시 이 목록에 추가하는 것을 빠뜨려 번호 배지 없이 구 HospitalCard로
- *   렌더링되던 것을 뒤늦게 바로잡았다.
- */
-const CHIP_PREVIEW_IDS = new Set([
-  "seoul-hongik",
-  "daejeon-chungnam-univ",
-  "daegu-keimyung-dongsan",
-  "gwangju-chosun",
-  "ulsan-uuh",
-  "seoul-ewha-mokdong",
-  "busan-pnu",
-  "busan-inje-paik",
-  "busan-donga",
-  "gwangju-jnu",
-  "jeonnam-hwasun-cnu",
-  "incheon-inha",
-  "daegu-knu",
-  "incheon-gachon-gil",
-  "daejeon-konyang-univ",
-  "gangwon-wonju-severance",
-  "chungbuk-cbnu",
-  "seoul-snu",
-  "seoul-severance",
-  "seoul-korea-anam",
-  "seoul-catholic-seoul-st-marys",
-  "gyeonggi-ajou",
-  "gyeonggi-snubh",
-  "gyeonggi-korea-ansan",
-  "chungnam-dankook",
-  "jeonbuk-jbnu",
-  "jeonbuk-wonkwang",
-  "gyeongnam-gnuh-jinju",
-  "gangwon-gangneung-asan",
-  "seoul-kangbuk-samsung",
-  "seoul-konkuk-univ",
-  "seoul-kyunghee-univ",
-  "seoul-korea-guro",
-  "seoul-samsung-medical",
-  "seoul-gangnam-severance",
-  "seoul-asan",
-  "seoul-chungang-univ",
-  "seoul-hanyang-univ",
-  "gangwon-knu",
-  "chungbuk-cheongju-hana",
-  "chungnam-cheonan-chungmu",
-  "jeonbuk-jeonju-jesus",
-  "jeju-jnu",
-  "jeju-halla",
-  "sejong-cnush",
-  "sejong-nk",
-  "gyeongnam-gnuch-changwon",
-  "gyeongnam-changwon-fatima",
-  "gyeonggi-bundang-jesaeng",
-  "gyeonggi-dongsuwon",
-  "gyeonggi-bucheon-sejong",
-  "gyeongbuk-dongguk-gyeongju",
-  "gyeongbuk-schmc-gumi",
-  "gyeongbuk-andong",
-  "ulsan-donggang",
-  "ulsan-good-samjeong",
-  "ulsan-joongang",
-  "ulsan-city",
-  "daegu-fatima",
-  "daegu-dream",
-  "daegu-koo",
-  "daegu-bohun",
-  "daegu-samil",
-  "daegu-kwak",
-  "daegu-gangnam",
-  "daegu-cheonju-seongsam",
-  "daejeon-eulji-univ",
-  "daejeon-catholic-daejeon-st-marys",
-  "daejeon-sun",
-  "daejeon-yuseong-sun",
-  "daejeon-hankook",
-  "daejeon-daecheong",
-  "daejeon-bohun",
-  "daejeon-comwel",
-  "busan-good-samsun",
-  "busan-samyook",
-  "busan-good-gangan",
-  "busan-on",
-  "busan-daedong",
-  "busan-sungmo",
-  "busan-maryknoll",
-  "busan-good-moonhwa",
-  "busan-dongrae-bongseng",
-  "busan-centum",
-  "busan-medical-center",
-  "busan-bohun",
-  "busan-dongeui",
-  "incheon-naeun",
-  "incheon-sarang",
-  "incheon-medical-center",
-  "incheon-christian",
-  "incheon-paik",
-  "incheon-uvis",
-  "incheon-nasaret",
-  "incheon-redcross",
-  "incheon-hallym",
-  "incheon-sejong",
-  "incheon-new-sungmin",
-  "incheon-geomdan-top",
-  "incheon-onnuri",
-  "incheon-bs",
-  "incheon-himchan",
-  "incheon-bupyeong-serim",
-  "incheon-comwel",
-  "gwangju-christian",
-  "jeonnam-suncheon-carollo",
-  "gwangju-suwan",
-  "gwangju-singa",
-  "gwangju-cheomdan",
-  "gwangju-hanam-sungshim",
-  "gwangju-ks",
-  "gwangju-central",
-  "gwangju-city",
-  "gwangju-donga",
-  "gwangju-gwangju-hosp",
-  "gwangju-ilgok",
-  "gwangju-hyundae",
-  "gwangju-heemang",
-  "gwangju-unam-hanguk",
-  "gwangju-happyview",
-  "gwangju-hanguk",
-  "gwangju-mirae21",
-  "gwangju-sangmoo",
-  "gwangju-seogwang",
-  "seoul-sahmyook",
-  "seoul-hplus-yangji",
-  "seoul-hanil",
-  "seoul-gibbeum",
-  "seoul-police",
-  "seoul-jungang-bohun",
-  "seoul-daehan",
-  "seoul-hyemin",
-  "seoul-heemyoung",
-  "seoul-atomic",
-  "seoul-boramae",
-  "seoul-dongshin",
-  "seoul-geumgang-asan",
-  "seoul-nmc",
-  "seoul-daerim-sungmo",
-  "seoul-myongji-sungmo",
-  "seoul-sungae",
-  "seoul-sungsim",
-  "seoul-dongbu",
-  "seoul-mizmedi",
-  "seoul-bumin",
-  "seoul-seonam",
-  "seoul-redcross",
-  "seoul-seran",
-  "seoul-green",
-  "seoul-medical-center",
-  "seoul-cheonggu-sungsim",
-  "seoul-guro-sungsim",
-  "seoul-dongbu-jeil",
-  "seoul-schmc",
-  "chungnam-schmc-cheonan",
-  "gyeonggi-schmc-bucheon",
-  "seoul-eulji-nowon",
-  "seoul-eulji-gangnam",
-  "gyeonggi-eulji-uijeongbu",
-  "daegu-yeungnam",
-  "daegu-catholic",
-]);
 
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
@@ -637,30 +409,18 @@ export default function Home() {
               </p>
             )}
 
-            {results.map((hospital, index) =>
-              CHIP_PREVIEW_IDS.has(hospital.id) ? (
-                <HospitalCardChips
-                  key={hospital.id}
-                  hospital={hospital}
-                  index={index}
-                  selected={hospital.id === selectedHospitalId}
-                  onSelect={() => setSelectedHospitalId(hospital.id)}
-                  cardRef={(node) => {
-                    cardRefs.current[hospital.id] = node;
-                  }}
-                />
-              ) : (
-                <HospitalCard
-                  key={hospital.id}
-                  hospital={hospital}
-                  selected={hospital.id === selectedHospitalId}
-                  onSelect={() => setSelectedHospitalId(hospital.id)}
-                  cardRef={(node) => {
-                    cardRefs.current[hospital.id] = node;
-                  }}
-                />
-              )
-            )}
+            {results.map((hospital, index) => (
+              <HospitalCardChips
+                key={hospital.id}
+                hospital={hospital}
+                index={index}
+                selected={hospital.id === selectedHospitalId}
+                onSelect={() => setSelectedHospitalId(hospital.id)}
+                cardRef={(node) => {
+                  cardRefs.current[hospital.id] = node;
+                }}
+              />
+            ))}
           </section>
 
           <div className="order-1 h-[320px] sm:h-[420px] lg:sticky lg:top-6 lg:order-2 lg:h-[calc(100vh-8rem)]">

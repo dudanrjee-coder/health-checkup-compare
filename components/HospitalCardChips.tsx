@@ -6,11 +6,8 @@ import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
 import { tierBadgeStyle } from "@/lib/tierColors";
 
 /**
- * 칩 클러스터형 카드 — **미리보기용 시안**이다(46번 항목이 최종 사양).
- *
- * 기존 HospitalCard는 그대로 두고, app/page.tsx의 CHIP_PREVIEW_IDS에 든 병원만
- * 이 컴포넌트로 렌더링해 디자인을 비교한다. 전체 적용이 결정되면 HospitalCard로
- * 합치고 이 파일과 스위치를 지운다.
+ * 칩 클러스터형 카드. 전체 병원 목록에 쓰는 유일한 카드 컴포넌트다(구
+ * HospitalCard는 2026-09 전체 전환 후 삭제됨).
  *
  * **이 카드는 hospital.note를 렌더링하지 않는다.** 요약은 칩, 상세는 6줄 표다.
  */
