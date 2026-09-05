@@ -8,6 +8,7 @@ import HospitalCard from "@/components/HospitalCard";
 import HospitalCardChips from "@/components/HospitalCardChips";
 import SearchBox from "@/components/SearchBox";
 import DateTimeClock from "@/components/DateTimeClock";
+import VisitorCounter from "@/components/VisitorCounter";
 import { hasCoords, Sido, Tier } from "@/types/hospital";
 import {
   filterHospitals,
@@ -467,11 +468,14 @@ export default function Home() {
             이 페이지를 조회한 날짜라는 뜻을 분명히 하려고 라벨을 바꿨다. */}
         <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <DateTimeClock />
-          {todayLabel && (
-            <span className="text-xs text-slate-500">
-              조회 기준일 {todayLabel}
-            </span>
-          )}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            {todayLabel && (
+              <span className="text-xs text-slate-500">
+                조회 기준일 {todayLabel}
+              </span>
+            )}
+            <VisitorCounter />
+          </div>
         </div>
 
         <section className="mb-6 flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-lg shadow-slate-200/60">

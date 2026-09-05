@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/kv": "^3.0.0",
     "hangul-js": "^0.2.6",
     "leaflet": "^1.9.4",
     "next": "14.2.5",
