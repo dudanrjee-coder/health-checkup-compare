@@ -77,6 +77,10 @@ import {
  * - 청구성심병원·구로성심병원·동부제일병원: 자동 접속이 막혀 있던 마지막
  *   3곳을 사용자가 직접 브라우저로 접속해 확인(2026-09-02)했다. 이로써
  *   153곳 전체가 0번 체크리스트 재조사 및 카드 전환을 마쳤다.
+ * - 순천향대학교 서울·천안·부천병원, 노원·강남·의정부을지대학교병원,
+ *   영남대학교병원, 대구가톨릭대학교병원: 2026-09-05 신규 등록 8곳.
+ *   등록 당시 이 목록에 추가하는 것을 빠뜨려 번호 배지 없이 구 HospitalCard로
+ *   렌더링되던 것을 뒤늦게 바로잡았다.
  */
 const CHIP_PREVIEW_IDS = new Set([
   "seoul-hongik",
@@ -232,6 +236,14 @@ const CHIP_PREVIEW_IDS = new Set([
   "seoul-cheonggu-sungsim",
   "seoul-guro-sungsim",
   "seoul-dongbu-jeil",
+  "seoul-schmc",
+  "chungnam-schmc-cheonan",
+  "gyeonggi-schmc-bucheon",
+  "seoul-eulji-nowon",
+  "seoul-eulji-gangnam",
+  "gyeonggi-eulji-uijeongbu",
+  "daegu-yeungnam",
+  "daegu-catholic",
 ]);
 
 export default function Home() {
