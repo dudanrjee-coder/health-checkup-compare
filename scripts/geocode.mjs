@@ -133,6 +133,11 @@ const QUERIES = {
   "daejeon-chungnam-univ": "대전광역시 중구 문화로 282",
   "daejeon-konyang-univ": "대전광역시 서구 관저동로 158",
   "daejeon-eulji-univ": "대전광역시 서구 둔산서로 95",
+  "seoul-eulji-nowon": "서울특별시 노원구 한글비석로 68",
+  "seoul-eulji-gangnam": "서울특별시 강남구 도산대로 202",
+  "gyeonggi-eulji-uijeongbu": "경기도 의정부시 동일로 712",
+  "daegu-yeungnam": "대구광역시 남구 현충로 170",
+  "daegu-catholic": "대구광역시 남구 두류공원로17길 33",
   // 주소만으로는 대흥로(도로)가 잡혀서 병원명을 먼저 시도한다.
   "daejeon-catholic-daejeon-st-marys": [
     "가톨릭대학교 대전성모병원",
