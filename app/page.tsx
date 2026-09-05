@@ -433,6 +433,16 @@ export default function Home() {
             />
           </div>
         </div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-600 shadow-sm">
+          <span>병원 정보 오류 제보 · 제휴 문의</span>
+          <a
+            href="mailto:youngmukjee@gmail.com"
+            className="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700"
+          >
+            youngmukjee@gmail.com
+          </a>
+        </div>
       </div>
     </main>
   );
