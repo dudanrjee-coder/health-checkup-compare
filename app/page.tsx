@@ -60,6 +60,19 @@ export default function Home() {
     const pad = (n: number) => String(n).padStart(2, "0");
     setTodayLabel(`${pad(today.getMonth() + 1)}/${pad(today.getDate())}`);
   }, []);
+  // 문의 이메일 클립보드 복사 — 복사 성공 시 잠깐 "복사됨"으로 바뀌었다가 되돌아간다.
+  const [contactEmailCopied, setContactEmailCopied] = useState(false);
+  const handleCopyContactEmail = async () => {
+    const email = "youngmukjee@gmail.com";
+    try {
+      await navigator.clipboard.writeText(email);
+      setContactEmailCopied(true);
+      setTimeout(() => setContactEmailCopied(false), 2000);
+    } catch {
+      // 클립보드 API를 못 쓰는 환경(권한 거부, 구형 브라우저 등)에서는
+      // 조용히 무시한다 — 이메일 주소는 화면에 그대로 보이므로 수동 복사가 가능하다.
+    }
+  };
   // 검색 중에는 지역 선택을 무시하므로 등급 목록도 전국 기준으로 계산한다.
   const tiersWithData = useMemo(
     () => getTiersWithData(isSearching ? null : selectedSido),
@@ -436,12 +449,20 @@ export default function Home() {
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-600 shadow-sm">
           <span>병원 정보 오류 제보 · 제휴 문의</span>
-          <a
-            href="mailto:youngmukjee@gmail.com"
+          <button
+            type="button"
+            onClick={handleCopyContactEmail}
             className="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700"
           >
             youngmukjee@gmail.com
-          </a>
+          </button>
+          <span
+            className={`text-xs text-emerald-600 transition-opacity ${
+              contactEmailCopied ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            복사됨
+          </span>
         </div>
       </div>
     </main>
