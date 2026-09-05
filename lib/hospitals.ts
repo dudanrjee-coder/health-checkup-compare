@@ -87,9 +87,18 @@ export function filterHospitals(
 ): Hospital[] {
   const q = query.trim().toLowerCase();
 
-  return hospitals.filter((h) => {
+  const filtered = hospitals.filter((h) => {
     if (tiers.size > 0 && !tiers.has(h.tier)) return false;
     if (q) return matchesQuery(h, q);
     return !sido || h.region.sido === sido;
   });
+
+  /**
+   * 등급 우선순위(TIER_LIST 순서: 상급종합병원 → 종합병원 → 병원 → 의원)로
+   * 정렬한다. Array.sort는 안정 정렬이라 같은 등급 안에서는 원래 순서가
+   * 유지된다(카드 번호 배지도 이 순서를 그대로 따라간다).
+   */
+  return [...filtered].sort(
+    (a, b) => TIER_LIST.indexOf(a.tier) - TIER_LIST.indexOf(b.tier)
+  );
 }
