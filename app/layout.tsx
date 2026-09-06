@@ -15,7 +15,7 @@ const KEYWORDS = [
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} | 전국 153개 병원 지역별 비교`,
+    default: SITE_NAME,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -28,12 +28,12 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | 전국 153개 병원 지역별 비교`,
+    title: SITE_NAME,
     description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary",
-    title: `${SITE_NAME} | 전국 153개 병원 지역별 비교`,
+    title: SITE_NAME,
     description: SITE_DESCRIPTION,
   },
   robots: {
