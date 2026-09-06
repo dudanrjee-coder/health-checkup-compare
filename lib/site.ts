@@ -7,4 +7,4 @@ export const SITE_URL =
 
 export const SITE_NAME = "전국 건강검진 예약 비교";
 export const SITE_DESCRIPTION =
-  "전국 16개 시/도 상급종합병원·종합병원 153곳의 건강검진 예약 방법, 등급, 국가검진 지정 여부를 지역별로 한눈에 비교합니다.";
+  "전국 상급종합병원·종합병원의 건강검진 예약 방법, 등급, 국가검진 지정 여부를 지역별로 한눈에 비교합니다.";
