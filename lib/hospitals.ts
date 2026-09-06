@@ -76,6 +76,9 @@ function matchesQuery(hospital: Hospital, query: string): boolean {
   );
 }
 
+/** 목록 정렬 기준. "name"은 병원명 가나다순, "recommended"는 등급 우선순위 */
+export type SortOption = "name" | "recommended";
+
 /**
  * sido가 null이면 지역 제한 없이(= 전국) 등급 필터만 적용한다.
  * 검색어가 있으면 지역 선택은 무시하고 전국에서 찾는다. 등급 필터는 함께 적용된다.
@@ -83,7 +86,8 @@ function matchesQuery(hospital: Hospital, query: string): boolean {
 export function filterHospitals(
   sido: Sido | null,
   tiers: Set<Tier>,
-  query = ""
+  query = "",
+  sortBy: SortOption = "name"
 ): Hospital[] {
   const q = query.trim().toLowerCase();
 
@@ -92,6 +96,10 @@ export function filterHospitals(
     if (q) return matchesQuery(h, q);
     return !sido || h.region.sido === sido;
   });
+
+  if (sortBy === "name") {
+    return [...filtered].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  }
 
   /**
    * 등급 우선순위(TIER_LIST 순서: 상급종합병원 → 종합병원 → 병원 → 의원)로

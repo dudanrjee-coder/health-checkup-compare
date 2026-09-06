@@ -16,11 +16,14 @@ import {
   getSidosWithData,
   getTierCounts,
   getTiersWithData,
+  SortOption,
 } from "@/lib/hospitals";
 
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
   const [selectedTiers, setSelectedTiers] = useState<Set<Tier>>(new Set());
+  // 기본 정렬은 가나다순(병원명 오름차순). "추천순"은 등급 우선순위 정렬이다.
+  const [sortBy, setSortBy] = useState<SortOption>("name");
   const [selectedHospitalId, setSelectedHospitalId] = useState<string | null>(
     null
   );
@@ -96,8 +99,8 @@ export default function Home() {
 
   // 지역을 고르지 않았으면 전국 목록을 보여준다.
   const results = useMemo(
-    () => filterHospitals(selectedSido, selectedTiers, query),
-    [selectedSido, selectedTiers, query]
+    () => filterHospitals(selectedSido, selectedTiers, query, sortBy),
+    [selectedSido, selectedTiers, query, sortBy]
   );
 
   const mappableResults = useMemo(() => results.filter(hasCoords), [results]);
@@ -377,15 +380,16 @@ export default function Home() {
               </p>
 
               {/*
-                정렬 드롭다운 — 지금은 자리만 잡아둔 시각적 placeholder다.
-                옵션이 "추천순" 하나뿐이라 골라도 목록 순서는 바뀌지 않는다.
-                실제 정렬 기준·로직은 다음 작업에서 정해서 연결할 예정이다.
+                정렬 드롭다운 — 기본값은 "가나다순"(병원명 오름차순, lib/hospitals.ts의
+                SortOption "name"). "추천순"은 filterHospitals의 등급 우선순위 정렬이다.
               */}
               <select
                 aria-label="정렬 기준"
-                defaultValue="recommended"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="shrink-0 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
+                <option value="name">가나다순</option>
                 <option value="recommended">추천순</option>
               </select>
             </div>
