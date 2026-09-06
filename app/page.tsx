@@ -21,7 +21,8 @@ import {
 
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
-  const [selectedTiers, setSelectedTiers] = useState<Set<Tier>>(new Set());
+  // 등급 필터는 단일 선택이다(라디오 버튼처럼) — null이면 "전체".
+  const [selectedTier, setSelectedTier] = useState<Tier | null>(null);
   // 기본 정렬은 가나다순(병원명 오름차순). "추천순"은 등급 우선순위 정렬이다.
   const [sortBy, setSortBy] = useState<SortOption>("name");
   const [selectedHospitalId, setSelectedHospitalId] = useState<string | null>(
@@ -99,8 +100,8 @@ export default function Home() {
 
   // 지역을 고르지 않았으면 전국 목록을 보여준다.
   const results = useMemo(
-    () => filterHospitals(selectedSido, selectedTiers, query, sortBy),
-    [selectedSido, selectedTiers, query, sortBy]
+    () => filterHospitals(selectedSido, selectedTier, query, sortBy),
+    [selectedSido, selectedTier, query, sortBy]
   );
 
   const mappableResults = useMemo(() => results.filter(hasCoords), [results]);
@@ -132,7 +133,7 @@ export default function Home() {
    */
   function switchToSido(sido: Sido) {
     setSelectedSido(sido);
-    setSelectedTiers(new Set());
+    setSelectedTier(null);
     setSelectedHospitalId(null);
     setSearchInput("");
     setQuery("");
@@ -160,7 +161,7 @@ export default function Home() {
     setSelectedHospitalId(null);
     // 결과 판정은 results와 같은 기준(전국 + 등급 필터)으로 계산한다.
     setSubmittedNoMatch(
-      filterHospitals(null, selectedTiers, trimmed).length === 0
+      filterHospitals(null, selectedTier, trimmed).length === 0
     );
   }
 
@@ -172,27 +173,20 @@ export default function Home() {
 
   function handleSidoChange(sido: Sido) {
     setSelectedSido(sido);
-    setSelectedTiers(new Set());
+    setSelectedTier(null);
     setSelectedHospitalId(null);
     setSubmittedNoMatch(false);
   }
 
-  function handleTierToggle(tier: Tier) {
+  /** 등급 필터는 라디오 버튼처럼 동작한다 — 새로 고른 등급이 이전 선택을 대체한다. */
+  function handleTierSelect(tier: Tier) {
     setSelectedHospitalId(null);
-    setSelectedTiers((prev) => {
-      const next = new Set(prev);
-      if (next.has(tier)) {
-        next.delete(tier);
-      } else {
-        next.add(tier);
-      }
-      return next;
-    });
+    setSelectedTier(tier);
   }
 
   function handleClearTiers() {
     setSelectedHospitalId(null);
-    setSelectedTiers(new Set());
+    setSelectedTier(null);
   }
 
   return (
@@ -308,8 +302,8 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <TierFilter
-              selected={selectedTiers}
-              onToggle={handleTierToggle}
+              selected={selectedTier}
+              onSelect={handleTierSelect}
               tiersWithData={tiersWithData}
               tierCounts={tierCounts}
               allCount={allCount}

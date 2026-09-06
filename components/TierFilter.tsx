@@ -5,8 +5,9 @@ import { TIER_LIST, Tier } from "@/types/hospital";
 import { TIER_COLORS } from "@/lib/tierColors";
 
 interface TierFilterProps {
-  selected: Set<Tier>;
-  onToggle: (tier: Tier) => void;
+  /** 단일 선택이다(라디오 버튼처럼) — null이면 "전체". */
+  selected: Tier | null;
+  onSelect: (tier: Tier) => void;
   tiersWithData: Set<Tier>;
   /** 버튼 옆에 표시할 실제 개수(hospitals.json 기준, lib/hospitals.ts의 getTierCounts) */
   tierCounts: Record<Tier, number>;
@@ -29,13 +30,13 @@ interface TierFilterProps {
  */
 export default function TierFilter({
   selected,
-  onToggle,
+  onSelect,
   tiersWithData,
   tierCounts,
   allCount,
   onClearAll,
 }: TierFilterProps) {
-  const isAllActive = selected.size === 0;
+  const isAllActive = selected === null;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -60,7 +61,7 @@ export default function TierFilter({
 
       {TIER_LIST.map((tier) => {
         const hasData = tiersWithData.has(tier);
-        const isActive = selected.has(tier);
+        const isActive = selected === tier;
         const color = TIER_COLORS[tier];
 
         // 데이터가 없는 등급은 지도에 마커도 없으므로 등급 색을 쓰지 않고
@@ -90,7 +91,7 @@ export default function TierFilter({
             key={tier}
             type="button"
             disabled={!hasData}
-            onClick={() => onToggle(tier)}
+            onClick={() => onSelect(tier)}
             className={[
               "rounded-full border px-3 py-1.5 text-sm transition-colors",
               !hasData

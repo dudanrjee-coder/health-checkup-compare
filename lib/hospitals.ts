@@ -82,17 +82,19 @@ export type SortOption = "name" | "recommended";
 /**
  * sido가 null이면 지역 제한 없이(= 전국) 등급 필터만 적용한다.
  * 검색어가 있으면 지역 선택은 무시하고 전국에서 찾는다. 등급 필터는 함께 적용된다.
+ *
+ * 등급 필터는 단일 선택이다(라디오 버튼처럼) — tier가 null이면 "전체"다.
  */
 export function filterHospitals(
   sido: Sido | null,
-  tiers: Set<Tier>,
+  tier: Tier | null,
   query = "",
   sortBy: SortOption = "name"
 ): Hospital[] {
   const q = query.trim().toLowerCase();
 
   const filtered = hospitals.filter((h) => {
-    if (tiers.size > 0 && !tiers.has(h.tier)) return false;
+    if (tier && h.tier !== tier) return false;
     if (q) return matchesQuery(h, q);
     return !sido || h.region.sido === sido;
   });
