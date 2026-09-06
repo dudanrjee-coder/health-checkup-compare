@@ -29,7 +29,7 @@ export const SIDO_LIST = [
 
 export type Sido = (typeof SIDO_LIST)[number];
 
-export const TIER_LIST = ["상급종합병원", "종합병원", "병원", "의원"] as const;
+export const TIER_LIST = ["상급종합병원", "종합병원", "병원", "의료원"] as const;
 
 export type Tier = (typeof TIER_LIST)[number];
 

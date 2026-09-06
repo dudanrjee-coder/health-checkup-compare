@@ -20,14 +20,17 @@ const SELECTED_STROKE = "#2563eb";
  *
  * **채움색은 tier가 정한다**(`TIER_COLORS` — 카드 배지와 같은 값을 본다).
  * 예전에는 채움색이 선택 여부를 나타냈지만, 이제 그 자리를 tier가 쓰므로
- * 선택 표시는 **크기(30→40) + 파란 테두리**로 옮겼다. 선택된 마커도 등급 색을
+ * 선택 표시는 **크기(비선택보다 크게) + 파란 테두리**로 옮겼다. 선택된 마커도 등급 색을
  * 그대로 유지해야 지도에서 등급이 끊기지 않는다.
  */
 function createPinIcon(tier: Tier, selected: boolean) {
   const fill = TIER_COLORS[tier].marker;
   const stroke = selected ? SELECTED_STROKE : "#ffffff";
   const strokeWidth = selected ? 2.5 : 1.5;
-  const size = selected ? 40 : 30;
+  // 병원이 계속 늘어날 예정이라 마커가 빽빽해져도 지도가 복잡해 보이지
+  // 않도록 기존(30/40)보다 작게 줄였다. 클릭 영역(iconSize)과 색 구분은
+  // 그대로 유지되고 크기만 축소된다.
+  const size = selected ? 30 : 22;
   const height = size * 1.3;
 
   return L.divIcon({

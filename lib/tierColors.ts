@@ -17,18 +17,16 @@ export interface TierColor {
   badgeText: string;
 }
 
+/**
+ * 등급별 색은 아래 네 가지로 확정한다(더 바뀌지 않는다) — 상급종합병원 보라,
+ * 종합병원 초록, 병원 주황, 의료원 노랑. 이 표가 유일한 기준이니 지도·카드
+ * 어디에도 다른 색을 새로 하드코딩하지 않는다.
+ */
 export const TIER_COLORS: Record<Tier, TierColor> = {
-  // 헤더의 하늘색->인디고->핑크 그라디언트와 어울리도록 채도를 낮췄다.
-  상급종합병원: { marker: "#6366f1", badgeBg: "#e0e7ff", badgeText: "#3730a3" },
-  종합병원: { marker: "#10b981", badgeBg: "#d1fae5", badgeText: "#065f46" },
-  병원: { marker: "#f59e0b", badgeBg: "#fef3c7", badgeText: "#92400e" },
-  /**
-   * 의원은 색이 아직 정해지지 않았다. **별도 지시가 있을 때까지 건드리지 않는다.**
-   * 아래 값은 새로 고른 색이 아니라 기존 화면 색을 hex로 옮겨 적은 것이다
-   * — 배지는 Tailwind `bg-slate-100 text-slate-800`, 마커는 선택되지 않은
-   * 핀의 기본색 `#64748b`와 같은 값이라 화면상 변화가 없다.
-   */
-  의원: { marker: "#64748b", badgeBg: "#f1f5f9", badgeText: "#1e293b" },
+  상급종합병원: { marker: "#9333ea", badgeBg: "#f3e8ff", badgeText: "#6b21a8" },
+  종합병원: { marker: "#16a34a", badgeBg: "#dcfce7", badgeText: "#166534" },
+  병원: { marker: "#f97316", badgeBg: "#ffedd5", badgeText: "#9a3412" },
+  의료원: { marker: "#eab308", badgeBg: "#fef9c3", badgeText: "#854d0e" },
 };
 
 /** 카드 tier 배지에 그대로 넣는 인라인 스타일. */
