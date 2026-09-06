@@ -23,6 +23,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  /**
+   * favicon.ico·apple-icon.png는 app/ 폴더에 두면 Next.js App Router 파일
+   * 컨벤션으로 자동 인식된다(원래 파일명은 apple-touch-icon.png였는데,
+   * Next 컨벤션이 인식하는 이름은 apple-icon.png라 그 이름으로 바꿨다).
+   * icon-192.png/icon-512.png는 여기 metadata.icons에 넣어도 favicon.ico
+   * 파일 컨벤션이 우선 적용되며 통째로 무시되길래(렌더링해서 확인함)
+   * app/manifest.ts 쪽으로 옮겼다 — PWA 매니페스트용 아이콘이라 그게
+   * 맞는 자리이기도 하다.
+   */
   openGraph: {
     type: "website",
     locale: "ko_KR",
