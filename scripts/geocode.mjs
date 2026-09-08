@@ -571,6 +571,14 @@ const QUERIES = {
   "suncheon-peace-hospital": ["순천평화병원", "전남 순천시 양율길 180"],
   "mokpo-nodong-hospital": ["목포노동병원", "전남 목포시 수강로12번길 11-1"],
   "jangseong-hospital": ["장성병원", "전남 장성군 장성읍 역전로 171"],
+  // 2026-09-08 전남 tier=병원 11차 배치.
+  "jangseong-hyewon-hospital": ["장성혜원병원", "전남 장성군 장성읍 강변안길 22"],
+  "jangheung-uri-hospital": ["장흥우리병원", "전남 장흥군 장흥읍 흥성로 83"],
+  "jangheung-integrated-medical-hospital": [
+    "원광대학교 장흥통합의료병원",
+    "전남 장흥군 안양면 로하스로 121",
+  ],
+  "mokpo-jeil-internal-medicine-hospital": ["제일내과병원 목포", "전남 목포시 섶나루길 126"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
