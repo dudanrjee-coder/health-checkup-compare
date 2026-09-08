@@ -623,6 +623,28 @@ const QUERIES = {
   "changwon-seoul-family-hospital": ["서울패밀리병원", "경상남도 창원시 성산구 마디미서로 54"],
   "yangsan-centumhill-hospital": ["센텀힐병원", "경상남도 양산시 평산로 11"],
   "haman-yeongdong-hospital": ["영동병원 함안", "시영의료재단 영동병원", "경상남도 함안군 칠원읍 용산2길 45-13"],
+  // 2026-09-09 경남 tier=병원 5차 배치(61~90번).
+  "changwon-sinmasan-seoul-childrens-hospital": ["신마산서울아동병원", "경상남도 창원시 마산합포구 문화동15길 25"],
+  "gimhae-isarang-hospital": ["아이사랑병원 김해", "경상남도 김해시 활천로 22"],
+  "changwon-yangdeok-seoul-childrens-hospital": ["양덕서울아동병원", "경상남도 창원시 마산회원구 양덕로 190"],
+  "yangsan-aideul-hospital": ["양산아이들병원", "경상남도 양산시 물금읍 청운로 354"],
+  "yangsan-jeil-hospital": ["양산제일병원", "경상남도 양산시 동면 금오로 255"],
+  "jinju-yedam-hospital": ["예담소아청소년과병원", "경상남도 진주시 충의로 20-33"],
+  "jinju-yeson-rehab-hospital": ["예손재활의학과병원", "경상남도 진주시 진주대로 839"],
+  "changwon-yein-hospital": ["예인병원 창원", "경상남도 창원시 진해구 진해대로 958"],
+  "gimhae-woori-womens-hospital": ["우리여성병원 김해", "경상남도 김해시 내외중앙로 91"],
+  "yangsan-woongsang-good-kids-hospital": ["웅상좋은아이병원", "경상남도 양산시 평산로 12"],
+  "changwon-eunhye-hospital": ["은혜병원 창원", "경상남도 창원시 마산합포구 해안대로 331"],
+  "changwon-himchan-hospital": ["창원힘찬병원", "경상남도 창원시 의창구 의창대로 45"],
+  "miryang-yoon-hospital": ["밀양윤병원", "경상남도 밀양시 삼문중앙로 32"],
+  "gimhae-samseung-hospital": ["김해삼승병원", "경상남도 김해시 김해대로 2335"],
+  "changwon-semyeong-hospital": ["세명병원 창원 진해구", "경상남도 창원시 진해구 용원서로 42"],
+  "namhae-hospital": ["남해병원", "경상남도 남해군 남해읍 화전로 169"],
+  "gimhae-mega-hospital": ["메가병원 김해", "경상남도 김해시 계동로 237"],
+  // 병원 건물 POI, 도로명(학산2길)·법정리(학산리) 모두 Nominatim에 없어 면(산인면) 중심점을 쓴다.
+  "haman-ara-hankook-hospital": ["아라한국병원", "경상남도 함안군 산인면 학산리", "경상남도 함안군 산인면"],
+  "sacheon-samcheonpo-seoul-hospital": ["삼천포서울병원", "경상남도 사천시 남일로 33"],
+  "changwon-segwang-hospital": ["세광병원 창원 진해구", "경상남도 창원시 진해구 중원동로 55-1"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
