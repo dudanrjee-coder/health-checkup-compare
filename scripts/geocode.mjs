@@ -553,6 +553,11 @@ const QUERIES = {
   ],
   "yeosu-yewul-hospital": ["예울병원 여수", "전남 여수시 신월로 114"],
   "wando-daesung-hospital": ["완도대성병원", "전남 완도군 완도읍 청해진동로 63"],
+  // 2026-09-08 전남 tier=병원 8차 배치.
+  "yeosu-munwha-hospital": ["여수문화병원", "전남 여수시 대치3길 26"],
+  "gwangyang-hospital": ["광양병원", "전남 광양시 광양읍 인덕로 992"],
+  "suncheon-hyundai-womens-hospital": ["현대여성아동병원 순천", "전남 순천시 장선배기1길 8"],
+  "gokseong-sarang-hospital": ["곡성사랑병원", "전남 곡성군 곡성읍 곡성로 761"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
