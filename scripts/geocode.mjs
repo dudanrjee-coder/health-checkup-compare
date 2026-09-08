@@ -60,6 +60,8 @@ const QUERIES = {
   "cheongju-iwell-childrens-hospital": ["아이웰어린이병원", "충북 청주시 청원구 주성로 273", "충북 청주시 청원구 주성동"],
   // 2026-09-09 충북 tier=병원 보류 목록 재조사(2곳째, 마이크로재활병원 — 마이크로병원과 같은 건물).
   "cheongju-micro-rehab-hospital": ["마이크로재활병원 청주", "충북 청주시 흥덕구 사직대로 26"],
+  // 2026-09-09 청주한국병원(종합병원 등급 확인 후 등록).
+  "cheongju-hankook-hospital": ["청주한국병원", "충청북도 청주시 상당구 단재로 106"],
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
