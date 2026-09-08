@@ -604,6 +604,11 @@ const QUERIES = {
   "gimhae-goodmorning-hospital": ["김해굿모닝병원", "경상남도 김해시 분성로 444"],
   "gimhae-sarang-hospital": ["김해사랑병원", "경상남도 김해시 금관대로 1263"],
   "miryang-nano-hospital": ["나노병원 밀양", "경상남도 밀양시 중앙로 229"],
+  // 2026-09-09 경남 tier=병원 3차 배치.
+  "yangsan-eroun-hospital": ["더이로운병원", "경상남도 양산시 양산대로 886"],
+  "changwon-dongmasan-hospital": ["동마산병원", "경상남도 창원시 마산회원구 3.15대로 681"],
+  "jinju-dongjinju-jeil-hospital": ["동진주 제일병원 진주", "경상남도 진주시 대신로 359"],
+  "changwon-metro-hospital": ["메트로병원 창원", "경상남도 창원시 의창구 평산로219번길 3"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
