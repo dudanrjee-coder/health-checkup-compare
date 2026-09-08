@@ -55,6 +55,9 @@ const QUERIES = {
   "cheongju-hyundai-hospital": ["청주현대병원", "충북 청주시 흥덕구 비하동"],
   "cheongju-chello-hospital": ["첼로병원 청주", "충북 청주시 청원구 내덕동"],
   "chungju-mirae-hospital": ["충주미래병원", "충북 충주시 국원대로 99"],
+  // 2026-09-08 충북 tier=병원 보류 목록 재조사(1곳, 아이웰어린이병원).
+  // 병원 건물 POI, 도로명 지번(주성로 273) 모두 Nominatim에 없어 법정동(주성동) 중심점을 쓴다.
+  "cheongju-iwell-childrens-hospital": ["아이웰어린이병원", "충북 청주시 청원구 주성로 273", "충북 청주시 청원구 주성동"],
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
