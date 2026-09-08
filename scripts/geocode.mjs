@@ -59,6 +59,9 @@ const QUERIES = {
   "wonju-hyundai-central-hospital": ["현대중앙병원 원주", "강원도 원주시 우산동"],
   "hoengseong-daesung-hospital": ["횡성대성병원", "횡성로 275", "강원도 횡성군 횡성읍"],
   "yeongwol-pureunsarang-hospital": ["푸른사랑병원 영월", "강원특별자치도 영월군 영월읍 중앙로 10"],
+  // 2026-09-08 강원 tier=병원 7차(누락분 보완) 배치.
+  "wonju-jung-hospital": ["정병원 원주", "강원도 원주시 원문로 141"],
+  "wonju-yonsei-myungin-hospital": ["연세명인병원", "강원특별자치도 원주시 평원로 100"],
   // 2026-08-23 서울 중랑구 3곳 등록분(38번 항목).
   "seoul-green": ["녹색병원 중랑구", "서울특별시 중랑구 사가정로49길 53"],
   // "서울의료원"만 쓰면 서울특별시 산하 다른 의료 시설이 잡힐 수 있어 법정동을 붙인다.
