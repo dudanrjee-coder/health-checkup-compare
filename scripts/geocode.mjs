@@ -594,6 +594,12 @@ const QUERIES = {
   "hwasun-sungsim-hospital": ["화순성심병원", "전남 화순군 화순읍 만연로 31"],
   "hwasun-jungang-hospital": ["화순중앙병원", "전남 화순군 화순읍 칠충로 101"],
   "haenam-hankook-hospital": ["해남한국병원", "전남 해남군 해남읍 중앙2로 123"],
+  // 2026-09-09 경남 tier=병원 1차 배치.
+  "gimhae-centum-hospital": ["김해센텀병원", "경상남도 김해시 구지로 56"],
+  "changwon-365-hospital": ["365병원 창원", "경상남도 창원시 마산회원구 3.15대로 686"],
+  "geoje-childrens-hospital": ["거제아동병원", "경상남도 거제시 동문천로 52"],
+  "geochang-redcross-hospital": ["거창적십자병원", "경상남도 거창군 거창읍 중앙로 91"],
+  "changwon-goot-hospital": ["구트병원 창원", "경상남도 창원시 성산구 원이대로 578"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
