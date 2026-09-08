@@ -5,8 +5,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -c \"for ($i=0; $i -lt 10; $i++) { [console]::beep(1000,500); Start-Sleep -Seconds 5 }\"",
-            "timeout": 90
+            "command": "powershell -c \"[System.Media.SystemSounds]::Exclamation.Play()\"",
+            "timeout": 10
           }
         ]
       }
