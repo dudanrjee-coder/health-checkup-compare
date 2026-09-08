@@ -546,6 +546,13 @@ const QUERIES = {
   "yeosu-gaon-hospital": ["여수가온병원", "전남 여수시 좌수영로 251-0"],
   "yeosu-jungang-hospital": ["여수중앙병원", "전남 여수시 둔덕2길 6-3"],
   "yeosu-hankook-hospital": ["여수한국병원", "전남 여수시 여천체육공원길 10"],
+  // 2026-09-08 전남 tier=병원 7차 배치.
+  "yeongam-hankook-hospital": [
+    "전남 영암군 영암읍 오리정길 8",
+    "영암한국병원",
+  ],
+  "yeosu-yewul-hospital": ["예울병원 여수", "전남 여수시 신월로 114"],
+  "wando-daesung-hospital": ["완도대성병원", "전남 완도군 완도읍 청해진동로 63"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
