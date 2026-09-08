@@ -558,6 +558,14 @@ const QUERIES = {
   "gwangyang-hospital": ["광양병원", "전남 광양시 광양읍 인덕로 992"],
   "suncheon-hyundai-womens-hospital": ["현대여성아동병원 순천", "전남 순천시 장선배기1길 8"],
   "gokseong-sarang-hospital": ["곡성사랑병원", "전남 곡성군 곡성읍 곡성로 761"],
+  // 2026-09-08 전남 tier=병원 9차 배치.
+  "boseong-samho-hospital": [
+    "전남 보성군 벌교읍 남하로 12",
+    "벌교삼호병원",
+  ],
+  "mokpo-sinan-hospital": ["전남 목포시 산정로 12", "신안병원 목포"],
+  "sinan-daewoo-hospital": ["전남 신안군 비금면 송치길 155-11"],
+  "hampyeong-sungsim-hospital": ["함평성심병원", "전남 함평군 함평읍 영수길 132"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
