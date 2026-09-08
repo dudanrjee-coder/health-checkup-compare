@@ -566,6 +566,11 @@ const QUERIES = {
   "mokpo-sinan-hospital": ["전남 목포시 산정로 12", "신안병원 목포"],
   "sinan-daewoo-hospital": ["전남 신안군 비금면 송치길 155-11"],
   "hampyeong-sungsim-hospital": ["함평성심병원", "전남 함평군 함평읍 영수길 132"],
+  // 2026-09-08 전남 tier=병원 10차 배치.
+  "goheung-nokdong-hyundai-hospital": ["녹동현대병원", "전남 고흥군 도양읍 차경구렁목길 215"],
+  "suncheon-peace-hospital": ["순천평화병원", "전남 순천시 양율길 180"],
+  "mokpo-nodong-hospital": ["목포노동병원", "전남 목포시 수강로12번길 11-1"],
+  "jangseong-hospital": ["장성병원", "전남 장성군 장성읍 역전로 171"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
