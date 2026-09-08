@@ -600,6 +600,10 @@ const QUERIES = {
   "geoje-childrens-hospital": ["거제아동병원", "경상남도 거제시 동문천로 52"],
   "geochang-redcross-hospital": ["거창적십자병원", "경상남도 거창군 거창읍 중앙로 91"],
   "changwon-goot-hospital": ["구트병원 창원", "경상남도 창원시 성산구 원이대로 578"],
+  // 2026-09-09 경남 tier=병원 2차 배치.
+  "gimhae-goodmorning-hospital": ["김해굿모닝병원", "경상남도 김해시 분성로 444"],
+  "gimhae-sarang-hospital": ["김해사랑병원", "경상남도 김해시 금관대로 1263"],
+  "miryang-nano-hospital": ["나노병원 밀양", "경상남도 밀양시 중앙로 229"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
