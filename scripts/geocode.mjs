@@ -49,6 +49,12 @@ const QUERIES = {
   "jincheon-hyuksin-sungmo-hospital": ["혁신성모병원 진천", "충청북도 진천군 덕산읍"],
   "cheongju-goodnews-hospital": ["청주복음병원", "충북 청주시 서원구 사직대로 160"],
   "jecheon-sungji-hospital": ["제천성지병원", "충북 제천시 의림대로 284"],
+  // 2026-09-08 충북 tier=병원 5차(마지막) 배치.
+  "cheongju-samsung-hospital": ["청주삼성병원", "충청북도 청주시 서원구 청남로 2014"],
+  "cheongju-prime-hospital": ["청주프라임병원", "충북 청주시 흥덕구 짐대로72번길 37"],
+  "cheongju-hyundai-hospital": ["청주현대병원", "충북 청주시 흥덕구 비하동"],
+  "cheongju-chello-hospital": ["첼로병원 청주", "충북 청주시 청원구 내덕동"],
+  "chungju-mirae-hospital": ["충주미래병원", "충북 충주시 국원대로 99"],
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
