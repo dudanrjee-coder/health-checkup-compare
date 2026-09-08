@@ -28,6 +28,12 @@ const QUERIES = {
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
+  // 2026-09-08 강원 tier=병원 2차 배치.
+  "yanggu-baekdu-hospital": ["백두병원 양구", "강원특별자치도 양구군 양구읍 금강산로 510"],
+  "wonju-bonebest-hospital": ["본베스트병원", "강원특별자치도 원주시 능라동길 51"],
+  "samcheok-goodneighbor-hospital": ["선한이웃병원 삼척", "강원특별자치도 삼척시 오십천로 506"],
+  "taebaek-shin-hospital": ["신태백병원", "강원특별자치도 태백시 황지로 23"],
+  "wonju-yonsei-mediheim-hospital": ["연세메디하임병원", "강원특별자치도 원주시 문막읍 원문로 1419"],
   // 2026-08-23 서울 중랑구 3곳 등록분(38번 항목).
   "seoul-green": ["녹색병원 중랑구", "서울특별시 중랑구 사가정로49길 53"],
   // "서울의료원"만 쓰면 서울특별시 산하 다른 의료 시설이 잡힐 수 있어 법정동을 붙인다.
