@@ -582,6 +582,11 @@ const QUERIES = {
   // 2026-09-08 전남 tier=병원 12차 배치.
   "jindo-hankook-hospital": ["진도한국병원", "전남 진도군 진도읍 남문길 48"],
   "suncheon-plus-imiko-hospital": ["플러스아이미코병원", "전남 순천시 신월큰길 7"],
+  // 2026-09-08 전남 tier=병원 13차(마지막) 배치.
+  "hwasun-korea-hospital": ["화순고려병원", "전남 화순군 화순읍 충의로 109"],
+  "hwasun-sungsim-hospital": ["화순성심병원", "전남 화순군 화순읍 만연로 31"],
+  "hwasun-jungang-hospital": ["화순중앙병원", "전남 화순군 화순읍 칠충로 101"],
+  "haenam-hankook-hospital": ["해남한국병원", "전남 해남군 해남읍 중앙2로 123"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
