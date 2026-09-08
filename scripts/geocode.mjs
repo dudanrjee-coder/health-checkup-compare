@@ -609,6 +609,20 @@ const QUERIES = {
   "changwon-dongmasan-hospital": ["동마산병원", "경상남도 창원시 마산회원구 3.15대로 681"],
   "jinju-dongjinju-jeil-hospital": ["동진주 제일병원 진주", "경상남도 진주시 대신로 359"],
   "changwon-metro-hospital": ["메트로병원 창원", "경상남도 창원시 의창구 평산로219번길 3"],
+  // 2026-09-09 경남 tier=병원 4차 배치(31~60번).
+  "changwon-moran-womens-hospital": ["모란여성병원", "경상남도 창원시 성산구 마디미서로 56"],
+  "miryang-hospital": ["밀양병원", "경상남도 밀양시 밀양대로 1823"],
+  "changwon-vital-hospital": ["바이탈병원 창원", "경상남도 창원시 의창구 북면 천주로 785"],
+  "jinju-bando-hospital": ["반도병원 진주", "경상남도 진주시 남강로 701"],
+  "yangsan-bonbarun-hospital": ["본바른병원", "경상남도 양산시 물금읍 청운로 343"],
+  "sacheon-samcheonpo-jeil-hospital": ["삼천포제일병원", "경상남도 사천시 중앙로 136"],
+  "changwon-sangnam-hanmaeum-hospital": ["상남한마음병원", "경상남도 창원시 성산구 원이대로682번길 21"],
+  "gimhae-seoul-saessack-hospital": ["서울새싹병원", "경상남도 김해시 율하3로 53"],
+  "geoje-seoul-childrens-hospital": ["서울아동병원 거제", "경상남도 거제시 서문로5길 6"],
+  "yangsan-seoul-pamily-hospital": ["서울패미리병원", "경상남도 양산시 물금읍 증산역로 135"],
+  "changwon-seoul-family-hospital": ["서울패밀리병원", "경상남도 창원시 성산구 마디미서로 54"],
+  "yangsan-centumhill-hospital": ["센텀힐병원", "경상남도 양산시 평산로 11"],
+  "haman-yeongdong-hospital": ["영동병원 함안", "시영의료재단 영동병원", "경상남도 함안군 칠원읍 용산2길 45-13"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
