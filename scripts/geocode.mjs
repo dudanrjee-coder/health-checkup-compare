@@ -520,6 +520,18 @@ const QUERIES = {
   "gurye-hospital": ["구례병원", "전라남도 구례군 구례읍 동편제길 4"],
   "damyang-sarang-hospital": ["담양사랑병원", "전라남도 담양군 담양읍 천변7길 19"],
   "mokpo-mirae-hospital": ["목포미래병원", "전남 목포시 녹색로 41"],
+  // 2026-09-08 전남 tier=병원 2~4차 배치.
+  "mokpo-mizai-hospital": ["목포미즈아이병원", "전남 목포시 백년대로 418"],
+  "mokpo-yehyang-hospital": ["목포예향병원", "전남 목포시 삼학로223번길 38"],
+  "mokpo-jangmun-hospital": ["목포장문외과병원", "전남 목포시 백년대로 322"],
+  "mokpo-solteun-hospital": ["솔튼병원 목포", "전남 목포시 고하대로 724"],
+  "suncheon-sunjeong-hospital": ["순정병원 순천", "전남 순천시 해룡면 지봉로 372-3"],
+  "suncheon-s-hospital": ["순천에스병원", "전남 순천시 용당삼산로 11"],
+  "mokpo-hansarang-hospital": ["목포한사랑병원", "전남 목포시 백년대로 335"],
+  "mokpo-hyundai-hospital": ["목포현대병원", "전남 목포시 용당로 322-1"],
+  "suncheon-miz-hospital": ["미즈여성아동병원 순천", "전남 순천시 조례1길 10-26"],
+  "yeosu-aeyang-hospital": ["여수애양병원", "전남 여수시 율촌면 구암길 319"],
+  "yeongam-samhojeil-hospital": ["삼호제일병원", "전남 영암군 삼호읍 신항로 92"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
