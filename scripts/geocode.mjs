@@ -43,6 +43,12 @@ const QUERIES = {
   "cheongju-micro-hospital": ["마이크로병원 청주", "충북 청주시 흥덕구 사직대로 26"],
   "boeun-hanyang-hospital": ["보은한양병원", "충북 보은군 보은읍"],
   "yeongdong-hospital": ["영동병원 충북", "충청북도 영동군 영동읍 대학로 106"],
+  // 2026-09-08 충북 tier=병원 4차 배치.
+  "eumseong-jeilgoeun-hospital": ["제일조은병원", "충청북도 음성군 금왕읍"],
+  "cheongju-kimsookja-childrens-hospital": ["김숙자소아청소년병원", "충청북도 청주시 흥덕구 직지대로 745"],
+  "jincheon-hyuksin-sungmo-hospital": ["혁신성모병원 진천", "충청북도 진천군 덕산읍"],
+  "cheongju-goodnews-hospital": ["청주복음병원", "충북 청주시 서원구 사직대로 160"],
+  "jecheon-sungji-hospital": ["제천성지병원", "충북 제천시 의림대로 284"],
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
