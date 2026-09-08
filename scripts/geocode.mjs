@@ -579,6 +579,9 @@ const QUERIES = {
     "전남 장흥군 안양면 로하스로 121",
   ],
   "mokpo-jeil-internal-medicine-hospital": ["제일내과병원 목포", "전남 목포시 섶나루길 126"],
+  // 2026-09-08 전남 tier=병원 12차 배치.
+  "jindo-hankook-hospital": ["진도한국병원", "전남 진도군 진도읍 남문길 48"],
+  "suncheon-plus-imiko-hospital": ["플러스아이미코병원", "전남 순천시 신월큰길 7"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
