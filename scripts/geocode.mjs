@@ -532,6 +532,16 @@ const QUERIES = {
   "suncheon-miz-hospital": ["미즈여성아동병원 순천", "전남 순천시 조례1길 10-26"],
   "yeosu-aeyang-hospital": ["여수애양병원", "전남 여수시 율촌면 구암길 319"],
   "yeongam-samhojeil-hospital": ["삼호제일병원", "전남 영암군 삼호읍 신항로 92"],
+  // 2026-09-08 전남 tier=병원 5차 배치.
+  "suncheon-hana-hospital": ["순천하나병원", "전남 순천시 팔마로 215"],
+  "suncheon-hope-hospital": ["순천희망병원", "전남 순천시 중앙로 4"],
+  "suncheon-onnuri-hospital": [
+    "전남 순천시 해룡면 향매로 97",
+    "신대온누리병원",
+    "온누리병원 순천 해룡면",
+  ],
+  "yeosu-cs-namu-hospital": ["씨에스나무병원", "전남 여수시 도원로 164-1"],
+  "boseong-asan-hospital": ["보성아산병원", "전남 보성군 미력면 가평길 36-17"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
