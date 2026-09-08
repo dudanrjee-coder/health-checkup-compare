@@ -25,6 +25,12 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-08 충북 tier=병원 1차 배치.
+  "eumseong-ingok-jaeae-hospital": ["인곡자애병원", "충청북도 음성군 맹동면 꽃동네길 37"],
+  "chungju-kimnkwon-hospital": ["김앤권병원 충주", "충북 충주시 번영대로 239"],
+  "cheongju-dana-womens-hospital": ["다나여성병원 청주", "충청북도 청주시 청원구 충청대로 179"],
+  "cheongju-motaean-womens-hospital": ["모태안여성병원", "충청북도 청주시 서원구 복대로17번길 57"],
+  "cheongju-ppuri-hospital": ["뿌리병원 청주", "충청북도 청주시 청원구 내덕로 56"],
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
