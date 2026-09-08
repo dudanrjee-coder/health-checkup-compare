@@ -37,6 +37,12 @@ const QUERIES = {
   "cheongju-ochang-jungang-hospital": ["오창중앙병원", "충청북도 청주시 청원구 오창읍 중부로 683"],
   "cheongju-wellness-childrens-hospital": ["웰니스어린이병원", "충북 청주시 상당구 방서동", "충북 청주시 상당구 2순환로"],
   "goesan-sungmo-hospital": ["괴산성모병원", "충북 괴산군 괴산읍 임꺽정로 116"],
+  // 2026-09-08 충북 tier=병원 3차 배치.
+  "cheongju-ochang-hosu-hospital": ["오창호수병원", "충청북도 청주시 청원구 오창읍"],
+  "goesan-seobu-hospital": ["괴산서부병원", "충청북도 괴산군 괴산읍 읍내로 259"],
+  "cheongju-micro-hospital": ["마이크로병원 청주", "충북 청주시 흥덕구 사직대로 26"],
+  "boeun-hanyang-hospital": ["보은한양병원", "충북 보은군 보은읍"],
+  "yeongdong-hospital": ["영동병원 충북", "충청북도 영동군 영동읍 대학로 106"],
   // 2026-09-08 강원 tier=병원 1차 배치.
   "gangwon-rehabilitation-hospital": ["강원특별자치도재활병원", "강원특별자치도 춘천시 충열로142번길 24-16"],
   "jeongseon-comwel-hospital": ["근로복지공단 정선병원", "강원특별자치도 정선군 정선읍 봉양1길 145"],
