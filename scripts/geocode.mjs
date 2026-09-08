@@ -542,6 +542,10 @@ const QUERIES = {
   ],
   "yeosu-cs-namu-hospital": ["씨에스나무병원", "전남 여수시 도원로 164-1"],
   "boseong-asan-hospital": ["보성아산병원", "전남 보성군 미력면 가평길 36-17"],
+  // 2026-09-08 전남 tier=병원 6차 배치.
+  "yeosu-gaon-hospital": ["여수가온병원", "전남 여수시 좌수영로 251-0"],
+  "yeosu-jungang-hospital": ["여수중앙병원", "전남 여수시 둔덕2길 6-3"],
+  "yeosu-hankook-hospital": ["여수한국병원", "전남 여수시 여천체육공원길 10"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
