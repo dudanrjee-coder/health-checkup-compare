@@ -5,7 +5,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -c \"[console]::beep(1000,500)\""
+            "command": "powershell -c \"for ($i=0; $i -lt 10; $i++) { [console]::beep(1000,500); Start-Sleep -Seconds 5 }\"",
+            "timeout": 90
           }
         ]
       }
