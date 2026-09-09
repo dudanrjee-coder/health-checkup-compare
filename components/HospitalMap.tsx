@@ -16,33 +16,75 @@ const FLY_DURATION_SEC = 0.6;
 const SELECTED_STROKE = "#2563eb";
 
 /**
+ * "전체" 등급 필터일 때 마커를 절반 크기로 축소해도 유지할 최소 터치 영역(px).
+ * 축소된 시각적 크기와 별개로, 클릭/탭 가능한 영역은 이 값 아래로 내려가지 않는다.
+ */
+const MIN_TOUCH_PX = 24;
+
+function buildPinSvg(
+  size: number,
+  height: number,
+  fill: string,
+  stroke: string,
+  strokeWidth: number
+) {
+  return `<svg width="${size}" height="${height}" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 0C5.7 0 0.6 5.1 0.6 11.4 0.6 20 12 32 12 32s11.4-12 11.4-20.6C23.4 5.1 18.3 0 12 0z"
+        fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" />
+      <circle cx="12" cy="11.4" r="4.2" fill="#ffffff" />
+    </svg>`;
+}
+
+/**
  * 번들러 환경에서 Leaflet 기본 마커 이미지 경로가 깨지므로 divIcon(인라인 SVG)을 쓴다.
  *
  * **채움색은 tier가 정한다**(`TIER_COLORS` — 카드 배지와 같은 값을 본다).
  * 예전에는 채움색이 선택 여부를 나타냈지만, 이제 그 자리를 tier가 쓰므로
  * 선택 표시는 **크기(비선택보다 크게) + 파란 테두리**로 옮겼다. 선택된 마커도 등급 색을
  * 그대로 유지해야 지도에서 등급이 끊기지 않는다.
+ *
+ * `allTiersSelected`(등급 필터가 "전체")일 때는 마커가 늘어나며 지도가 빽빽해
+ * 보이지 않도록 시각적 크기를 절반으로 줄인다. 다만 클릭 영역까지 그대로
+ * 절반이 되면 탭이 어려워지므로, `iconSize`(=클릭 영역)는 `MIN_TOUCH_PX`
+ * 아래로 내려가지 않게 하고, 그 안에서 SVG를 하단 중앙 정렬해 지도 좌표를
+ * 가리키는 핀 끝(tip) 위치는 그대로 유지한다(iconAnchor가 곧 박스의
+ * bottom-center와 일치).
  */
-function createPinIcon(tier: Tier, selected: boolean) {
+function createPinIcon(tier: Tier, selected: boolean, allTiersSelected: boolean) {
   const fill = TIER_COLORS[tier].marker;
   const stroke = selected ? SELECTED_STROKE : "#ffffff";
   const strokeWidth = selected ? 2.5 : 1.5;
   // 병원이 계속 늘어날 예정이라 마커가 빽빽해져도 지도가 복잡해 보이지
-  // 않도록 기존(30/40)보다 작게 줄였다. 클릭 영역(iconSize)과 색 구분은
-  // 그대로 유지되고 크기만 축소된다.
-  const size = selected ? 30 : 22;
+  // 않도록 기존(30/40)보다 작게 줄였다. 이 값이 "개별 등급 선택" 시의
+  // 100% 기준 크기다.
+  const baseSize = selected ? 30 : 22;
+  const baseHeight = baseSize * 1.3;
+
+  if (!allTiersSelected) {
+    return L.divIcon({
+      className: "",
+      html: buildPinSvg(baseSize, baseHeight, fill, stroke, strokeWidth),
+      iconSize: [baseSize, baseHeight],
+      iconAnchor: [baseSize / 2, baseHeight],
+      popupAnchor: [0, -baseHeight + 4],
+    });
+  }
+
+  const size = baseSize * 0.5;
   const height = size * 1.3;
+  const touchWidth = Math.max(size, MIN_TOUCH_PX);
+  const touchHeight = Math.max(height, MIN_TOUCH_PX * 1.3);
 
   return L.divIcon({
     className: "",
-    html: `<svg width="${size}" height="${height}" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 0C5.7 0 0.6 5.1 0.6 11.4 0.6 20 12 32 12 32s11.4-12 11.4-20.6C23.4 5.1 18.3 0 12 0z"
-        fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" />
-      <circle cx="12" cy="11.4" r="4.2" fill="#ffffff" />
-    </svg>`,
-    iconSize: [size, height],
-    iconAnchor: [size / 2, height],
-    popupAnchor: [0, -height + 4],
+    // flex + align-items:flex-end로 SVG를 박스 하단 중앙에 붙여, 확장된
+    // 클릭 영역이 위쪽으로만 여백을 갖고 핀 끝(tip) 좌표는 그대로 둔다.
+    html: `<div style="width:${touchWidth}px;height:${touchHeight}px;display:flex;align-items:flex-end;justify-content:center;">
+      ${buildPinSvg(size, height, fill, stroke, strokeWidth)}
+    </div>`,
+    iconSize: [touchWidth, touchHeight],
+    iconAnchor: [touchWidth / 2, touchHeight],
+    popupAnchor: [0, -touchHeight + 4],
   });
 }
 
@@ -53,6 +95,8 @@ interface HospitalMapProps {
   searchActive?: boolean;
   selectedId: string | null;
   onSelect: (id: string) => void;
+  /** 등급 필터가 "전체"(미선택)인지 여부. true면 마커를 절반 크기로 축소한다 */
+  allTiersSelected?: boolean;
 }
 
 /**
@@ -177,6 +221,7 @@ export default function HospitalMap({
   searchActive = false,
   selectedId,
   onSelect,
+  allTiersSelected = false,
 }: HospitalMapProps) {
   // 카드에서 선택했을 때도 말풍선이 열리도록 MapController가 이 참조를 쓴다.
   const markerRefs = useRef<Record<string, L.Marker | null>>({});
@@ -232,7 +277,11 @@ export default function HospitalMap({
           <Marker
             key={hospital.id}
             position={[hospital.lat, hospital.lng]}
-            icon={createPinIcon(hospital.tier, hospital.id === selectedId)}
+            icon={createPinIcon(
+              hospital.tier,
+              hospital.id === selectedId,
+              allTiersSelected
+            )}
             zIndexOffset={hospital.id === selectedId ? 1000 : 0}
             ref={(marker) => {
               markerRefs.current[hospital.id] = marker;

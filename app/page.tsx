@@ -441,6 +441,7 @@ export default function Home() {
               searchActive={isSearching}
               selectedId={selectedHospitalId}
               onSelect={setSelectedHospitalId}
+              allTiersSelected={selectedTier === null}
             />
           </div>
         </div>
