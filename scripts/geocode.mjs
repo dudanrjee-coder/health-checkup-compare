@@ -774,6 +774,19 @@ const QUERIES = {
   "goseong-gang-hospital": ["경상남도 고성군 고성읍 중앙로 49"],
   "geoje-jungang-hospital": ["거제중앙병원", "경상남도 거제시 고현로 89"],
   "changwon-goodmorning-naegwa-hospital": ["경상남도 창원시 의창구 사화로 6"],
+  // 2026-09-10 충남 tier=병원 1차 배치(1~10번, 등록 8곳).
+  "dangjin-9988-hospital": ["9988병원", "충청남도 당진시 운학길 3"],
+  "cheonan-sg-samsungjoeun-hospital": ["SG삼성조은병원", "충청남도 천안시 서북구 불당25로 200"],
+  // "해월로"가 논산시 여러 동(반월동/덕지동 등)을 지나가 법정동 없이 조회하면
+  // 다른 구간(화지동/산동리)이 잡힌다. 법정동을 붙여 정확도를 높인다.
+  "nonsan-goryeo-hospital": ["충청남도 논산시 반월동 해월로 151"],
+  "asan-kkumkeuneunai-hospital": ["꿈크는아이병원", "충청남도 아산시 배방읍 배방로13번길 13"],
+  "dangjin-seongmo-hospital": ["당진성모병원", "충청남도 당진시 당진중앙1로 43"],
+  "cheonan-dodoom-hospital": ["돋움병원", "충청남도 천안시 서북구 동서대로 110"],
+  "cheonan-dujeong-ijin-hospital": ["두정이진병원", "충청남도 천안시 서북구 동서대로 65"],
+  // "충무로"가 법정동 없이 조회하면 아산시 둔포리(약 16km 떨어진 엉뚱한 구간)가
+  // 잡힌다. 법정동(권곡동)을 붙여 정정한다.
+  "asan-leaders-hospital": ["충청남도 아산시 권곡동 충무로 74"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
