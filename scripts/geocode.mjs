@@ -671,6 +671,18 @@ const QUERIES = {
   "yangsan-hanareum-hospital": ["한아름병원 양산", "경상남도 양산시 물금읍 범구로 27"],
   "hamyang-sungsim-hospital": ["함양성심병원", "경상남도 함양군 함양읍 고운로 70"],
   "changwon-huimang-hospital": ["희망병원 창원 진해구", "경상남도 창원시 진해구 용원로 15"],
+  // 2026-09-09 경남 tier=병원 보류 목록 재조사 1차(A+C그룹, Playwright/Wayback 활용).
+  // 병원 건물 POI, 도로명(송정1길)·법정리(송정리) 모두 Nominatim에 없어 읍(거창읍) 중심점을 쓴다.
+  "geochang-segyeong-hospital": ["에스지서경병원", "경상남도 거창군 거창읍 송정1길 24-13", "경상남도 거창군 거창읍"],
+  "changwon-jinhae-seoul-childrens-hospital": [
+    "서울아동병원 창원 진해구",
+    "경상남도 창원시 진해구 진해대로776번길 27",
+  ],
+  "changwon-naeseo-seoul-childrens-hospital": [
+    "서울아동병원 창원 마산회원구 내서읍",
+    "경상남도 창원시 마산회원구 내서읍 삼계로 2",
+  ],
+  "gimhae-yulha-dreamtree-hospital": ["율하꿈나무병원", "경상남도 김해시 율하3로 38"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
