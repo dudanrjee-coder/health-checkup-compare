@@ -762,6 +762,18 @@ const QUERIES = {
   "changwon-kidswell-pediatric-hospital": ["키즈웰소아청소년과병원", "경상남도 창원시 마산회원구 용마로 130"],
   "jinju-tuntun-pediatric-hospital": ["튼튼소아청소년과병원 진주", "경상남도 진주시 진양호로 206"],
   "miryang-happy-hospital": ["경상남도 밀양시 하남읍 수산중앙로 56"],
+  // 2026-09-10 경남 보류 33곳 재조사(1조, 등록 전환 10곳).
+  "changnyeong-seoul-hospital": ["경상남도 창녕군 창녕읍 창녕대로 122"],
+  // 도로명(선평길 17)이 Nominatim에 없어 읍 중심점(사천읍)을 쓴다.
+  "sacheon-seoul-childrens-hospital": ["경상남도 사천시 사천읍 선평길 17", "경상남도 사천시 사천읍"],
+  "jinju-seoul-childrens-hospital": ["경상남도 진주시 하대로 80"],
+  "tongyeong-seoul-childrens-hospital": ["경상남도 통영시 중앙로 334"],
+  "changwon-jinhae-dana-hospital": ["경상남도 창원시 진해구 진해대로1026번길 4"],
+  "changwon-best-su-hospital": ["베스트수병원", "경상남도 창원시 마산회원구 양덕로 190"],
+  "jinju-gangnam-hospital": ["경상남도 진주시 동진로 111"],
+  "goseong-gang-hospital": ["경상남도 고성군 고성읍 중앙로 49"],
+  "geoje-jungang-hospital": ["거제중앙병원", "경상남도 거제시 고현로 89"],
+  "changwon-goodmorning-naegwa-hospital": ["경상남도 창원시 의창구 사화로 6"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
