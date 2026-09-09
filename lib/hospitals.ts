@@ -76,6 +76,28 @@ function matchesQuery(hospital: Hospital, query: string): boolean {
   );
 }
 
+/** 병원명이 한글 완성형(가~힣, U+AC00~U+D7A3)으로 시작하는지 */
+function startsWithHangul(name: string): boolean {
+  const code = name.codePointAt(0) ?? 0;
+  return code >= 0xac00 && code <= 0xd7a3;
+}
+
+/**
+ * 가나다순 정렬. "(의)인석의료재단 보람병원", "365병원"처럼 괄호·숫자로
+ * 시작하는 병원명은 문자열 비교상 한글보다 앞쪽에 뒤섞여 나와 가나다순처럼
+ * 보이지 않는다. 한글로 시작하는 병원을 먼저 가나다순으로 두고, 그 외
+ * (괄호·숫자·영문 등으로 시작하는) 병원은 뒤로 몰아 목록 맨 아래에 붙인다.
+ */
+function sortByNameKoreanFirst(list: Hospital[]): Hospital[] {
+  const hangul: Hospital[] = [];
+  const rest: Hospital[] = [];
+  for (const h of list) {
+    (startsWithHangul(h.name) ? hangul : rest).push(h);
+  }
+  const byName = (a: Hospital, b: Hospital) => a.name.localeCompare(b.name, "ko");
+  return [...hangul.sort(byName), ...rest.sort(byName)];
+}
+
 /** 목록 정렬 기준. "name"은 병원명 가나다순, "recommended"는 등급 우선순위 */
 export type SortOption = "name" | "recommended";
 
@@ -100,7 +122,7 @@ export function filterHospitals(
   });
 
   if (sortBy === "name") {
-    return [...filtered].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+    return sortByNameKoreanFirst(filtered);
   }
 
   /**
