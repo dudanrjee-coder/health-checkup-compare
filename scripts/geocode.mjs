@@ -683,6 +683,23 @@ const QUERIES = {
     "경상남도 창원시 마산회원구 내서읍 삼계로 2",
   ],
   "gimhae-yulha-dreamtree-hospital": ["율하꿈나무병원", "경상남도 김해시 율하3로 38"],
+  // 2026-09-09 경북 tier=병원 1차 배치(1~30번).
+  "gumi-gangnam-hospital": ["강남병원 구미", "경상북도 구미시 금오시장로2길 21"],
+  "gyeongsan-gyeongbuk-regional-rehab-hospital": ["경북권역재활병원", "경상북도 경산시 미래로 120"],
+  "gyeongju-goodmorning-hospital": ["경주굿모닝병원", "경상북도 경주시 원화로 397"],
+  "gyeongju-centum-hospital": ["경주센텀병원", "경상북도 경주시 화랑로 130"],
+  "gyeongju-keimyung-dongsan-hospital": [
+    "계명대학교 경주동산병원",
+    "경상북도 경주시 봉황로 65",
+  ],
+  "gyeongju-momzone-womens-hospital": ["맘존여성병원", "경상북도 경주시 원화로 315"],
+  "gumi-bareunyou-hospital": ["바른유병원", "경상북도 구미시 역전로 28"],
+  "pohang-women-child-hospital": ["여성아이병원", "경상북도 포항시 북구 우창동로22번길 7"],
+  "yeongdeok-asan-hospital": ["영덕아산병원", "경상북도 영덕군 영해면 영덕로 1621"],
+  "yeongju-kidok-hospital": ["영주기독병원", "경상북도 영주시 구성로 380"],
+  "yeongju-jain-hospital": ["영주자인병원", "경상북도 영주시 대동로31번길 9"],
+  "yeongcheon-j-hospital": ["영천제이병원", "경상북도 영천시 호국로 145"],
+  "chilgok-waegwan-hospital": ["왜관병원", "경상북도 칠곡군 왜관읍 군청2길 10"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
