@@ -715,6 +715,25 @@ const QUERIES = {
   // "용담로"는 현곡면~황성동까지 길게 이어져 있어 법정동(황성동) 없이 조회하면
   // 먼 현곡면 구간이 잡힌다. 법정동을 붙여 정확도를 높인다.
   "hanbit-childrens-hospital": ["경상북도 경주시 황성동 용담로 34"],
+  // 2026-09-09 경북 보류 15곳 재조사(등록 전환 14곳).
+  "bonghwa-haeseong-hospital": ["봉화해성병원", "경상북도 봉화군 봉화읍 보밑길 3"],
+  "silla-miso-hospital": ["경상북도 경주시 신평동 보문로 465"],
+  // 건물 POI, 도로명(삼백로) 모두 Nominatim에 없어 법정동(무양동) 중심점을 쓴다.
+  "sangju-barun-rehabilitation-hospital": ["경상북도 상주시 무양동 삼백로 66", "경상북도 상주시 무양동"],
+  "seongju-moogang-hospital": ["성주무강병원", "경상북도 성주군 성주읍 성주읍3길 5"],
+  // "화랑로"도 경주시 여러 동을 지나가는 도로라 법정동(성건동)을 붙인다.
+  "gyeongju-hyundai-hospital": ["경상북도 경주시 성건동 화랑로 51"],
+  "uiseong-jenam-hospital": ["제남병원 의성", "경상북도 의성군 봉양면 도리원2길 41"],
+  "pohang-sangkwaehan-hanggu-hospital": ["경상북도 포항시 북구 중흥로 265"],
+  "goryeong-yeongsaeng-hospital": ["고령영생병원", "경상북도 고령군 대가야읍 중앙로 33"],
+  "gyeongju-jagang-hospital": ["경상북도 경주시 성건동 금성로 287"],
+  "yeongyang-hospital": ["영양병원 영양군", "경상북도 영양군 영양읍 동서대로 75"],
+  "cheongdo-cheongchun-hospital": ["경상북도 청도군 매전면 청려로 3757"],
+  // 건물 POI, 도로명(화랑로 129 구간) 모두 Nominatim에 없어 법정동(성동동) 중심점을 쓴다.
+  "gyeongju-saecheonnyeon-hospital": ["경상북도 경주시 성동동 화랑로 129", "경상북도 경주시 성동동"],
+  "gumi-hyundai-hospital": ["경상북도 구미시 형곡동 신시로 54"],
+  // 건물 POI, 도로명(대학로 11) 모두 Nominatim에 없어 법정동(중산동) 중심점을 쓴다.
+  "gyeongsan-kkumgreen-hospital": ["꿈그린소아청소년과병원", "경상북도 경산시 중산동 대학로 11", "경상북도 경산시 중산동"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
