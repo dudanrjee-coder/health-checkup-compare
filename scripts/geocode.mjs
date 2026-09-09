@@ -734,6 +734,34 @@ const QUERIES = {
   "gumi-hyundai-hospital": ["경상북도 구미시 형곡동 신시로 54"],
   // 건물 POI, 도로명(대학로 11) 모두 Nominatim에 없어 법정동(중산동) 중심점을 쓴다.
   "gyeongsan-kkumgreen-hospital": ["꿈그린소아청소년과병원", "경상북도 경산시 중산동 대학로 11", "경상북도 경산시 중산동"],
+  // 2026-09-09~10 경남 보류 33곳 재조사(등록 전환 22곳, 2조+3조).
+  "jinju-prime-hospital": ["경상남도 진주시 명석면 나불로 305"],
+  "gimhae-adong-hospital": ["김해아동병원", "경상남도 김해시 내외중앙로 74"],
+  "geoje-daewoo-adong-hospital": ["대우아동병원", "경상남도 거제시 옥포대첩로 38"],
+  // 도로명(동외로 142)이 Nominatim에 없어 법정동 중심점(고성읍)을 쓴다.
+  "goseong-the-joeun-hospital": ["더조은병원 고성", "경상남도 고성군 고성읍 동외로 142", "경상남도 고성군 고성읍"],
+  "geoje-malgeunsaem-centum-hospital": ["맑은샘센텀병원", "경상남도 거제시 거제대로 3762"],
+  "miryang-mireu-i-hospital": ["미르아이병원", "경상남도 밀양시 미리벌중앙로 67"],
+  "changwon-misoan-rehabilitation-hospital": ["경상남도 창원시 마산회원구 3.15대로 775"],
+  "gimhae-samsung-adong-hospital": ["삼성아동병원 김해", "경상남도 김해시 삼계중앙로 36"],
+  // 도로명(대야로 876)이 Nominatim에 없어 법정동 중심점(합천읍)을 쓴다.
+  "hapcheon-samsung-hospital": ["삼성합천병원", "경상남도 합천군 합천읍 대야로 876", "경상남도 합천군 합천읍"],
+  "changwon-sangnam-goodmorning-hospital": ["경상남도 창원시 성산구 상남로 73"],
+  // 도로명(정동2길 58)이 Nominatim에 없어 법정동 중심점(정량동)을 쓴다.
+  "tongyeong-sinsegyero-hospital": ["신세계로병원", "경상남도 통영시 정동2길 58", "경상남도 통영시 정량동"],
+  "changwon-jinhae-woori-hospital": ["경상남도 창원시 진해구 용원로 13"],
+  "uiryeong-hospital": ["의령병원", "경상남도 의령군 의령읍 의병로14길 10"],
+  "miryang-jeil-hospital": ["경상남도 밀양시 노상하4길 4"],
+  // 도로명(동전고개로 2)이 Nominatim에 없어 면 중심점(진동면)을 쓴다.
+  "jindong-taebong-hospital": ["진동태봉병원", "경상남도 창원시 마산합포구 진동면 동전고개로 2", "경상남도 창원시 마산합포구 진동면"],
+  // "동진로"가 진주시 여러 동을 지나가 법정동(칠암동) 없이 조회하면 다른 구간(상대동)이 잡힌다.
+  "jinju-saerom-rehabilitation-hospital": ["진주새롬재활의학과병원", "경상남도 진주시 칠암동 동진로 22"],
+  "gimhae-geumgang-hospital": ["금강병원 김해", "경상남도 김해시 가락로 20"],
+  "yangsan-jain-hill-hospital": ["자인힐병원", "경상남도 양산시 물금읍 청운로 345"],
+  "changwon-thekium-hospital": ["창원더키움병원", "경상남도 창원시 의창구 중동중앙로 95"],
+  "changwon-kidswell-pediatric-hospital": ["키즈웰소아청소년과병원", "경상남도 창원시 마산회원구 용마로 130"],
+  "jinju-tuntun-pediatric-hospital": ["튼튼소아청소년과병원 진주", "경상남도 진주시 진양호로 206"],
+  "miryang-happy-hospital": ["경상남도 밀양시 하남읍 수산중앙로 56"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
