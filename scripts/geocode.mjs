@@ -645,6 +645,32 @@ const QUERIES = {
   "haman-ara-hankook-hospital": ["아라한국병원", "경상남도 함안군 산인면 학산리", "경상남도 함안군 산인면"],
   "sacheon-samcheonpo-seoul-hospital": ["삼천포서울병원", "경상남도 사천시 남일로 33"],
   "changwon-segwang-hospital": ["세광병원 창원 진해구", "경상남도 창원시 진해구 중원동로 55-1"],
+  // 2026-09-09 경남 tier=병원 6차(마지막) 배치(91~133번).
+  "gimhae-mi-hospital": ["엠아이병원 김해", "경상남도 김해시 번화1로 36"],
+  // 병원 건물 POI, 도로명(용평로5길) 모두 Nominatim에 없어 동(용평동) 중심점을 쓴다.
+  "miryang-goodmorning-hospital": ["밀양굿모닝병원", "경상남도 밀양시 용평로5길 4-20", "경상남도 밀양시 용평동"],
+  "gimhae-jinyoung-hospital": ["진영병원 김해", "경상남도 김해시 진영읍 김해대로334번길 9"],
+  "gimhae-rebom-hospital": ["래봄병원 김해", "경상남도 김해시 분성로 202"],
+  "geochang-jungang-medical-hospital": ["중앙메디컬병원 거창", "경상남도 거창군 거창읍 거창대로1길 7-2"],
+  "gimhae-jinyoung-saessack-hospital": ["진영새싹병원", "경상남도 김해시 진영읍 본산로 15-17"],
+  "jinju-su-hospital": ["진주수병원", "경상남도 진주시 동진로 22"],
+  "jinju-goodmorning-hospital": ["진주굿모닝병원", "경상남도 진주시 서장대로213번길 7"],
+  "jinju-mirae-womens-hospital": ["진주미래여성병원", "경상남도 진주시 진주대로 957"],
+  "jinju-bokeum-hospital": ["진주복음병원", "경상남도 진주시 진양호로 370"],
+  "jinju-bon-hospital": ["진주본병원", "경상남도 진주시 진양호로 206"],
+  "jinju-seran-hospital": ["진주세란병원", "경상남도 진주시 진주대로 829"],
+  "changwon-cham-womens-hospital": ["참여성병원 창원", "경상남도 창원시 마산합포구 불종거리로 19"],
+  "changwon-jungang-hospital": ["창원중앙병원", "경상남도 창원시 성산구 대암로 40-4"],
+  "changwon-tuntun-i-hospital": ["창원튼튼i병원", "경상남도 창원시 의창구 원이대로 53"],
+  "changnyeong-hansung-hospital": ["한성병원 창녕", "경상남도 창녕군 창녕읍 교리1길 2"],
+  "tongyeong-korea-hospital": ["통영고려병원", "경상남도 통영시 중앙로 310"],
+  "tongyeong-seoul-hospital": ["통영서울병원", "경상남도 통영시 광도면 남해안대로 857"],
+  "tongyeong-redcross-hospital": ["통영적십자병원", "경상남도 통영시 중앙로 97"],
+  "sacheon-hana-hospital": ["하나병원 사천", "경상남도 사천시 사천읍 진삼로 1468-8"],
+  "changwon-hana-hospital": ["하나병원 창원 마산합포구", "경상남도 창원시 마산합포구 합포로 110"],
+  "yangsan-hanareum-hospital": ["한아름병원 양산", "경상남도 양산시 물금읍 범구로 27"],
+  "hamyang-sungsim-hospital": ["함양성심병원", "경상남도 함양군 함양읍 고운로 70"],
+  "changwon-huimang-hospital": ["희망병원 창원 진해구", "경상남도 창원시 진해구 용원로 15"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
