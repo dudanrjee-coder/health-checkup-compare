@@ -787,6 +787,20 @@ const QUERIES = {
   // "충무로"가 법정동 없이 조회하면 아산시 둔포리(약 16km 떨어진 엉뚱한 구간)가
   // 잡힌다. 법정동(권곡동)을 붙여 정정한다.
   "asan-leaders-hospital": ["충청남도 아산시 권곡동 충무로 74"],
+  // 2026-09-10 충남 tier=병원 2차 배치(11~29번, 등록 12곳).
+  "asan-mirae-hankook-hospital": ["미래한국병원", "충청남도 아산시 모종동 번영로230번길 13"],
+  "asan-samsung-miz-hospital": ["삼성미즈병원", "충청남도 아산시 배방읍 희망로46번길 16", "충청남도 아산시 배방읍"],
+  "geumsan-saegeumsan-hospital": ["새금산병원", "충청남도 금산군 금산읍 비단로 183"],
+  // 도로명(호수공원1로 34)이 Nominatim에 없어 법정동(예천동) 중심점을 쓴다.
+  "seosan-bon-hospital": ["서산본병원", "충청남도 서산시 예천동 호수공원1로 34", "충청남도 서산시 예천동"],
+  "cheonan-seoul-daejeong-hospital": ["서울대정병원", "충청남도 천안시 서북구 불당동 불당33길 18"],
+  "asan-sindosi-ijin-hospital": ["신도시이진병원", "충청남도 아산시 배방읍 희망로46번길 45", "충청남도 아산시 배방읍"],
+  "boryeong-sinjeil-hospital": ["신제일병원", "충청남도 보령시 궁촌동 대해로 52"],
+  "cheonan-ibone-hospital": ["아이본병원", "충청남도 천안시 서북구 불당동 불당25로 206"],
+  "cheonan-angjeuro-hospital": ["앙즈로여성병원", "충청남도 천안시 서북구 불당동 불당33길 1"],
+  "cheonan-yonsei-namu-hospital": ["연세나무병원", "충청남도 천안시 서북구 불당동 불당21로 67"],
+  "yesan-myeongji-hospital": ["예산명지병원", "충청남도 예산군 예산읍 신례원로 26"],
+  "cheonan-yeil-hospital": ["예일병원", "충청남도 천안시 서북구 쌍용동 충무로 129"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
