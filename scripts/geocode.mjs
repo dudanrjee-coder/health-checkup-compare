@@ -859,6 +859,23 @@ const QUERIES = {
   "gwangmyeong-saeum-hospital": ["광명새움병원", "경기도 광명시 오리로 518 (소하동)"],
   "guri-central-hospital": ["구리센트럴병원", "경기도 구리시 검배로 46", "경기도 구리시 수택동"],
   "anyang-gukje-naeun-hospital": ["국제나은병원", "경기도 안양시 만안구 안양로223번길 5 (안양동)"],
+  // 2026-09-11 경기도 tier=병원 2차 배치.
+  "goyang-grace-hospital": ["그레이스병원 고양", "경기도 고양시 일산동구 중앙로 1073 (백석동)"],
+  "hanam-geum-hospital": ["금병원 하남", "경기도 하남시 하남대로739번길 74 (신장동)"],
+  "paju-gidaeplus-hospital": ["경기도 파주시 청암로17번길 33", "경기도 파주시 목동동"],
+  "ansan-kidung-hospital": ["경기도 안산시 상록구 상록수로 34", "경기도 안산시 상록구 본오동"],
+  "gimpo-dajoeun-hospital": ["김포다조은병원", "경기도 김포시 통진읍 김포대로 2214"],
+  "gimpo-ijeil-hospital": ["경기도 김포시 김포한강8로 382", "경기도 김포시 구래동"],
+  "gimpo-nari-womens-hospital": ["경기도 김포시 돌문로 99", "경기도 김포시 사우동"],
+  "yangju-namujungwon-womens-hospital": ["나무정원여성병원", "경기도 양주시 평화로1489번길 19-11 (덕계동)"],
+  "hwaseong-nice-hospital": ["경기도 화성시 효행구 봉담읍 삼천병마로 1283"],
+  "namyangju-baek-hospital": ["남양주백병원", "경기도 남양주시 진접읍 해밀예당1로 30-25"],
+  "namyangju-yang-hospital": ["경기도 남양주시 경춘로 933", "경기도 남양주시 금곡동"],
+  "gunpo-namcheon-hospital": ["남천병원 군포", "경기도 군포시 고산로 575 (산본동)"],
+  "bucheon-newdaesung-hospital": ["뉴대성병원", "경기도 부천시 원미구 부천로 91"],
+  "namyangju-jeongseok-pediatric-hospital": ["정석소아청소년과병원 남양주", "경기도 남양주시 진접읍 해밀예당1로 221"],
+  "namyangju-dasan-cheongaram-childrens-hospital": ["경기도 남양주시 다산순환로 349", "경기도 남양주시 다산동"],
+  "suwon-dain-hospital": ["다인병원 수원", "경기도 수원시 장안구 창룡대로 159 (연무동)"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
