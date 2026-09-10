@@ -801,6 +801,21 @@ const QUERIES = {
   "cheonan-yonsei-namu-hospital": ["연세나무병원", "충청남도 천안시 서북구 불당동 불당21로 67"],
   "yesan-myeongji-hospital": ["예산명지병원", "충청남도 예산군 예산읍 신례원로 26"],
   "cheonan-yeil-hospital": ["예일병원", "충청남도 천안시 서북구 쌍용동 충무로 129"],
+  // 2026-09-10 충남 tier=병원 3차 배치(30~47번, 등록 14곳).
+  "gyeryong-hospital": ["계룡병원 충남", "충청남도 계룡시 금암동 계룡대로 295"],
+  "yesan-mediplus-hospital": ["메디플러스병원 예산", "충청남도 예산군 예산읍 마상길 9", "충청남도 예산군 예산읍"],
+  "boryeong-daecheon-central-hospital": ["대천중앙병원", "충청남도 보령시 죽정동 지장골길 69"],
+  "seocheon-seohae-hospital": ["서해병원 서천", "충청남도 서천군 서천읍 서천로 184"],
+  "cheonan-ewha-hospital": ["이화병원 천안", "충청남도 천안시 서북구 쌍용동 충무로 165"],
+  "dangjin-hapdeok-asan-hospital": ["합덕아산병원", "충청남도 당진시 합덕읍 합덕시장로 174", "충청남도 당진시 합덕읍"],
+  "cheonan-danaheal-hospital": ["천안다나힐병원", "충청남도 천안시 동남구 신부동 터미널3길 5"],
+  "cheonan-woori-hospital": ["천안우리병원", "충청남도 천안시 동남구 청당동 남부대로 350"],
+  "cheonan-rehabilitation-hospital": ["천안재활병원", "충청남도 천안시 서북구 성정동 쌍용대로 225", "충청남도 천안시 서북구 성정동"],
+  "cheonan-firsthill-hospital": ["충청남도 천안시 서북구 백석동 백석로 99"],
+  "cheonan-haeul-hospital": ["충청남도 천안시 서북구 두정동 원두정3길 37"],
+  "buyeo-konyang-university-hospital": ["건양대학교부여병원", "충청남도 부여군 부여읍 계백로 200"],
+  "asan-hyundai-hospital": ["충청남도 아산시 온천동 온천대로 1442"],
+  "cheonan-hyeseong-obgyn-hospital": ["혜성산부인과병원", "충청남도 천안시 서북구 쌍용동 미라2길 18", "충청남도 천안시 서북구 쌍용동"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
