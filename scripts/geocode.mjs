@@ -612,6 +612,13 @@ const QUERIES = {
   "gunsan-cha-hospital": ["차병원 군산 수송로", "전북특별자치도 군산시 수송로 8 (나운동)"],
   "jeonju-jainplus-hospital": ["자인플러스병원", "전북특별자치도 전주시 완산구 기린대로 227"],
   "gunsan-sungsin-hospital": ["군산성신병원", "전북특별자치도 군산시 백토로 33-0 (문화동)"],
+  // 2026-09-10 전북 tier=병원 3차 배치.
+  "jeongeup-sungsin-hospital": ["전라북도 정읍시 연지동 충정로 344-5"],
+  "gunsan-luke-hospital": ["전라북도 군산시 조촌동 백릉로 70"],
+  "jeonju-hosung-hospital": ["전북특별자치도 전주시 덕진구 호성동1가 동부대로 895"],
+  "jeonju-21c-hospital": ["전라북도 전주시 덕진구 덕진동2가 송천중앙로 43"],
+  "jeonju-christian-hospital": ["전북특별자치도 전주시 완산구 효자동1가 거마평로 185"],
+  "jeonju-dasol-childrens-hospital": ["전라북도 전주시 완산구 효자동2가 우전로 250"],
   // 2026-09-09 경남 tier=병원 1차 배치.
   "gimhae-centum-hospital": ["김해센텀병원", "경상남도 김해시 구지로 56"],
   "changwon-365-hospital": ["365병원 창원", "경상남도 창원시 마산회원구 3.15대로 686"],
