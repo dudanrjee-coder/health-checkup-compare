@@ -619,6 +619,11 @@ const QUERIES = {
   "jeonju-21c-hospital": ["전라북도 전주시 덕진구 덕진동2가 송천중앙로 43"],
   "jeonju-christian-hospital": ["전북특별자치도 전주시 완산구 효자동1가 거마평로 185"],
   "jeonju-dasol-childrens-hospital": ["전라북도 전주시 완산구 효자동2가 우전로 250"],
+  // 2026-09-10 전북 tier=병원 4차(마지막) 배치.
+  "jeonju-woosuk-hospital": ["전북특별자치도 전주시 완산구 중화산동2가 어은로 46"],
+  "gunsan-kium-hospital": ["전라북도 군산시 조촌동 궁포안2길 24"],
+  "wanju-kidsdream-imc-hospital": ["전북특별자치도 완주군 이서면 갈산리 갈산로 46"],
+  "jeonju-hanyang-hospital": ["전라북도 전주시 완산구 평화동1가 장승배기로 204"],
   // 2026-09-09 경남 tier=병원 1차 배치.
   "gimhae-centum-hospital": ["김해센텀병원", "경상남도 김해시 구지로 56"],
   "changwon-365-hospital": ["365병원 창원", "경상남도 창원시 마산회원구 3.15대로 686"],
