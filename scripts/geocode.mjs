@@ -846,6 +846,19 @@ const QUERIES = {
   "buyeo-konyang-university-hospital": ["건양대학교부여병원", "충청남도 부여군 부여읍 계백로 200"],
   "asan-hyundai-hospital": ["충청남도 아산시 온천동 온천대로 1442"],
   "cheonan-hyeseong-obgyn-hospital": ["혜성산부인과병원", "충청남도 천안시 서북구 쌍용동 미라2길 18", "충청남도 천안시 서북구 쌍용동"],
+  // 2026-09-11 경기도 tier=병원 1차 배치.
+  "yongin-seoul-hospital": ["용인서울병원", "경기도 용인시 처인구 고림로 81 (고림동)"],
+  "gimpo-gaja-yonsei-hospital": ["가자연세병원 김포", "경기도 김포시 돌문로 43", "경기도 김포시 사우동"],
+  "suwon-gangnam-womens-hospital": ["강남여성병원 수원", "경기도 수원시 팔달구 중부대로 96 (인계동)"],
+  "pocheon-gang-hospital": ["경기도 포천시 포천로 1570", "경기도 포천시 신읍동"],
+  "bucheon-geonju-hospital": ["건주병원", "경기도 부천시 소사구 경인로536번길 27", "경기도 부천시 소사구 괴안동"],
+  "ansan-godeun-hospital": ["고든병원 안산", "경기도 안산시 단원구 고잔로 76 (고잔동)"],
+  "goyang-hyumedi-hospital": ["고양휴메디병원", "경기도 고양시 덕양구 원흥동 633-7"],
+  "gwangmyeong-21c-hospital": ["광명21세기병원", "경기도 광명시 광명로 963 (광명동)"],
+  "gwangmyeong-gidaechan-hospital": ["광명기대찬병원", "경기도 광명시 오리로 872 (철산동)"],
+  "gwangmyeong-saeum-hospital": ["광명새움병원", "경기도 광명시 오리로 518 (소하동)"],
+  "guri-central-hospital": ["구리센트럴병원", "경기도 구리시 검배로 46", "경기도 구리시 수택동"],
+  "anyang-gukje-naeun-hospital": ["국제나은병원", "경기도 안양시 만안구 안양로223번길 5 (안양동)"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
