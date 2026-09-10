@@ -594,6 +594,14 @@ const QUERIES = {
   "hwasun-sungsim-hospital": ["화순성심병원", "전남 화순군 화순읍 만연로 31"],
   "hwasun-jungang-hospital": ["화순중앙병원", "전남 화순군 화순읍 칠충로 101"],
   "haenam-hankook-hospital": ["해남한국병원", "전남 해남군 해남읍 중앙2로 123"],
+  // 2026-09-10 전북 tier=병원 1차 배치.
+  "gimje-woosuk-hospital": ["김제우석병원", "전북특별자치도 김제시 서암4길 45 (서암동)"],
+  "jeonju-dasarang-hospital": ["다사랑병원 전주", "전라북도 전주시 완산구 백제대로 74 (삼천동1가)"],
+  "jeonju-dreamsol-hospital": ["드림솔병원", "전북특별자치도 전주시 완산구 천잠로 507 (효자동3가)"],
+  "jeonju-mirpia-womens-hospital": ["미르피아여성병원", "전북특별자치도 전주시 완산구 쑥고개로 343 (효자동2가)"],
+  "gimje-mideum-hospital": ["믿음병원 김제", "전북특별자치도 김제시 금성로 90 (신풍동)"],
+  "jeonju-bon-hospital": ["본병원 전주", "전라북도 전주시 완산구 유연로 276 (중화산동2가)"],
+  "gochang-seokjeong-wellpark-hospital": ["석정웰파크병원", "전라북도 고창군 고창읍 석정2로 147"],
   // 2026-09-09 경남 tier=병원 1차 배치.
   "gimhae-centum-hospital": ["김해센텀병원", "경상남도 김해시 구지로 56"],
   "changwon-365-hospital": ["365병원 창원", "경상남도 창원시 마산회원구 3.15대로 686"],
