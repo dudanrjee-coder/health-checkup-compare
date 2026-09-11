@@ -893,6 +893,20 @@ const QUERIES = {
   "uijeongbu-masterplus-hospital": ["경기도 의정부시 신흥로 84", "경기도 의정부시 호원동"],
   "suwon-maedeup-hospital": ["매듭병원 수원", "경기도 수원시 영통구 태장로 68 (망포동)"],
   "paju-moocheokjoeun-hospital": ["무척조은병원", "경기도 파주시 문산읍 방촌로 1675-20"],
+  // 2026-09-11 경기도 tier=병원 4차 배치.
+  "paju-munsanjungang-hospital": ["문산중앙병원", "경기도 파주시 문산읍 문향로39번길 53"],
+  "paju-misorae-hospital": ["경기도 파주시 금정7길 29", "미소래병원 파주"],
+  "hwaseong-bahrdigm-hospital": ["바르다임병원", "경기도 화성시 동탄신리천로 408"],
+  "seongnam-barunmadi-hospital": ["경기도 성남시 중원구 광명로 330", "바른마디병원 성남"],
+  "icheon-barun-hospital": ["바른병원 이천", "경기도 이천시 경충대로 2543"],
+  "ansan-bakjinyoung-hospital": ["박진영병원", "경기도 안산시 단원구 광덕대로 181"],
+  "suwon-baekseong-hospital": ["백성병원 수원", "경기도 수원시 팔달구 인계로 102"],
+  "suwon-burtim-yeongtong-hospital": ["경기도 수원시 영통구 영통로 195", "버팀병원 영통"],
+  "suwon-bedesda-rehab-hospital": ["베데스다재활병원", "경기도 수원시 영통구 봉영로 1623"],
+  "hanam-bobath-hospital": ["경기도 하남시 미사강변중앙로 50", "보바스병원 하남"],
+  "anyang-bombit-hospital": ["봄빛병원", "경기도 안양시 동안구 평촌대로211번길 26"],
+  "bucheon-jungang-hospital": ["경기도 부천시 오정구 소사로 797", "부천중앙병원"],
+  "seongnam-bundangjeil-womens-hospital": ["분당제일여성병원", "경기도 성남시 분당구 서현로180번길 27"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
