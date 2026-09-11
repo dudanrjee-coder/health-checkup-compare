@@ -1,0 +1,15 @@
+/**
+ * leaflet.css(1.9.x)는 Chromium의 줌 애니메이션 중 타일 경계선이 살짝
+ * 보이는 문제(https://bugs.chromium.org/p/chromium/issues/detail?id=600120)를
+ * 피하려고 `.leaflet-tile`에 `mix-blend-mode: plus-lighter`를 건다.
+ *
+ * 그런데 일부 데스크톱(Windows) GPU/드라이버 조합에서는 이 블렌드 모드가
+ * GPU 컴포지팅과 충돌해 타일이 아예 안 보이는 훨씬 더 심한 문제를
+ * 일으킨다 — 확대/축소나 드래그 때 타일 레이어가 통째로 사라지고
+ * 마커만 남는 증상이 이 조합에서 재발한다. 원래 문제(줌 애니메이션 중
+ * 미세한 이음선)는 거의 안 보이는 수준이라, 지도 자체가 안 보이는
+ * 위험을 감수할 가치가 없다. 기본값(normal)으로 되돌린다.
+ */
+.leaflet-tile {
+  mix-blend-mode: normal !important;
+}

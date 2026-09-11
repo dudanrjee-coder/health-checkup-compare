@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "./leaflet-overrides.css";
 import { MappableHospital, Sido, Tier } from "@/types/hospital";
 import { TIER_COLORS } from "@/lib/tierColors";
 import { NATIONWIDE_VIEW, SIDO_VIEW } from "@/lib/regions";
