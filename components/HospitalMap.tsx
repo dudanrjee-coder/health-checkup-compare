@@ -43,14 +43,16 @@ function buildPinSvg(
  * 선택 표시는 **크기(비선택보다 크게) + 파란 테두리**로 옮겼다. 선택된 마커도 등급 색을
  * 그대로 유지해야 지도에서 등급이 끊기지 않는다.
  *
- * `allTiersSelected`(등급 필터가 "전체")일 때는 마커가 늘어나며 지도가 빽빽해
- * 보이지 않도록 시각적 크기를 절반으로 줄인다. 다만 클릭 영역까지 그대로
- * 절반이 되면 탭이 어려워지므로, `iconSize`(=클릭 영역)는 `MIN_TOUCH_PX`
- * 아래로 내려가지 않게 하고, 그 안에서 SVG를 하단 중앙 정렬해 지도 좌표를
- * 가리키는 핀 끝(tip) 위치는 그대로 유지한다(iconAnchor가 곧 박스의
- * bottom-center와 일치).
+ * `shrinkMarkers`(등급 필터가 "전체"이거나, 개수가 계속 늘어나는 "병원"
+ * 등급만 단독 선택된 경우)일 때는 마커가 늘어나며 지도가 빽빽해 보이지
+ * 않도록 시각적 크기를 절반으로 줄인다. 다른 개별 등급(상급종합병원/
+ * 종합병원/의료원)은 개수가 적어 100% 크기를 유지한다. 다만 클릭 영역까지
+ * 그대로 절반이 되면 탭이 어려워지므로, `iconSize`(=클릭 영역)는
+ * `MIN_TOUCH_PX` 아래로 내려가지 않게 하고, 그 안에서 SVG를 하단 중앙
+ * 정렬해 지도 좌표를 가리키는 핀 끝(tip) 위치는 그대로 유지한다(iconAnchor가
+ * 곧 박스의 bottom-center와 일치).
  */
-function createPinIcon(tier: Tier, selected: boolean, allTiersSelected: boolean) {
+function createPinIcon(tier: Tier, selected: boolean, shrinkMarkers: boolean) {
   const fill = TIER_COLORS[tier].marker;
   const stroke = selected ? SELECTED_STROKE : "#ffffff";
   const strokeWidth = selected ? 2.5 : 1.5;
@@ -60,7 +62,7 @@ function createPinIcon(tier: Tier, selected: boolean, allTiersSelected: boolean)
   const baseSize = selected ? 30 : 22;
   const baseHeight = baseSize * 1.3;
 
-  if (!allTiersSelected) {
+  if (!shrinkMarkers) {
     return L.divIcon({
       className: "",
       html: buildPinSvg(baseSize, baseHeight, fill, stroke, strokeWidth),
@@ -95,8 +97,9 @@ interface HospitalMapProps {
   searchActive?: boolean;
   selectedId: string | null;
   onSelect: (id: string) => void;
-  /** 등급 필터가 "전체"(미선택)인지 여부. true면 마커를 절반 크기로 축소한다 */
-  allTiersSelected?: boolean;
+  /** 마커를 절반 크기로 축소할지 여부. 등급 필터가 "전체"(미선택)이거나
+   * "병원" 등급만 단독 선택된 경우 true */
+  shrinkMarkers?: boolean;
 }
 
 /**
@@ -221,7 +224,7 @@ export default function HospitalMap({
   searchActive = false,
   selectedId,
   onSelect,
-  allTiersSelected = false,
+  shrinkMarkers = false,
 }: HospitalMapProps) {
   // 카드에서 선택했을 때도 말풍선이 열리도록 MapController가 이 참조를 쓴다.
   const markerRefs = useRef<Record<string, L.Marker | null>>({});
@@ -280,7 +283,7 @@ export default function HospitalMap({
             icon={createPinIcon(
               hospital.tier,
               hospital.id === selectedId,
-              allTiersSelected
+              shrinkMarkers
             )}
             zIndexOffset={hospital.id === selectedId ? 1000 : 0}
             ref={(marker) => {

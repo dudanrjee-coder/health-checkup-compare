@@ -441,7 +441,7 @@ export default function Home() {
               searchActive={isSearching}
               selectedId={selectedHospitalId}
               onSelect={setSelectedHospitalId}
-              allTiersSelected={selectedTier === null}
+              shrinkMarkers={selectedTier === null || selectedTier === "병원"}
             />
           </div>
         </div>
