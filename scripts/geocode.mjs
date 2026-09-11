@@ -876,6 +876,23 @@ const QUERIES = {
   "namyangju-jeongseok-pediatric-hospital": ["정석소아청소년과병원 남양주", "경기도 남양주시 진접읍 해밀예당1로 221"],
   "namyangju-dasan-cheongaram-childrens-hospital": ["경기도 남양주시 다산순환로 349", "경기도 남양주시 다산동"],
   "suwon-dain-hospital": ["다인병원 수원", "경기도 수원시 장안구 창룡대로 159 (연무동)"],
+  // 2026-09-11 경기도 tier=병원 3차 배치.
+  "paju-dalrija-hospital": ["경기도 파주시 경의로 1204", "경기도 파주시 와동동"],
+  "bucheon-themanjok-hospital": ["경기도 부천시 원미구 계남로 310", "경기도 부천시 원미구 중동"],
+  "seongnam-themiz-hospital": ["더미즈병원", "경기도 성남시 수정구 수정로 91 (태평동)"],
+  "suwon-thewell-hospital": ["경기도 수원시 영통구 봉영로 1620", "경기도 수원시 영통구 영통동"],
+  "gwangju-theplus-hospital": ["더플러스병원 광주", "경기도 광주시 경안로 40 (경안동)"],
+  "dongducheon-jungang-sungmo-hospital": ["동두천중앙성모병원", "경기도 동두천시 동광로 53 (생연동)"],
+  "ansan-dongansan-hospital": ["동안산병원", "경기도 안산시 상록구 월피로 88 (월피동)"],
+  "hwaseong-dongtan-sungmo-hospital": ["경기도 화성시 동탄순환대로 127-19", "경기도 화성시 산척동"],
+  "hwaseong-dongtan-city-hospital": ["동탄시티병원", "경기도 화성시 동탄지성로 113 (반송동)"],
+  "goyang-deundeunhan-hospital": ["든든한병원", "경기도 고양시 일산서구 하이파크2로 60 (덕이동)"],
+  "bucheon-didim-hospital": ["경기도 부천시 원미구 부천로29번길 7", "경기도 부천시 원미구 심곡동"],
+  "suwon-liber-womens-hospital": ["경기도 수원시 영통구 삼성로 34", "경기도 수원시 영통구 신동"],
+  "yongin-rin-hospital": ["린병원 용인", "경기도 용인시 수지구 포은대로59번길 15 (상현동)"],
+  "uijeongbu-masterplus-hospital": ["경기도 의정부시 신흥로 84", "경기도 의정부시 호원동"],
+  "suwon-maedeup-hospital": ["매듭병원 수원", "경기도 수원시 영통구 태장로 68 (망포동)"],
+  "paju-moocheokjoeun-hospital": ["무척조은병원", "경기도 파주시 문산읍 방촌로 1675-20"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
