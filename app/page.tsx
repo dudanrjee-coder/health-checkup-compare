@@ -21,7 +21,7 @@ import {
 
 /** 유휴 자동 순환이 도는 등급 필터 순서. null은 "전체"다. */
 const IDLE_CYCLE_SEQUENCE: (Tier | null)[] = [null, ...TIER_LIST];
-const IDLE_CYCLE_INTERVAL_MS = 2000;
+const IDLE_CYCLE_INTERVAL_MS = 5000;
 
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
