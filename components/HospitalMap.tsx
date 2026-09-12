@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./leaflet-overrides.css";
@@ -101,6 +108,31 @@ interface HospitalMapProps {
   /** 마커를 절반 크기로 축소할지 여부. 등급 필터가 "전체"(미선택)이거나
    * "병원" 등급만 단독 선택된 경우 true */
   shrinkMarkers?: boolean;
+  /** 사용자가 지도를 직접 드래그/줌했을 때만 호출된다(코드가 일으킨
+   * flyTo/setView/fitBounds는 포함하지 않는다) — 유휴 자동 순환을 멈추는 데 쓴다. */
+  onUserInteraction?: () => void;
+}
+
+/**
+ * 사용자가 지도를 직접 드래그하거나 확대/축소했을 때만 `onUserInteraction`을
+ * 부른다. `dragstart`는 항상 실제 드래그에서만 나오지만, `zoomstart`는
+ * `flyTo`/`setView`/`fitBounds` 같은 코드상 이동에서도 발생하므로
+ * `programmaticMoveRef`가 true인 동안은 무시한다.
+ */
+function InteractionWatcher({
+  onUserInteraction,
+  programmaticMoveRef,
+}: {
+  onUserInteraction?: () => void;
+  programmaticMoveRef: React.MutableRefObject<boolean>;
+}) {
+  useMapEvents({
+    dragstart: () => onUserInteraction?.(),
+    zoomstart: () => {
+      if (!programmaticMoveRef.current) onUserInteraction?.();
+    },
+  });
+  return null;
 }
 
 /**
@@ -113,12 +145,17 @@ function MapController({
   searchActive,
   selectedId,
   markerRefs,
+  programmaticMoveRef,
 }: {
   hospitals: MappableHospital[];
   selectedSido: Sido | null;
   searchActive: boolean;
   selectedId: string | null;
   markerRefs: React.MutableRefObject<Record<string, L.Marker | null>>;
+  /** true인 동안의 movestart/zoomstart는 코드가 일으킨 이동이지 사용자
+   * 조작이 아니다 — 유휴 자동 순환이 지도 이동으로 오인해 멈추지 않도록
+   * InteractionWatcher가 이 값을 참고한다. */
+  programmaticMoveRef: React.MutableRefObject<boolean>;
 }) {
   const map = useMap();
   const boundsKey = hospitals.map((h) => h.id).join(",");
@@ -127,6 +164,11 @@ function MapController({
     // 최초 진입 상태에서는 MapContainer에 지정한 전국 뷰를 유지한다.
     if (!selectedSido && !searchActive) return;
 
+    programmaticMoveRef.current = true;
+    map.once("moveend", () => {
+      programmaticMoveRef.current = false;
+    });
+
     if (hospitals.length) {
       const bounds = L.latLngBounds(hospitals.map((h) => [h.lat, h.lng]));
       map.fitBounds(bounds, { padding: [48, 48], maxZoom: 15, animate: false });
@@ -134,7 +176,10 @@ function MapController({
     }
 
     // 검색 결과에 좌표가 하나도 없으면 지도를 억지로 옮기지 않는다.
-    if (!selectedSido) return;
+    if (!selectedSido) {
+      programmaticMoveRef.current = false;
+      return;
+    }
 
     // 좌표가 등록된 병원이 아직 없는 지역이면 지역 기준점으로 이동한다.
     const { center, zoom } = SIDO_VIEW[selectedSido];
@@ -154,8 +199,14 @@ function MapController({
     // map.panBy를 호출해 진행 중인 flyTo가 취소되기 때문이다.
     const openPopup = () => markerRefs.current[selected.id]?.openPopup();
 
+    const onMoveEnd = () => {
+      programmaticMoveRef.current = false;
+      openPopup();
+    };
+
+    programmaticMoveRef.current = true;
     map.flyTo(target, zoom, { duration: FLY_DURATION_SEC });
-    map.once("moveend", openPopup);
+    map.once("moveend", onMoveEnd);
 
     // flyTo는 requestAnimationFrame으로 움직이므로, 화면이 그려지지 않는 상황
     // (비활성 탭 등)에서는 애니메이션이 진행되지 않는다. 그런 경우에도 최종
@@ -164,14 +215,15 @@ function MapController({
       if (!map.getCenter().equals(target, 1e-4)) {
         map.setView(target, zoom, { animate: false });
       }
+      programmaticMoveRef.current = false;
       openPopup();
     }, FLY_DURATION_SEC * 1000 + 300);
 
     return () => {
       window.clearTimeout(fallback);
-      map.off("moveend", openPopup);
+      map.off("moveend", onMoveEnd);
     };
-  }, [map, hospitals, selectedId, markerRefs]);
+  }, [map, hospitals, selectedId, markerRefs, programmaticMoveRef]);
 
   return null;
 }
@@ -226,10 +278,13 @@ export default function HospitalMap({
   selectedId,
   onSelect,
   shrinkMarkers = false,
+  onUserInteraction,
 }: HospitalMapProps) {
   // 카드에서 선택했을 때도 말풍선이 열리도록 MapController가 이 참조를 쓴다.
   const markerRefs = useRef<Record<string, L.Marker | null>>({});
   const hoverCapable = useHoverCapable();
+  // MapController가 일으키는 이동인지(true) InteractionWatcher가 구분하는 데 쓴다.
+  const programmaticMoveRef = useRef(false);
 
   return (
     <div className="relative h-full min-h-[320px] w-full">
@@ -275,6 +330,12 @@ export default function HospitalMap({
           searchActive={searchActive}
           selectedId={selectedId}
           markerRefs={markerRefs}
+          programmaticMoveRef={programmaticMoveRef}
+        />
+
+        <InteractionWatcher
+          onUserInteraction={onUserInteraction}
+          programmaticMoveRef={programmaticMoveRef}
         />
 
         {hospitals.map((hospital) => (

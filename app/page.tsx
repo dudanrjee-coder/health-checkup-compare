@@ -8,7 +8,7 @@ import HospitalCardChips from "@/components/HospitalCardChips";
 import SearchBox from "@/components/SearchBox";
 import DateTimeClock from "@/components/DateTimeClock";
 import VisitorCounter from "@/components/VisitorCounter";
-import { hasCoords, Sido, Tier } from "@/types/hospital";
+import { hasCoords, Sido, Tier, TIER_LIST } from "@/types/hospital";
 import {
   filterHospitals,
   findUniqueSidoMatch,
@@ -18,6 +18,10 @@ import {
   getTiersWithData,
   SortOption,
 } from "@/lib/hospitals";
+
+/** 유휴 자동 순환이 도는 등급 필터 순서. null은 "전체"다. */
+const IDLE_CYCLE_SEQUENCE: (Tier | null)[] = [null, ...TIER_LIST];
+const IDLE_CYCLE_INTERVAL_MS = 2000;
 
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
@@ -41,6 +45,27 @@ export default function Home() {
    */
   const [nationalOnly, setNationalOnly] = useState(false);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  /**
+   * 유휴 상태 등급 필터 자동 순환. 페이지가 켜져 있는 동안 상호작용이 한
+   * 번도 없으면 "전체 → 상급종합병원 → 종합병원 → 병원 → 의료원 → 전체"를
+   * 2초마다 반복한다. 필터 버튼 클릭, 지도 드래그/줌, 마커 클릭 중 하나라도
+   * 감지되면 `stopIdleCycle`로 영구히 멈추고(새로고침 전까지 재개 안 함)
+   * 그 시점의 선택 상태를 그대로 둔다.
+   */
+  const [idleCycleActive, setIdleCycleActive] = useState(true);
+  const idleCycleIndexRef = useRef(0);
+  const stopIdleCycle = () => setIdleCycleActive(false);
+
+  useEffect(() => {
+    if (!idleCycleActive) return;
+    const timer = setInterval(() => {
+      idleCycleIndexRef.current =
+        (idleCycleIndexRef.current + 1) % IDLE_CYCLE_SEQUENCE.length;
+      setSelectedTier(IDLE_CYCLE_SEQUENCE[idleCycleIndexRef.current]);
+    }, IDLE_CYCLE_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [idleCycleActive]);
 
   // 입력할 때마다 필터링하지 않도록 200ms 디바운스를 둔다.
   useEffect(() => {
@@ -180,13 +205,21 @@ export default function Home() {
 
   /** 등급 필터는 라디오 버튼처럼 동작한다 — 새로 고른 등급이 이전 선택을 대체한다. */
   function handleTierSelect(tier: Tier) {
+    stopIdleCycle();
     setSelectedHospitalId(null);
     setSelectedTier(tier);
   }
 
   function handleClearTiers() {
+    stopIdleCycle();
     setSelectedHospitalId(null);
     setSelectedTier(null);
+  }
+
+  /** 지도 마커 클릭. 카드 목록 클릭(별도 핸들러)과 달리 유휴 순환을 멈춘다. */
+  function handleMapMarkerSelect(id: string) {
+    stopIdleCycle();
+    setSelectedHospitalId(id);
   }
 
   return (
@@ -440,7 +473,8 @@ export default function Home() {
               selectedSido={isSearching ? null : selectedSido}
               searchActive={isSearching}
               selectedId={selectedHospitalId}
-              onSelect={setSelectedHospitalId}
+              onSelect={handleMapMarkerSelect}
+              onUserInteraction={stopIdleCycle}
               shrinkMarkers={selectedTier === null || selectedTier === "병원"}
             />
           </div>
