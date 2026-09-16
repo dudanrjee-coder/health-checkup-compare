@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useHoverCapable } from "@/lib/useHoverCapable";
 
 /**
@@ -11,6 +11,20 @@ import { useHoverCapable } from "@/lib/useHoverCapable";
 export default function HeroVideo() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hoverCapable = useHoverCapable();
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // `autoPlay` 속성만으로는 하이드레이션 타이밍에 따라 브라우저가
+    // 자동재생을 놓치는 경우가 있어, 마운트 시 명시적으로 한 번 더
+    // play()를 시도한다. 실패해도(자동재생 정책 등) 화면엔 영향 없고,
+    // 프로덕션 콘솔에는 아무것도 남기지 않는다(원인 파악은 개발 환경에서만).
+    video.play()?.catch((err) => {
+      if (process.env.NODE_ENV !== "production") {
+        console.debug("[HeroVideo] 자동재생 시도 실패:", err?.name, err?.message);
+      }
+    });
+  }, []);
 
   const handleMouseEnter = () => {
     if (!hoverCapable) return;
