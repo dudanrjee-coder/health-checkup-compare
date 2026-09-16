@@ -35,14 +35,26 @@ export default function Home() {
   );
   const [searchInput, setSearchInput] = useState("");
   const [query, setQuery] = useState("");
-  // 리스트 패널을 300px 이상 내렸을 때만 "맨 위로 가기" 버튼을 보여준다.
-  const [showBackToTop, setShowBackToTop] = useState(false);
+  // 리스트 패널(데스크톱) 또는 페이지 전체(모바일)를 300px 이상 내렸을 때만
+  // "맨 위로 가기" 버튼을 보여준다. lg 미만에서는 리스트 패널이 자체 스크롤을
+  // 갖지 않고 페이지 전체(window)가 스크롤되므로 두 소스를 함께 감시해야 한다.
+  const [sectionScrolled, setSectionScrolled] = useState(false);
+  const [windowScrolled, setWindowScrolled] = useState(false);
+  const showBackToTop = sectionScrolled || windowScrolled;
   const listScrollRef = useRef<HTMLElement | null>(null);
   const handleListScroll = (event: React.UIEvent<HTMLElement>) => {
-    setShowBackToTop(event.currentTarget.scrollTop > 300);
+    setSectionScrolled(event.currentTarget.scrollTop > 300);
   };
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      setWindowScrolled(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleWindowScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleWindowScroll);
+  }, []);
   const scrollListToTop = () => {
     listScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
   /**
    * 엔터로 확정했는데 지역명도 아니고 병원 검색 결과도 0건일 때만 켠다.
@@ -490,7 +502,7 @@ export default function Home() {
               onClick={scrollListToTop}
               aria-label="맨 위로 가기"
               title="맨 위로 가기"
-              className={`absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-slate-300 bg-white text-slate-600 shadow-md transition-opacity duration-300 hover:bg-slate-50 ${
+              className={`fixed bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-slate-300 bg-white text-slate-600 shadow-md transition-opacity duration-300 hover:bg-slate-50 lg:absolute ${
                 showBackToTop ? "opacity-100" : "pointer-events-none opacity-0"
               }`}
             >
