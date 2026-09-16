@@ -911,6 +911,28 @@ const QUERIES = {
   // 병의원(중앙이비인후과·중앙산부인과)만 잡혀 좌표를 비워 둔다(인천백병원과 같은 처리).
   "bucheon-jungang-hospital": ["경기도 부천시 오정구 소사로 797", "부천중앙병원"],
   "seongnam-bundangjeil-womens-hospital": ["분당제일여성병원", "경기도 성남시 분당구 서현로180번길 27"],
+  // 2026-09-16 경기도 tier=병원 5차 배치(101~125번).
+  "paju-vic365-hospital": ["브이아이씨365병원", "경기도 파주시 책향기로 836"],
+  "seongnam-sarang-hospital": ["사랑의병원 성남시 분당구", "경기도 성남시 분당구 분당내곡로 151"],
+  "gunpo-sanbonjeil-hospital": ["산본제일병원", "경기도 군포시 산본로 374"],
+  "namyangju-samsungbarun-hospital": ["삼성바른병원 남양주시 화도읍", "경기도 남양주시 화도읍 경춘로 1872"],
+  "osan-samsungbon-hospital": ["삼성본병원 오산시", "경기도 오산시 북삼미로 175"],
+  // 건물 POI가 없어 도로명(은계중앙로)까지만 잡힌다. 시흥시 은행동 구간이라
+  // 건물 지번(대야동 82)과 법정동이 다를 수 있으나 도로 자체는 인접해 있다.
+  "siheung-samsungboneus-hospital": ["삼성본어스병원", "은계중앙로 시흥시"],
+  "suwon-samsunggrand-hospital": ["삼성큰병원 수원시 권선구", "경기도 수원시 권선구 매송고색로 724"],
+  "hanam-saesol-childrens-hospital": ["새솔어린이병원", "감일백제로 하남시"],
+  // 건물 POI가 없어 도로명(소사로, 소사본동) 수준까지만 잡힌다.
+  "bucheon-saeul-hospital": ["새울병원 부천시", "경기도 부천시 소사구 소사본동 소사로 80"],
+  "bucheon-saengsaeng-hospital": ["생생병원 부천시", "경기도 부천시 소사구 경인옛로 3"],
+  "seongnam-seoulnow-hospital": ["서울나우병원 분당", "경기도 성남시 분당구 분당로 43"],
+  // 건물 POI가 없어 도로명(수정로, 수진동) 수준까지만 잡힌다.
+  "seongnam-jiwoo-hospital": ["지우병원 성남시 수정구", "경기도 성남시 수정구 수정로"],
+  "osan-seoulchildrens-hospital": ["서울어린이병원 오산시", "경기도 오산시 경기대로 209"],
+  "namyangju-seoulace-hospital": ["서울에이스병원 남양주시", "경기도 남양주시 다산중앙로145번길 9"],
+  "bucheon-seoulwomens-hospital": ["서울여성병원 부천시", "경기도 부천시 원미구 길주로 84"],
+  "gimpo-seoul-womens-hospital": ["서울여성병원 김포시", "경기도 김포시 김포대로 829"],
+  "pyeongtaek-seoul-jeil-jisan-hospital": ["서울제일병원 평택시 지산동", "경기도 평택시 지산로 70"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
