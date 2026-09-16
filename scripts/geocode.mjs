@@ -32,6 +32,10 @@ const QUERIES = {
   "suwon-eden-medi-womens-hospital": ["에덴메디여성병원", "경기도 수원시 권선구 동수원로 220"],
   "hwaseong-abc-hospital": ["ABC병원 화성", "경기도 화성시 향남읍 발안로 68", "경기도 화성시 향남읍"],
   "ansan-ace-hospital": ["에이스병원 안산", "경기도 안산시 단원구 광덕대로 244"],
+  "gapyeong-hj-magnolia-international-hospital": ["HJ매그놀리아국제병원", "경기도 가평군 설악면 미사리로", "경기도 가평군 설악면"],
+  "namyangju-l-hospital": ["엘병원 퇴계원", "경기도 남양주시 퇴계원읍 퇴계원로 20"],
+  "uijeongbu-yonsei-godn-hospital": ["연세고든병원", "경기도 의정부시 천보로 44"],
+  "siheung-yonsei-thebaro-hospital": ["연세더바로병원", "경기도 시흥시 수인로 3330"],
   // 2026-09-08 충북 tier=병원 1차 배치.
   "eumseong-ingok-jaeae-hospital": ["인곡자애병원", "충청북도 음성군 맹동면 꽃동네길 37"],
   "chungju-kimnkwon-hospital": ["김앤권병원 충주", "충북 충주시 번영대로 239"],
