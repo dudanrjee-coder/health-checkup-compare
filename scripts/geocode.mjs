@@ -25,6 +25,10 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-17 경기도 tier=병원 7차 배치.
+  "anseong-dongin-hospital": ["안성동인병원", "경기도 안성시 인지1길 9"],
+  "yangju-yess-hospital": ["양주예쓰병원", "경기도 양주시 회정로 103"],
+  "yangpyeong-hospital": ["양평병원", "경기도 양평군 양평읍 중앙로 129"],
   // 2026-09-08 충북 tier=병원 1차 배치.
   "eumseong-ingok-jaeae-hospital": ["인곡자애병원", "충청북도 음성군 맹동면 꽃동네길 37"],
   "chungju-kimnkwon-hospital": ["김앤권병원 충주", "충북 충주시 번영대로 239"],
