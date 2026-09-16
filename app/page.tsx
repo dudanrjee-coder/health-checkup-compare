@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import HospitalMap from "@/components/HospitalMapLazy";
+import HeroVideo from "@/components/HeroVideo";
 import SidoSelect from "@/components/SidoSelect";
 import TierFilter from "@/components/TierFilter";
 import HospitalCardChips from "@/components/HospitalCardChips";
@@ -267,13 +268,16 @@ export default function Home() {
             <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
               2026 국가건강검진 시즌
             </span>
-            <div>
-              <h1 className="break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-                전국 건강검진 병원
-              </h1>
-              <p className="mt-2 text-sm text-slate-600 sm:text-base">
-                지역별 검진병원 정보를 한눈에 비교하세요
-              </p>
+            <div className="flex items-center gap-4">
+              <HeroVideo />
+              <div>
+                <h1 className="break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                  전국 건강검진 병원
+                </h1>
+                <p className="mt-2 text-sm text-slate-600 sm:text-base">
+                  지역별 검진병원 정보를 한눈에 비교하세요
+                </p>
+              </div>
             </div>
             <div className="flex flex-wrap justify-center gap-2">
               {[
