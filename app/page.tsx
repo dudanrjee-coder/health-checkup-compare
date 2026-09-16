@@ -268,9 +268,9 @@ export default function Home() {
             <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
               2026 국가건강검진 시즌
             </span>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4">
               <HeroVideo />
-              <div>
+              <div className="text-center md:text-left">
                 <h1 className="break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
                   전국 건강검진 병원
                 </h1>

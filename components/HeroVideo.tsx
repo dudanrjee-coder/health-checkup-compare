@@ -53,7 +53,7 @@ export default function HeroVideo() {
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="h-28 w-28 shrink-0 overflow-hidden rounded-full shadow-md sm:h-32 sm:w-32"
+      className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-full shadow-md md:h-32 md:w-32"
     >
       <video
         ref={videoRef}
