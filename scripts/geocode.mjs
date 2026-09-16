@@ -29,6 +29,9 @@ const QUERIES = {
   "anseong-dongin-hospital": ["안성동인병원", "경기도 안성시 인지1길 9"],
   "yangju-yess-hospital": ["양주예쓰병원", "경기도 양주시 회정로 103"],
   "yangpyeong-hospital": ["양평병원", "경기도 양평군 양평읍 중앙로 129"],
+  "suwon-eden-medi-womens-hospital": ["에덴메디여성병원", "경기도 수원시 권선구 동수원로 220"],
+  "hwaseong-abc-hospital": ["ABC병원 화성", "경기도 화성시 향남읍 발안로 68", "경기도 화성시 향남읍"],
+  "ansan-ace-hospital": ["에이스병원 안산", "경기도 안산시 단원구 광덕대로 244"],
   // 2026-09-08 충북 tier=병원 1차 배치.
   "eumseong-ingok-jaeae-hospital": ["인곡자애병원", "충청북도 음성군 맹동면 꽃동네길 37"],
   "chungju-kimnkwon-hospital": ["김앤권병원 충주", "충북 충주시 번영대로 239"],
