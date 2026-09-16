@@ -45,13 +45,6 @@ export default function DateTimeClock() {
       <span className="whitespace-nowrap font-bold text-slate-900">
         {formatTime(now)}
       </span>
-      <span aria-hidden="true">·</span>
-      {/* 실제로 실시간 진료 가능 여부를 반영하는 기능은 없다. Claude Design
-          시안의 문구를 그대로 가져온 것이라 오해 소지가 있다 — 나중에 실제
-          기능을 붙이거나, 그 전까지는 문구를 바꿔야 한다. */}
-      <span className="whitespace-nowrap text-slate-400">
-        실시간 진료 가능 여부 반영
-      </span>
     </p>
   );
 }
