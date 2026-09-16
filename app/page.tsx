@@ -34,6 +34,15 @@ export default function Home() {
   );
   const [searchInput, setSearchInput] = useState("");
   const [query, setQuery] = useState("");
+  // 리스트 패널을 300px 이상 내렸을 때만 "맨 위로 가기" 버튼을 보여준다.
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const listScrollRef = useRef<HTMLElement | null>(null);
+  const handleListScroll = (event: React.UIEvent<HTMLElement>) => {
+    setShowBackToTop(event.currentTarget.scrollTop > 300);
+  };
+  const scrollListToTop = () => {
+    listScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
   /**
    * 엔터로 확정했는데 지역명도 아니고 병원 검색 결과도 0건일 때만 켠다.
    * 타이핑 도중에는 결과가 잠깐 0건이 되는 일이 흔하므로 그때는 켜지 않는다.
@@ -378,7 +387,12 @@ export default function Home() {
 
         <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
           {/* 모바일에서는 지도가 위, 데스크톱에서는 리스트가 왼쪽 */}
-          <section className="order-2 flex flex-col gap-4 lg:order-1 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-1">
+          <div className="relative order-2 lg:order-1">
+            <section
+              ref={listScrollRef}
+              onScroll={handleListScroll}
+              className="flex flex-col gap-4 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:pr-1"
+            >
             <div className="flex items-center justify-between gap-2">
               <p className="text-sm text-slate-500">
                 {isSearching ? (
@@ -465,7 +479,22 @@ export default function Home() {
                 }}
               />
             ))}
-          </section>
+            </section>
+
+            <button
+              type="button"
+              onClick={scrollListToTop}
+              aria-label="맨 위로 가기"
+              title="맨 위로 가기"
+              className={`absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border-[0.5px] border-slate-300 bg-white text-slate-600 shadow-md transition-opacity duration-300 hover:bg-slate-50 ${
+                showBackToTop ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+            >
+              <span aria-hidden="true" className="text-lg leading-none">
+                ↑
+              </span>
+            </button>
+          </div>
 
           <div className="order-1 h-[320px] sm:h-[420px] lg:sticky lg:top-6 lg:order-2 lg:h-[calc(100vh-8rem)]">
             <HospitalMap
