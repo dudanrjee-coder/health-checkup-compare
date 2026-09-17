@@ -3,7 +3,7 @@
 ## 커밋
 - 작업 하나가 끝나면 사용자가 따로 말하지 않아도 git commit까지 완료할 것
 - 커밋 전 반드시: npx tsc(타입체크 통과) + 콘솔 오류 0건 확인
-- 이 저장소는 브랜치 없이 master에 직접 커밋한다 (1인 로컬 저장소, 리모트 없음)
+- 이 저장소는 브랜치 없이 master에 직접 커밋한다 (1인 저장소, 리모트 origin: https://github.com/dudanrjee-coder/health-checkup-compare.git)
 - 커밋 메시지는 무엇을 왜 바꿨는지 한국어로 간단히
 
 ## 데이터 수정 시
