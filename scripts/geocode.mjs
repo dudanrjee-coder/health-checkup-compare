@@ -972,6 +972,7 @@ const QUERIES = {
   "suwon-lct-hospital": ["이춘택병원", "경기도 수원시 팔달구 매산로 138"],
   "pyeongtaek-songtan-jungang-hospital": ["송탄중앙병원", "경기도 평택시 오좌동길 17-16"],
   "anyang-wills-hospital": ["안양윌스기념병원", "경기도 안양시 동안구 경수대로 560"],
+  "suwon-baek-hospital": ["수원백병원", "경기도 수원시 팔달구 정조로 793"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
