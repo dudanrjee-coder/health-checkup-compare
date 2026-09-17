@@ -951,6 +951,10 @@ const QUERIES = {
   "yeoju-yonsei-saeroun-hospital": ["연세새로운병원", "경기도 여주시 영릉로 22"],
   "uijeongbu-yonsei-okay-hospital": ["연세오케이병원", "경기도 의정부시 경의로 107"],
   "yongin-yonsei-prime-hospital": ["용인프라임병원", "연세프라임병원", "경기도 용인시 기흥구 용구대로 2355"],
+  "gimpo-yonsei-hana-hospital": ["연세하나병원", "경기도 김포시 김포대로 709"],
+  "goyang-yonsei-hangmac-hospital": ["연세항맥병원", "경기도 고양시 일산서구 강성로 121"],
+  "bucheon-yeson-hospital": ["예손병원", "경기도 부천시 원미구 부천로 206"],
+  "osan-sejong-hospital": ["오산세종병원", "경기도 오산시 오산로 8"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
