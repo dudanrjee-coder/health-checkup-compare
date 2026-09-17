@@ -25,6 +25,14 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-18 경기도 tier=병원 11차 배치.
+  "namyangju-jinjeop-hanyang-hospital": ["진접한양병원", "경기도 남양주시 진접읍 해밀예당1로 28"],
+  "hanam-cheongbong-hospital": ["청봉병원 하남", "경기도 하남시 하남대로802번길 5-4"],
+  "bucheon-chonyou-womens-hospital": ["초앤유여성병원", "경기도 부천시 중동로248번길 19"],
+  "icheon-chusaero-hospital": ["추새로병원", "경기도 이천시 영창로 189"],
+  "uijeongbu-tuntun-childrens-hospital": ["튼튼어린이병원 의정부", "경기도 의정부시 평화로 647"],
+  "paju-mirae-childrens-hospital": ["파주미래아동병원", "경기도 파주시 와석순환로 133"],
+  "anyang-pyeongchon-woori-hospital": ["평촌우리병원", "경기도 안양시 동안구 관악대로 221"],
   // 2026-09-17 경기도 tier=병원 7차 배치.
   "anseong-dongin-hospital": ["안성동인병원", "경기도 안성시 인지1길 9"],
   "yangju-yess-hospital": ["양주예쓰병원", "경기도 양주시 회정로 103"],
