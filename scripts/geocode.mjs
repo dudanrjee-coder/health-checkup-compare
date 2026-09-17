@@ -960,6 +960,13 @@ const QUERIES = {
   "ansan-onnuri-hospital": ["온누리병원 안산", "경기도 안산시 단원구 선부로 201"],
   "yongin-childrens-hospital": ["용인아이들병원", "경기도 용인시 기흥구 용구대로 2354"],
   "yongin-wooriho-hospital": ["우리호병원", "경기도 용인시 수지구 문정로 15"],
+  "uijeongbu-womanpia-hospital": ["우먼피아여성병원", "경기도 의정부시 청사로5번길 16"],
+  "paju-unjeongwise-hospital": ["운정와이즈병원", "경기도 파주시 금바위로 50"],
+  "goyang-yonsei-wondang-hospital": ["원당연세병원", "경기도 고양시 덕양구 호국로 781"],
+  "namyangju-won-hospital": ["원병원 남양주", "경기도 남양주시 화도읍 경춘로 1943-16"],
+  "goyang-wonheung-ijeil-hospital": ["원흥아이제일병원", "경기도 고양시 덕양구 권율대로 685"],
+  "osan-wellbom-hospital": ["웰봄병원", "경기도 오산시 경기대로 534"],
+  "guri-yunseo-hospital": ["윤서병원", "경기도 구리시 건원대로 47"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
