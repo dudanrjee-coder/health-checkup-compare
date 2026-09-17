@@ -955,6 +955,11 @@ const QUERIES = {
   "goyang-yonsei-hangmac-hospital": ["연세항맥병원", "경기도 고양시 일산서구 강성로 121"],
   "bucheon-yeson-hospital": ["예손병원", "경기도 부천시 원미구 부천로 206"],
   "osan-sejong-hospital": ["오산세종병원", "경기도 오산시 오산로 8"],
+  "bucheon-ojbon-hospital": ["오정본병원", "경기도 부천시 오정구 소사로 801"],
+  "guri-okcham-hospital": ["오케이참병원", "경기도 구리시 건원대로 95"],
+  "ansan-onnuri-hospital": ["온누리병원 안산", "경기도 안산시 단원구 선부로 201"],
+  "yongin-childrens-hospital": ["용인아이들병원", "경기도 용인시 기흥구 용구대로 2354"],
+  "yongin-wooriho-hospital": ["우리호병원", "경기도 용인시 수지구 문정로 15"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
