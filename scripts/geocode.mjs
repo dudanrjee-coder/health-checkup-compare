@@ -944,6 +944,11 @@ const QUERIES = {
   "bucheon-seoulwomens-hospital": ["서울여성병원 부천시", "경기도 부천시 원미구 길주로 84"],
   "gimpo-seoul-womens-hospital": ["서울여성병원 김포시", "경기도 김포시 김포대로 829"],
   "pyeongtaek-seoul-jeil-jisan-hospital": ["서울제일병원 평택시 지산동", "경기도 평택시 지산로 70"],
+  // 2026-09-17 경기도 tier=병원 8차 배치.
+  "gimpo-yonsei-thebareun-hospital": ["연세더바른병원", "경기도 김포시 김포한강4로 543"],
+  "goyang-yonsei-madu-hospital": ["연세마두병원", "경기도 고양시 일산동구 강석로 123"],
+  "bucheon-yonsei-bonsarang-hospital": ["연세본사랑병원", "장말로 376"],
+  "yeoju-yonsei-saeroun-hospital": ["연세새로운병원", "경기도 여주시 영릉로 22"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
