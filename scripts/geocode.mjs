@@ -967,6 +967,11 @@ const QUERIES = {
   "goyang-wonheung-ijeil-hospital": ["원흥아이제일병원", "경기도 고양시 덕양구 권율대로 685"],
   "osan-wellbom-hospital": ["웰봄병원", "경기도 오산시 경기대로 534"],
   "guri-yunseo-hospital": ["윤서병원", "경기도 구리시 건원대로 47"],
+  "hwaseong-hyangnam-smart-hospital": ["향남스마트병원", "경기도 화성시 향남읍 상신하길로298번길 11"],
+  "uiwang-city-hospital": ["시티병원 의왕", "경기도 의왕시 오전천로 29"],
+  "suwon-lct-hospital": ["이춘택병원", "경기도 수원시 팔달구 매산로 138"],
+  "pyeongtaek-songtan-jungang-hospital": ["송탄중앙병원", "경기도 평택시 오좌동길 17-16"],
+  "anyang-wills-hospital": ["안양윌스기념병원", "경기도 안양시 동안구 경수대로 560"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
