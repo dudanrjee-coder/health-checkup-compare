@@ -973,6 +973,27 @@ const QUERIES = {
   "pyeongtaek-songtan-jungang-hospital": ["송탄중앙병원", "경기도 평택시 오좌동길 17-16"],
   "anyang-wills-hospital": ["안양윌스기념병원", "경기도 안양시 동안구 경수대로 560"],
   "suwon-baek-hospital": ["수원백병원", "경기도 수원시 팔달구 정조로 793"],
+  "siheung-smarthub-hospital": ["스마트허브병원", "경기도 시흥시 공단1대로 263"],
+  "suwon-s-seoul-hospital": ["S서울병원 수원", "경기도 수원시 영통구 중부대로246번길 14"],
+  "pyeongtaek-anjung-baek-hospital": ["안중백병원", "경기도 평택시 안중읍 서동대로 1931-21"],
+  "hwaseong-dongtan-jeil-hospital": ["동탄제일병원", "경기도 화성시 동탄구 삼성1로 144-6"],
+  "anyang-kimhyeonggeunye-hospital": ["김형근예병원", "경기도 안양시 동안구 관악대로 458"],
+  "ansan-hansarang-hospital": ["한사랑병원 안산", "경기도 안산시 상록구 광덕1로 345"],
+  "uijeongbu-stpeter-hospital": ["성베드로병원 의정부", "경기도 의정부시 평화로 622"],
+  "pyeongtaek-sungse-hospital": ["성세아이들병원", "경기도 평택시 조개터로42번길 61"],
+  "goyang-ilsanbogeum-hospital": ["일산복음병원", "경기도 고양시 일산동구 고양대로 760"],
+  "namyangju-verygood-hospital": ["베리굿병원", "경기도 남양주시 별내5로5번길 5"],
+  "icheon-elijah-hospital": ["이천엘리야병원", "경기도 이천시 장호원읍 서동대로 8793"],
+  "icheon-fatima-hospital": ["이천파티마병원", "경기도 이천시 경충대로 2560-2"],
+  "bucheon-inbone-hospital": ["인본병원 부천", "경기도 부천시 상동로 90"],
+  "paju-inbon-hospital": ["인본병원 파주", "경기도 파주시 청암로17번길 31"],
+  "goyang-ilsan21c-hospital": ["일산21세기병원", "경기도 고양시 일산동구 중앙로 1059"],
+  "goyang-ilsanjungsim-rehab-hospital": ["일산중심재활병원", "경기도 고양시 일산서구 미래로 227"],
+  "siheung-ileona-hospital": ["일어나병원", "경기도 시흥시 황고개로 472"],
+  "guri-wonjin-green-hospital": ["원진녹색병원", "경기도 구리시 동구릉로 65"],
+  // 주의: "제이에스병원"으로 이름 검색하면 김포시 통진읍의 동명 무관 시설이 잡힌다. 반드시 도로명주소를 먼저 시도할 것.
+  "suwon-js-hospital": ["경기도 수원시 권선구 금곡로196번길 76", "제이에스병원 수원"],
+  "yongin-joeunson-hospital": ["조은손병원", "경기도 용인시 처인구 중부대로 1349"],
 };
 
 /** 시/도별 대략적인 좌표 범위. 엉뚱한 곳이 매칭되는 것을 걸러낸다. */
