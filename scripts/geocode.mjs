@@ -25,6 +25,23 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-18 경기도 tier=병원 12차(마지막) 배치.
+  "pyeongtaek-woori-hospital": ["평택우리병원", "경기도 평택시 비전5로 20-18"],
+  "namyangju-hana-pediatrics-hospital": ["하나소아청소년과병원", "경기도 남양주시 늘을1로16번길 25"],
+  "hanam-s-hospital": ["하남S병원", "경기도 하남시 덕풍공원로 41"],
+  "yongin-suji-skyblue-childrens-hospital": ["하늘빛 어린이병원", "경기도 용인시 수지구 수풍로 65"],
+  "gimpo-hangang-ijeil-hospital": ["한강아이제일병원", "경기도 김포시 김포한강11로 133"],
+  "goyang-heavenly-hospital": ["해븐리병원", "경기도 고양시 일산동구 중산로 117"],
+  "hanam-haetsal-hospital": ["햇살병원 하남", "경기도 하남시 신평로 51"],
+  "guri-haengbokhan-surgery-hospital": ["행복한외과병원 구리", "경기도 구리시 검배로 78"],
+  "goyang-heryoojae-hospital": ["허유재병원", "경기도 고양시 일산동구 중앙로 1317"],
+  "namyangju-hyeseong-hospital": ["혜성병원 남양주", "경기도 남양주시 경춘로1308번길 4"],
+  "uijeongbu-howon-hospital": ["호원병원 의정부", "경기도 의정부시 신흥로 145-1"],
+  "hwaseong-ds-hospital": ["화성디에스병원", "경기도 화성시 남양읍 시청로160번길 46-13", "경기도 화성시 만세구 남양읍"],
+  "gimpo-hismedi-hospital": ["히즈메디병원", "경기도 김포시 김포대로 681"],
+  "siheung-heungk-hospital": ["흥K병원", "경기도 시흥시 능곡번영길 22"],
+  "hwaseong-hope-hospital": ["희망찬병원 화성", "경기도 화성시 병점중앙로 174"],
+  "namyangju-hero-hospital": ["히어로병원", "경기도 남양주시 진건읍 사릉로442번길 15"],
   // 2026-09-18 경기도 tier=병원 11차 배치.
   "namyangju-jinjeop-hanyang-hospital": ["진접한양병원", "경기도 남양주시 진접읍 해밀예당1로 28"],
   "hanam-cheongbong-hospital": ["청봉병원 하남", "경기도 하남시 하남대로802번길 5-4"],
