@@ -25,6 +25,10 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-22 경기도 tier=병원 최종 보류 13곳 재조사 후 등록분(NHIS 지정 근거).
+  "osan-joeun-hospital": ["조은오산병원", "경기도 오산시 오산로 307"],
+  "ansan-hanbit-womens-hospital": ["한빛여성병원", "경기도 안산시 단원구 광덕동로 53"],
+  "anseong-heoripyeonhan-hospital": ["허리편한병원", "경기도 안성시 공도읍 진건중길 9"],
   // 2026-09-18 경기도 tier=병원 12차(마지막) 배치.
   "pyeongtaek-woori-hospital": ["평택우리병원", "경기도 평택시 비전5로 20-18"],
   "namyangju-hana-pediatrics-hospital": ["하나소아청소년과병원", "경기도 남양주시 늘을1로16번길 25"],
