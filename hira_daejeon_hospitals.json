@@ -1,0 +1,402 @@
+[
+  {
+    "no": "1",
+    "name": "가톨릭병원",
+    "addr": "대전광역시 서구 도산로 351, (용문동)",
+    "tel": "042-537-0222",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQxMyQyNjEyMjIjNDEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "2",
+    "name": "고운손병원",
+    "addr": "대전광역시 서구 둔산서로 59, (8층)",
+    "tel": "042-472-7445",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQwMyQyNjEyMjIjNTEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "3",
+    "name": "국군대전병원",
+    "addr": "대전광역시 유성구 자운로 90-0,  (자운동)",
+    "tel": "042-1688-9152",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjEyMjIjNDEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "4",
+    "name": "글로벌삼육오엠씨병원",
+    "addr": "대전광역시 서구 대덕대로 194,  7~10층 (둔산동,백마빌딩)",
+    "tel": "042-488-3653",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQzNjEwMDIjNDEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "5",
+    "name": "글로벌튼튼병원",
+    "addr": "대전광역시 동구 계족로 516,  (용전동)",
+    "tel": "042-220-2300",
+    "sggu": "대전동구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4MiQyNjE0ODEjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "6",
+    "name": "다빈치병원",
+    "addr": "대전광역시 서구 계룡로553번길 60,  (탄방동)",
+    "tel": "042-1566-9852",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3OSQzNjEwMDIjNTEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "7",
+    "name": "대전굿니스병원",
+    "addr": "대전광역시 서구 둔산중로 38-0, 둔산메트로존(9,10층)",
+    "tel": "042-719-7575",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQyNjEyMjIjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "8",
+    "name": "대전더젠병원",
+    "addr": "대전광역시 서구 계백로 1013-0,  0동 (관저동,2층~7층)",
+    "tel": "042-544-0025",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQyNjEwMDIjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "9",
+    "name": "대전본병원",
+    "addr": "대전광역시 유성구 계룡로 114-0,  5,6층 (봉명동)",
+    "tel": "042-361-7575",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQ0NjE0ODEjNjEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "10",
+    "name": "대전세종충남·넥슨후원 공공어린이재활병원",
+    "addr": "대전광역시 서구 도안중로 133-0, 대전세종충남넥슨후원공공어린이재활병원",
+    "tel": "042-330-2110",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQ3MiQyNjE0ODEjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "11",
+    "name": "대전센텀병원",
+    "addr": "대전광역시 서구 청사로 234-0,  (둔산동)",
+    "tel": "042-481-0100",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQyIyQxIyQwMCQzNjEyMjIjNjEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "12",
+    "name": "대전우리병원",
+    "addr": "대전광역시 서구 문정로48번길 70, (탄방동)",
+    "tel": "042-1577-0052",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5OSQyNjE0ODEjNTEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "13",
+    "name": "대전웰니스병원",
+    "addr": "대전광역시 대덕구 동서대로1777번길 2-0, 대전웰니스병원",
+    "tel": "042-712-8500",
+    "sggu": "대전대덕구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ2MiQzNjEyMjIjNTEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "14",
+    "name": "대전중앙로병원",
+    "addr": "대전광역시 중구 중교로 39, (대흥동)",
+    "tel": "042-242-0875",
+    "sggu": "대전중구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQzNjEwMDIjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "15",
+    "name": "대전코젤병원",
+    "addr": "대전광역시 유성구 계백로 927-0,  0동 (원내동,코젤랜드)",
+    "tel": "042-520-0000",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3OSQzNjE0ODEjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "16",
+    "name": "대전화병원",
+    "addr": "대전광역시 동구 동대전로 39-0, 대전화병원",
+    "tel": "042-620-7575",
+    "sggu": "대전동구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQ0NjEwMDIjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "17",
+    "name": "더블유여성병원",
+    "addr": "대전광역시 서구 문정로48번길 70, (탄방동)",
+    "tel": "042-485-7777",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQyIyQ1IyQwMCQzNjEyMjIjNTEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "18",
+    "name": "마라톤정형외과병원",
+    "addr": "대전광역시 서구 둔산남로 87-0,  (둔산동)",
+    "tel": "042-719-1199",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3OSQyNjEyMjIjODEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "19",
+    "name": "맘모스정형외과병원",
+    "addr": "대전광역시 서구 계룡로 619, (탄방동)",
+    "tel": "042-536-0911",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQzNjEyMjIjNzEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "20",
+    "name": "미즈여성병원",
+    "addr": "대전광역시 서구 문정로2번길 95,  (탄방동)",
+    "tel": "042-483-3575",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ5MiQ0NjEwMDIjNDEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "21",
+    "name": "미즈제일여성병원",
+    "addr": "대전광역시 유성구 계룡로 126-0,  1~6층 (봉명동)",
+    "tel": "042-821-0000",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQyNjE4MzIjNjEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "22",
+    "name": "바로본병원",
+    "addr": "대전광역시 동구 동서대로 1719, 바로본병원 (용전동)",
+    "tel": "042-341-8275",
+    "sggu": "대전동구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQyNjE0ODEjODEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "23",
+    "name": "바로세움병원",
+    "addr": "대전광역시 유성구 계룡로 142-0,  4~8층 (봉명동)",
+    "tel": "042-489-8888",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ4OSQyNjEyMjIjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "24",
+    "name": "바른생각병원",
+    "addr": "대전광역시 서구 청사로 128, (월평동)",
+    "tel": "042-337-0001",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQwMyQzNjEwMDIjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "25",
+    "name": "밝은누리안과병원",
+    "addr": "대전광역시 서구 둔산로 61, (둔산동)",
+    "tel": "042-485-6644",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQzNjE0ODEjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "26",
+    "name": "봉키병원",
+    "addr": "대전광역시 유성구 계룡로 120-0, (봉명동)",
+    "tel": "042-1522-6705",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ4OSQyNjE0ODEjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "27",
+    "name": "사회복지법인 성재원 성세병원",
+    "addr": "대전광역시 유성구 온천북로33번길 21-32,  (봉명동)",
+    "tel": "042-820-1234",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQxMyQyNjE4MzIjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "28",
+    "name": "사회복지법인 성화 대전재활병원",
+    "addr": "대전광역시 유성구 문화원로146번길 7-24,  (봉명동)",
+    "tel": "042-717-7575",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQyNjEyMjIjNTEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "29",
+    "name": "사회복지법인천성원신탄진한일병원",
+    "addr": "대전광역시 대덕구 신탄진로 623,  (상서동)",
+    "tel": "042-930-0300",
+    "sggu": "대전대덕구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQ5MiQyNjE0ODEjNTEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "30",
+    "name": "새손병원",
+    "addr": "대전광역시 중구 계룡로 858-0,  0동 (B1,2,3,4,층 (오류동,새손병원(B1,2,3,4,5,6))",
+    "tel": "042-535-1900",
+    "sggu": "대전중구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQxMyQ0NjEwMDIjODEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "31",
+    "name": "서울여성병원",
+    "addr": "대전광역시 서구 문정로 7, (둔산동)",
+    "tel": "042-488-8275",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQ5MiQ0NjE0ODEjNjEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "32",
+    "name": "써지탑병원",
+    "addr": "대전광역시 서구 대덕대로 238, 4,5,6층 (둔산동)",
+    "tel": "042-484-9898",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3MiQzNjEwMDIjNTEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "33",
+    "name": "에스앤케이병원",
+    "addr": "대전광역시 서구 둔산북로 36-0, 3,4,5층 (둔산동)",
+    "tel": "042-476-9000",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQ0NjEwMDIjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "34",
+    "name": "엠블병원",
+    "addr": "대전광역시 유성구 원신흥남로12번길 8-10,  2~7층 (원신흥동,MBL빌딩)",
+    "tel": "042-1899-3275",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQyNjEwMDIjNjEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "35",
+    "name": "엠플러스병원",
+    "addr": "대전광역시 유성구 테크노중앙로 53-0, (관평동)",
+    "tel": "042-936-7588",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQzNjE4MzIjNjEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "36",
+    "name": "을지소아청소년과병원",
+    "addr": "대전광역시 대덕구 송촌북로 60-0, 3~7층 (송촌동,을지소아크리닉)",
+    "tel": "042-605-0000",
+    "sggu": "대전대덕구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQxMyQzNjE0ODEjNTEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "37",
+    "name": "의료법인 리노의료재단 유성웰니스재활병원",
+    "addr": "대전광역시 유성구 온천동로 15-0, 유성웰니스재활전문병원",
+    "tel": "042-824-6900",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQyNjEwMDIjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "38",
+    "name": "의료법인 밝은마음의료재단 워크런재활병원",
+    "addr": "대전광역시 유성구 온천동로 43-0, 본관지하1~3층,9층/신관2~3층",
+    "tel": "042-607-1234",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ5OSQyNjEwMDIjODEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "39",
+    "name": "의료법인 의명의료재단 대전병원",
+    "addr": "대전광역시 대덕구 대전로 1215-0, 대전병원",
+    "tel": "042-625-0700",
+    "sggu": "대전대덕구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQ2MiQ0NjEwMDIjNjEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "40",
+    "name": "의료법인삼영의료재단 둔산병원",
+    "addr": "대전광역시 서구 계룡로 568-0,  4,5,6층 (괴정동,삼영빌딩)",
+    "tel": "042-484-9300",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQ3IyQwMyQ0NjEwMDIjNDEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "41",
+    "name": "이김병원",
+    "addr": "대전광역시 서구 계백로 993-0,  6~8층 (관저동,대전관저클리닉센터)",
+    "tel": "042-721-0777",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQzNjEwMDIjNDEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "42",
+    "name": "이안과병원",
+    "addr": "대전광역시 중구 대종로 468-0,  9층 (대흥동,천우빌딩)",
+    "tel": "042-220-5500",
+    "sggu": "대전중구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzExIyQxIyQzIyQwMyQzNjEyMjIjNDEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "43",
+    "name": "이안병원",
+    "addr": "대전광역시 동구 동서대로 1722-0,  201,313호 (가양동,힐스테이트가양더와이즈)",
+    "tel": "042-721-8844",
+    "sggu": "대전동구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQyNjE0ODEjNjEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "44",
+    "name": "조이병원",
+    "addr": "대전광역시 서구 계룡로553번길 18, (탄방동)",
+    "tel": "042-485-2235",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ3MiQyNjE4MzIjNTEjJDEjJDIjJDgz"
+  },
+  {
+    "no": "45",
+    "name": "청춘병원",
+    "addr": "대전광역시 중구 대종로 608-0,  (선화동)",
+    "tel": "042-337-0300",
+    "sggu": "대전중구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQwMyQ0NjE0ODEjODEjJDEjJDYjJDgz"
+  },
+  {
+    "no": "46",
+    "name": "코젤병원",
+    "addr": "대전광역시 유성구 계룡로 150,  6~7층 (봉명동,승호빌딩)",
+    "tel": "042-829-0000",
+    "sggu": "대전유성구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ5OSQyNjE4MzIjNDEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "47",
+    "name": "킴벨피부과병원",
+    "addr": "대전광역시 서구 대덕대로 238, 238",
+    "tel": "042-471-7575",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQ1IyQ2MiQzNjEyMjIjNDEjJDEjJDQjJDgz"
+  },
+  {
+    "no": "48",
+    "name": "탄방엠블병원",
+    "addr": "대전광역시 서구 문정로48번길 70-0, (탄방동)",
+    "tel": "042-1899-2955",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQyIyQ1IyQwMCQzNjEwMDIjNjEjJDEjJDAjJDgz"
+  },
+  {
+    "no": "49",
+    "name": "탄탄병원",
+    "addr": "대전광역시 서구 계룡로553번길 72-0,  (탄방동)",
+    "tel": "042-476-0001",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQwMyQ0NjEwMDIjNzEjJDEjJDgjJDgz"
+  },
+  {
+    "no": "50",
+    "name": "허리사랑병원",
+    "addr": "대전광역시 서구 계룡로 618,  (괴정동)",
+    "tel": "042-528-7588",
+    "sggu": "대전서구",
+    "ykiho": "JDQ4MTYyMiM2MSMkMSMkMiMkOTkkMzgxMzUxIzIxIyQxIyQxIyQ3OSQzNjE0ODEjODEjJDEjJDIjJDgz"
+  }
+]

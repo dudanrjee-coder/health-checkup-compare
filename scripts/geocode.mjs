@@ -25,6 +25,18 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-24 대전광역시 tier=병원 1차 배치(HIRA 1~25번) 등록분.
+  "daejeon-catholic-hospital": ["가톨릭병원 대전", "대전광역시 서구 도산로 351"],
+  // 계족로는 동구~대덕구를 길게 관통해 "대전광역시 동구 계족로 516"으로 조회하면
+  // 3km 남쪽 신안동 구간(우편번호 34610)이 먼저 잡힌다. 용전동을 넣어야 병원이 있는
+  // 중리네거리 쪽 구간(34541)이 나온다. OSM에 병원 노드 자체는 없어 도로 기준 근사치다.
+  "daejeon-global-tunteun-hospital": ["글로벌튼튼병원", "대전 동구 용전동 계족로"],
+  "daejeon-davinci-hospital": ["다빈치병원 대전", "대전광역시 서구 계룡로553번길 60"],
+  "daejeon-thegen-hospital": ["더젠병원 대전", "대전광역시 서구 계백로 1013"],
+  "daejeon-wellness-hospital": ["대전웰니스병원", "대전광역시 대덕구 동서대로1777번길 2"],
+  "daejeon-w-womens-hospital": ["더블유여성병원 대전", "대전광역시 서구 문정로48번길 70"],
+  "daejeon-miz-womens-hospital": ["미즈여성병원 대전", "대전광역시 서구 문정로2번길 95"],
+  "daejeon-barunsaenggak-hospital": ["바른생각병원", "대전광역시 서구 청사로 128"],
   // 2026-09-22 경기도 tier=병원 최종 보류 13곳 재조사 후 등록분(NHIS 지정 근거).
   "osan-joeun-hospital": ["조은오산병원", "경기도 오산시 오산로 307"],
   "ansan-hanbit-womens-hospital": ["한빛여성병원", "경기도 안산시 단원구 광덕동로 53"],
