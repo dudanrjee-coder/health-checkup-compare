@@ -17,8 +17,6 @@ const VOLUME = 0.6;
 const BAR_COUNT = 20;
 /** 정지 상태에서 모든 막대가 갖는 높이 비율. 20개가 같은 크기로 낮게 깔린다. */
 const IDLE_SCALE = 0.35;
-/** 주파수 데이터 중 실제로 귀에 들리는 대역만 쓴다(고역 끝은 거의 0이라 뺀다). */
-const USED_BINS = 48;
 
 export default function BgmPlayer({ className = "" }: { className?: string }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -27,6 +25,9 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const frameRef = useRef<number | null>(null);
+  /** 막대별 주파수 대역 경계(로그 간격)와 직전 높이. 막대마다 따로 떨어뜨리는 데 쓴다. */
+  const bandsRef = useRef<Array<{ from: number; to: number; decay: number }>>([]);
+  const levelsRef = useRef<number[]>(new Array(BAR_COUNT).fill(0));
 
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
@@ -34,6 +35,7 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
   const [useCssFallback, setUseCssFallback] = useState(false);
 
   const resetBars = useCallback(() => {
+    levelsRef.current.fill(0);
     for (const bar of barsRef.current) {
       if (bar) bar.style.transform = `scaleY(${IDLE_SCALE})`;
     }
@@ -54,16 +56,29 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     analyser.getByteFrequencyData(data);
     for (let i = 0; i < BAR_COUNT; i += 1) {
       const bar = barsRef.current[i];
-      if (!bar) continue;
-      const from = Math.floor((i / BAR_COUNT) * USED_BINS);
-      const to = Math.max(from + 1, Math.floor(((i + 1) / BAR_COUNT) * USED_BINS));
+      const band = bandsRef.current[i];
+      if (!bar || !band) continue;
+
       let sum = 0;
-      for (let bin = from; bin < to; bin += 1) sum += data[bin];
-      // 저역은 늘 세고 고역은 약해서, 그대로 쓰면 왼쪽 막대만 천장에 붙는다.
-      // 오른쪽으로 갈수록 이득을 키워 20개가 고르게 움직이게 한다.
-      const level = sum / (to - from) / 255;
-      const gain = 0.75 + (i / BAR_COUNT) * 2.1;
-      const scale = IDLE_SCALE + Math.min(1, level * gain) * (1 - IDLE_SCALE);
+      let peak = 0;
+      for (let bin = band.from; bin < band.to; bin += 1) {
+        sum += data[bin];
+        if (data[bin] > peak) peak = data[bin];
+      }
+      const average = sum / (band.to - band.from) / 255;
+      const raw = average * 0.7 + (peak / 255) * 0.3;
+      // 요즘 음원은 계속 크게 눌려 있어서 그대로 쓰면 20개가 다 천장에 붙는다.
+      // 거듭제곱으로 조용한 대역을 더 낮춰 막대 사이 높이 차를 만든다.
+      const shaped = Math.pow(raw, 1.6);
+      // 고역으로 갈수록 에너지가 작아 그대로 두면 오른쪽이 안 움직인다.
+      const gain = 1 + (i / BAR_COUNT) * 1.3;
+      const target = Math.min(1, shaped * gain);
+      // 막대마다 다른 속도로 내려오게 해서 서로 붙어 움직이지 않게 한다.
+      const previous = levelsRef.current[i] * band.decay;
+      const level = target > previous ? target : previous;
+      levelsRef.current[i] = level;
+
+      const scale = IDLE_SCALE + level * (1 - IDLE_SCALE);
       bar.style.transform = `scaleY(${scale.toFixed(3)})`;
     }
 
@@ -83,14 +98,29 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     try {
       const ctx = new Ctor();
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 128;
-      analyser.smoothingTimeConstant = 0.75;
+      // 해상도를 충분히 주고 스무딩을 낮춰야 막대가 각자 다른 소리를 잡는다.
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.6;
       ctx.createMediaElementSource(audio).connect(analyser);
       analyser.connect(ctx.destination);
 
       audioCtxRef.current = ctx;
       analyserRef.current = analyser;
       dataRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount));
+
+      // 사람이 듣는 음높이는 로그 간격이라, 대역도 로그로 갈라야 저음 막대와
+      // 고음 막대가 서로 다른 악기를 따라간다. 균등 분할하면 전부 같이 출렁인다.
+      const minBin = 2;
+      const maxBin = Math.max(minBin + BAR_COUNT, Math.floor(analyser.frequencyBinCount * 0.55));
+      const ratio = Math.pow(maxBin / minBin, 1 / BAR_COUNT);
+      bandsRef.current = Array.from({ length: BAR_COUNT }, (_, i) => {
+        const from = Math.floor(minBin * Math.pow(ratio, i));
+        return {
+          from,
+          to: Math.max(from + 1, Math.floor(minBin * Math.pow(ratio, i + 1))),
+          decay: 0.75 + (i % 5) * 0.02,
+        };
+      });
       return analyser;
     } catch (err) {
       if (process.env.NODE_ENV !== "production") {
@@ -150,9 +180,16 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
       onClick={handleToggle}
       aria-pressed={playing}
       aria-label={playing ? "배경음악 정지" : "배경음악 재생"}
-      className={`relative flex h-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-500 ${className}`}
+      className={`relative flex items-center justify-center transition-all duration-700 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-500 ${
+        started ? "h-11" : "h-[104px] md:h-[128px]"
+      } ${className}`}
     >
-      <span className="flex h-5 items-center gap-[4px]">
+      {/* 첫 재생 전에는 막대 간격을 벌려, 가운데 큰 재생 버튼 양옆으로 막대가 보이게 한다. */}
+      <span
+        className={`flex h-5 items-center transition-all duration-700 ease-out ${
+          started ? "gap-[4px]" : "gap-[8px] md:gap-[10px]"
+        }`}
+      >
         {Array.from({ length: BAR_COUNT }, (_, index) => (
           <span
             key={index}
@@ -174,10 +211,11 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
         ))}
       </span>
 
-      {/* 첫 재생 전에만 막대 한가운데에 뜨는 원형 플레이 버튼. */}
+      {/* 첫 재생 전에만 막대 한가운데에 뜨는 원형 플레이 버튼. 누르는 자리라는 게
+          한눈에 보여야 해서 히어로 영역이 허용하는 만큼 크게 잡았다. */}
       {!started && (
-        <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-[0_0_16px_rgba(34,211,238,0.6)] ring-1 ring-cyan-400/70 backdrop-blur">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-[2px] h-5 w-5 fill-cyan-700">
+        <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-[0_0_28px_rgba(34,211,238,0.6)] ring-2 ring-cyan-400/70 backdrop-blur md:h-32 md:w-32">
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-[4px] h-10 w-10 fill-cyan-700 md:h-14 md:w-14">
             <path d="M8 4.5 19 12 8 19.5Z" />
           </svg>
         </span>
