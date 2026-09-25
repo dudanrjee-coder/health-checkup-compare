@@ -7,9 +7,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * 반드시 사용자 클릭에서만 시작되므로 마운트 시 play()를 시도하지 않고,
  * Web Audio 컨텍스트도 클릭 순간에 만든다(그 전에 만들면 suspended로 뜬다).
  *
- * 파형은 따로 떨어진 세로선 20개다. 재생 중에는 AnalyserNode로 실제
- * bgm.mp3의 주파수를 읽어 선마다 길이를 매 프레임 다시 쓴다. React state로
- * 돌리면 초당 60번 리렌더가 되므로 ref로 DOM을 직접 만진다.
+ * 파형은 따로 떨어진 세로선 20개다. 아래 끝은 바닥에 고정이고 음량에 따라
+ * 위로만 자란다. 재생 중에는 AnalyserNode로 실제 bgm.mp3의 주파수를 읽어
+ * 선마다 길이를 매 프레임 다시 쓴다. React state로 돌리면 초당 60번
+ * 리렌더가 되므로 ref로 DOM을 직접 만진다.
  */
 
 const VOLUME = 0.6;
@@ -18,10 +19,11 @@ const LINE_COUNT = 20;
 /** 선 좌표계. preserveAspectRatio="none"으로 컨테이너 크기에 맞춰 늘린다. */
 const VIEW_WIDTH = 100;
 const VIEW_HEIGHT = 40;
-const CENTER_Y = VIEW_HEIGHT / 2;
-/** 소리가 가장 클 때 선의 절반 길이. 정지 상태에서는 그 35%로 짧게 눕는다. */
-const MAX_HALF = 18;
-const IDLE_HALF = MAX_HALF * 0.35;
+/** 선이 서 있는 바닥. 위로만 자라므로 아래 끝은 늘 여기에 고정된다. */
+const BASE_Y = VIEW_HEIGHT - 2;
+/** 소리가 가장 클 때 선 길이. 정지 상태에서는 그 40%로 짧게 선다. */
+const MAX_LENGTH = 34;
+const IDLE_LENGTH = MAX_LENGTH * 0.4;
 
 /** 선 i의 가운데 x 좌표. 양끝이 잘리지 않게 칸 가운데에 놓는다. */
 function lineX(index: number) {
@@ -51,13 +53,12 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     }
   }, []);
 
-  /** 선 하나의 길이를 반영한다. 가운데를 기준으로 위아래로 같이 자란다. */
+  /** 선 하나의 길이를 반영한다. 아래 끝은 바닥에 고정이고 위로만 자란다. */
   const drawLine = useCallback((index: number, level: number) => {
     const line = linesRef.current[index];
     if (!line) return;
-    const half = IDLE_HALF + level * (MAX_HALF - IDLE_HALF);
-    line.setAttribute("y1", (CENTER_Y - half).toFixed(2));
-    line.setAttribute("y2", (CENTER_Y + half).toFixed(2));
+    const length = IDLE_LENGTH + level * (MAX_LENGTH - IDLE_LENGTH);
+    line.setAttribute("y1", (BASE_Y - length).toFixed(2));
   }, []);
 
   const resetLines = useCallback(() => {
@@ -246,12 +247,12 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
             id="bgm-line-gradient"
             gradientUnits="userSpaceOnUse"
             x1="0"
-            y1={CENTER_Y - MAX_HALF}
+            y1={BASE_Y - MAX_LENGTH}
             x2="0"
-            y2={CENTER_Y + MAX_HALF}
+            y2={BASE_Y}
           >
             <stop offset="0%" stopColor="#67e8f9" />
-            <stop offset="50%" stopColor="#22d3ee" />
+            <stop offset="55%" stopColor="#22d3ee" />
             <stop offset="100%" stopColor="#0891b2" />
           </linearGradient>
         </defs>
@@ -263,8 +264,8 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
             }}
             x1={lineX(index)}
             x2={lineX(index)}
-            y1={CENTER_Y - IDLE_HALF}
-            y2={CENTER_Y + IDLE_HALF}
+            y1={BASE_Y - IDLE_LENGTH}
+            y2={BASE_Y}
             stroke="url(#bgm-line-gradient)"
             strokeWidth={1.5}
             strokeLinecap="round"
