@@ -31,6 +31,8 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
 
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
+  // 문서 클릭 리스너가 state 갱신을 기다리지 않고 바로 볼 수 있어야 한다.
+  const startedRef = useRef(false);
   // Web Audio를 못 만들었을 때만 CSS 애니메이션으로 대체한다.
   const [useCssFallback, setUseCssFallback] = useState(false);
 
@@ -137,16 +139,11 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     };
   }, [stopLoop]);
 
-  function handleToggle() {
+  const startPlayback = useCallback(() => {
     const audio = audioRef.current;
-    if (!audio) return;
-    setStarted(true);
+    if (!audio || !audio.paused) return;
 
-    if (!audio.paused) {
-      audio.pause();
-      return;
-    }
-
+    // Web Audio 컨텍스트는 반드시 클릭 안에서 만들어야 suspended로 뜨지 않는다.
     if (!ensureAnalyser(audio)) setUseCssFallback(true);
     if (audioCtxRef.current?.state === "suspended") {
       audioCtxRef.current.resume().catch(() => {});
@@ -158,9 +155,45 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
         console.debug("[BgmPlayer] 재생 실패:", err?.name, err?.message);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /**
+   * 재생 버튼을 못 보고 지나치는 사람을 위해, 첫 재생 전에는 페이지
+   * 아무 곳이나 클릭해도 음악이 시작된다. 클릭 자체는 가로채지 않으므로
+   * 검색·필터 같은 원래 동작은 그대로 일어난다. 한 번 시작되면 이 리스너는
+   * 사라져서, 이후의 클릭은 음악에 아무 영향도 주지 않는다.
+   */
+  useEffect(() => {
+    if (started) return;
+
+    const handleFirstClick = () => {
+      if (startedRef.current) return;
+      startPlayback();
+    };
+
+    document.addEventListener("click", handleFirstClick);
+    return () => document.removeEventListener("click", handleFirstClick);
+  }, [started, startPlayback]);
+
+  function handleToggle() {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (!audio.paused) {
+      audio.pause();
+      return;
+    }
+    startPlayback();
   }
 
+  /**
+   * 재생 버튼을 감추고 크기를 줄이는 건 실제로 소리가 나기 시작한 다음이다.
+   * 클릭 시점에 미리 감추면, 재생이 막혔을 때 누를 곳이 사라져 버린다.
+   */
   function handlePlay() {
+    startedRef.current = true;
+    setStarted(true);
     setPlaying(true);
     if (analyserRef.current) {
       stopLoop();
@@ -196,7 +229,7 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
             ref={(el) => {
               barsRef.current[index] = el;
             }}
-            className={`h-full w-[3px] origin-center rounded-full bg-gradient-to-t from-cyan-600 via-cyan-400 to-cyan-200 shadow-[0_0_4px_rgba(34,211,238,0.95),0_0_10px_rgba(8,145,178,0.55)] ${
+            className={`h-full w-px origin-center rounded-full bg-gradient-to-t from-cyan-600 via-cyan-400 to-cyan-200 shadow-[0_0_4px_rgba(34,211,238,0.95),0_0_10px_rgba(8,145,178,0.55)] ${
               playing && useCssFallback ? "animate-eq motion-reduce:animate-none" : ""
             }`}
             style={
