@@ -277,7 +277,7 @@ export default function Home() {
             </div>
           </nav>
 
-          <div className="relative flex flex-col items-center gap-4 text-center">
+          <div className="flex flex-col items-center gap-4 text-center">
             <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
               2026 국가건강검진 시즌
             </span>
@@ -293,11 +293,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 배경음악 웨이브폼. lg 이상에서는 타이틀 줄 높이의 오른쪽
-                여백에 겹쳐 놓고(absolute), 그보다 좁은 화면에서는 타이틀과
-                통계 배지 사이의 제 줄에 오른쪽 정렬로 둔다 — 그 아래 lg
-                미만에서는 타이틀이 넓어 오른쪽 여백이 남지 않기 때문이다. */}
-            <BgmPlayer className="self-end lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2" />
             <div className="flex flex-wrap justify-center gap-2">
               {[
                 { label: "전국 병원", value: headerStats.totalHospitals },
@@ -315,6 +310,9 @@ export default function Home() {
                 </span>
               ))}
             </div>
+
+            {/* 배경음악 컨트롤. 통계 배지 줄 바로 아래 가운데에 둔다. */}
+            <BgmPlayer />
           </div>
         </div>
       </header>
