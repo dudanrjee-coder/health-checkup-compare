@@ -277,14 +277,11 @@ export default function Home() {
             </div>
           </nav>
 
-          <div className="flex flex-col items-center gap-4 text-center">
+          <div className="relative flex flex-col items-center gap-4 text-center">
             <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
               2026 국가건강검진 시즌
             </span>
-            {/* 배경음악 버튼은 데스크톱에서만 타이틀 줄 오른쪽 끝에 겹쳐
-                놓는다(absolute). 모바일에서는 그대로 흐름에 따라 타이틀
-                아래 가운데에 놓여 원형 영상·타이틀과 겹치지 않는다. */}
-            <div className="relative flex w-full flex-col items-center gap-3 md:flex-row md:items-center md:justify-center md:gap-4">
+            <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4">
               <HeroVideo />
               <div className="text-center md:text-left">
                 <h1 className="break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
@@ -294,8 +291,13 @@ export default function Home() {
                   지역별 검진병원 정보를 한눈에 비교하세요
                 </p>
               </div>
-              <BgmPlayer className="self-end md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2" />
             </div>
+
+            {/* 배경음악 웨이브폼. lg 이상에서는 타이틀 줄 높이의 오른쪽
+                여백에 겹쳐 놓고(absolute), 그보다 좁은 화면에서는 타이틀과
+                통계 배지 사이의 제 줄에 오른쪽 정렬로 둔다 — 그 아래 lg
+                미만에서는 타이틀이 넓어 오른쪽 여백이 남지 않기 때문이다. */}
+            <BgmPlayer className="self-end lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2" />
             <div className="flex flex-wrap justify-center gap-2">
               {[
                 { label: "전국 병원", value: headerStats.totalHospitals },
