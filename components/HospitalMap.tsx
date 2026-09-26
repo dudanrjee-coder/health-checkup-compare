@@ -137,7 +137,7 @@ function InteractionWatcher({
 
 /**
  * 지역을 고르면 그 지역으로, 병원을 고르면 그 병원 위치로 지도를 옮긴다.
- * 지역을 고르기 전(최초 진입)에는 전국 뷰를 그대로 둔다.
+ * 화면을 처음 열었을 때(지역 선택도 검색도 없는 상태)에만 전국 뷰를 그대로 둔다.
  */
 function MapController({
   hospitals,
@@ -159,31 +159,69 @@ function MapController({
 }) {
   const map = useMap();
   const boundsKey = hospitals.map((h) => h.id).join(",");
+  /**
+   * 마지막으로 화면 범위를 맞춘 상태(지역 + 검색 여부 + 목록)의 서명.
+   * null이면 아직 한 번도 맞추지 않은 최초 렌더다.
+   *
+   * 최초 렌더에서만 전국 뷰를 그대로 두고, 그 뒤로는 목록이 바뀔 때마다
+   * 항상 화면 범위를 다시 맞춘다. 예전에는 "시·도 선택도 검색도 없으면
+   * 언제나 건너뛴다"였는데, 그래서 전국 뷰에서 등급 필터를 바꿔도 지도
+   * 범위가 그대로 남았다. 특히 마커를 클릭해 한 병원으로 확대(flyTo)한 뒤
+   * 등급을 바꾸면 지도가 그 병원에 확대된 채 굳어, 왼쪽 목록과 지도에
+   * 보이는 범위가 어긋났다.
+   *
+   * 서명을 들고 있는 이유는 StrictMode(개발 모드)가 같은 상태로 effect를
+   * 한 번 더 부르기 때문이다. 그때 "최초 렌더가 아니다"라고만 판단하면
+   * 첫 화면부터 전국 뷰 대신 전체 병원 범위로 맞춰져 버린다.
+   */
+  const lastFitRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // 최초 진입 상태에서는 MapContainer에 지정한 전국 뷰를 유지한다.
-    if (!selectedSido && !searchActive) return;
+    const signature = [selectedSido ?? "", searchActive, boundsKey].join("|");
+    const isFirstRun = lastFitRef.current === null;
+    const alreadyFitted = lastFitRef.current === signature;
+    lastFitRef.current = signature;
 
+    // StrictMode가 같은 상태로 다시 부른 경우 — 이미 맞춘 범위다.
+    if (alreadyFitted) return;
+
+    // 최초 진입 상태(지역 선택도 검색도 없음)에서는 MapContainer에 지정한
+    // 전국 뷰를 그대로 둔다. 그 뒤로는 전국 뷰에서도 목록이 바뀌면 맞춘다.
+    if (isFirstRun && !selectedSido && !searchActive) return;
+
+    // 여기서 일으키는 이동은 모두 animate:false라 동기적으로 끝나므로
+    // moveend를 기다리지 않고 바로 플래그를 되돌린다. moveend에 걸어두면
+    // 이동 거리가 0이라 이벤트가 아예 안 뜨는 경우 플래그가 true로 남아,
+    // 이후 사용자의 실제 줌을 코드상 이동으로 오인한다.
     programmaticMoveRef.current = true;
-    map.once("moveend", () => {
+    try {
+      if (hospitals.length) {
+        const bounds = L.latLngBounds(hospitals.map((h) => [h.lat, h.lng]));
+        map.fitBounds(bounds, {
+          padding: [48, 48],
+          maxZoom: 15,
+          animate: false,
+        });
+        return;
+      }
+
+      // 좌표가 등록된 병원이 아직 없는 지역이면 지역 기준점으로 이동한다.
+      if (selectedSido) {
+        const { center, zoom } = SIDO_VIEW[selectedSido];
+        map.setView(center, zoom, { animate: false });
+        return;
+      }
+
+      // 검색 결과에 좌표가 하나도 없으면 지도를 억지로 옮기지 않는다.
+      if (searchActive) return;
+
+      // 전국 범위인데 표시할 좌표가 하나도 없으면 전국 뷰로 되돌린다.
+      map.setView(NATIONWIDE_VIEW.center, NATIONWIDE_VIEW.zoom, {
+        animate: false,
+      });
+    } finally {
       programmaticMoveRef.current = false;
-    });
-
-    if (hospitals.length) {
-      const bounds = L.latLngBounds(hospitals.map((h) => [h.lat, h.lng]));
-      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 15, animate: false });
-      return;
     }
-
-    // 검색 결과에 좌표가 하나도 없으면 지도를 억지로 옮기지 않는다.
-    if (!selectedSido) {
-      programmaticMoveRef.current = false;
-      return;
-    }
-
-    // 좌표가 등록된 병원이 아직 없는 지역이면 지역 기준점으로 이동한다.
-    const { center, zoom } = SIDO_VIEW[selectedSido];
-    map.setView(center, zoom, { animate: false });
     // boundsKey로 목록이 실제로 바뀐 경우에만 다시 맞춘다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, selectedSido, searchActive, boundsKey]);
