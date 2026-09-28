@@ -25,6 +25,30 @@ const REQUEST_INTERVAL_MS = 1100;
 
 /** 병원 id -> 검색어(문자열 또는 후보 배열, 앞에서부터 시도) */
 const QUERIES = {
+  // 2026-09-28 울산광역시 tier=병원 전수 조사(HIRA 종별 "병원" 34곳) 등록분 20곳.
+  // **좌표는 이미 HIRA가 제공하는 WGS84 값으로 채워 넣었다.** 이 스크립트는 lat/lng이
+  // 있는 병원을 건너뛰므로 아래 검색어는 --force로 재조회할 때만 쓰인다. HIRA 좌표와
+  // Nominatim 결과가 어긋나는지 대조하는 용도로 남겨 둔다.
+  "ulsan-jeil-hospital": ["울산제일병원", "울산광역시 남구 남산로354번길 26"],
+  "ulsan-gangnam-donggang": ["강남동강병원", "울산광역시 남구 돋질로 80"],
+  "ulsan-semin-hospital": ["울산세민병원", "울산광역시 중구 학성로 184"],
+  "ulsan-jenith-hospital": ["제니스병원 울산", "울산광역시 남구 번영로 160"],
+  "ulsan-iyun-hospital": ["아이윤병원", "울산광역시 중구 번영로 371"],
+  "ulsan-hm-hospital": ["에이치엠병원 울산", "울산광역시 남구 중앙로167번길 26"],
+  "ulsan-eson-hospital": ["울산이손병원", "울산광역시 울주군 삼남읍 하방로 43"],
+  "ulsan-thefrau-hospital": ["더프라우병원", "울산광역시 남구 삼산중로 94"],
+  "ulsan-healthywill-hospital": ["건강한윌병원", "울산광역시 남구 중앙로 282"],
+  "ulsan-goodmorning-hospital": ["굿모닝병원 울산", "울산광역시 남구 삼산로 110"],
+  "ulsan-moms-womens-hospital": ["맘스여성병원", "울산광역시 중구 남외2길 36"],
+  "ulsan-bukulsan-hospital": ["북울산병원", "울산광역시 북구 신답로 37"],
+  "ulsan-wooldul-hospital": ["울들병원", "울산광역시 남구 중앙로 228"],
+  "ulsan-ulju-hospital": ["울주병원", "울산광역시 울주군 온양읍 덕남로 233"],
+  "ulsan-miz-hospital": ["울산미즈병원", "울산광역시 남구 남산로 2"],
+  "ulsan-childrens-hospital": ["울산아동병원", "울산광역시 북구 호계로 332-1"],
+  "ulsan-hangsarang-hospital": ["항사랑병원", "울산광역시 남구 번영로 92"],
+  "ulsan-haetsal-childrens-hospital": ["햇살아동병원", "울산광역시 울주군 범서읍 천상중앙길 80"],
+  "ulsan-jungang-hakmun-hospital": ["중앙학문병원", "울산광역시 남구 삼산로 161"],
+  "ulsan-hibone-hospital": ["하이본병원", "울산광역시 남구 돋질로 228"],
   // 2026-09-26 세종특별자치시 tier=병원 배치 등록분. HIRA 종별 "병원" 3곳 중
   // 아름드리나무어린이병원·서울현병원은 보류(jeju-sejong-pending-review.md)라 등록하지 않았다.
   // 참고로 둘 다 Nominatim에 건물 POI가 있어(아름드리나무 36.5114315/127.2484034,
