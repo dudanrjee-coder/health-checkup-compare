@@ -1,3 +1,93 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===========================================================================
+   히어로 영역 전용 모션 (2026-09-28)
+
+   **여기 있는 규칙은 전부 히어로(<header>) 안에서만 쓴다.** 검색창·등급
+   필터·카드 리스트·지도에는 모션을 넣지 않기로 한 작업이라, 클래스 이름을
+   전부 `hero-`로 시작하게 해서 다른 곳에 섞여 들어가지 않게 했다.
+
+   지켜야 하는 제약 두 가지:
+
+   1. **제목(h1)과 부제는 opacity 0에서 시작하지 않는다.** 이 둘 중 하나가
+      LCP 요소인데, 투명하게 시작하면 브라우저가 "아직 안 그려졌다"로 보고
+      LCP 시점이 애니메이션 끝까지 밀린다. 그래서 `hero-lift`는 transform만
+      움직이고 opacity는 건드리지 않는다. 페이드가 필요한 보조 요소
+      (배지·BGM 버튼)만 `hero-fade`를 쓴다.
+   2. **모든 모션은 `prefers-reduced-motion: no-preference` 안에만 둔다.**
+      바깥에는 키프레임 정의만 두고 애니메이션을 걸지 않으므로, reduce
+      모드에서는 궤도 링·빛 덩어리가 아예 돌지 않는다(정지가 아니라 미적용).
+   =========================================================================== */
+
+@keyframes hero-lift {
+  from {
+    transform: translateY(14px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* opacity를 0이 아니라 0.01에서 시작한다. 0이면 일부 브라우저가 요소를
+   "그려지지 않은 것"으로 취급해 페인트 관련 지표에 잡히지 않는다. */
+@keyframes hero-fade {
+  from {
+    opacity: 0.01;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hero-drift-1 {
+  to {
+    transform: translate(90px, 46px) scale(1.1);
+  }
+}
+
+@keyframes hero-drift-2 {
+  to {
+    transform: translate(-100px, -24px) scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 진입 모션. --hero-delay로 배지 → 원형 영상 → 제목 → 부제 → 통계 →
+     BGM 순서를 만든다. 마지막 요소가 300ms에 시작해 380ms 동안 움직이므로
+     전체가 680ms에 끝난다(요구 상한 700ms). */
+  .hero-lift {
+    animation: hero-lift 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--hero-delay, 0ms);
+  }
+
+  .hero-fade {
+    animation: hero-fade 380ms ease-out both;
+    animation-delay: var(--hero-delay, 0ms);
+  }
+
+  /* 원형 영상 둘레의 점선 궤도 링. 20초에 한 바퀴. */
+  .hero-orbit {
+    animation: hero-spin 20s linear infinite;
+  }
+
+  /* 배경의 흐릿한 빛 덩어리. transform만 움직여서 레이아웃·페인트를
+     일으키지 않는다. 히어로가 화면 밖으로 나가면 HeroBackdrop이
+     animationPlayState를 paused로 바꾼다. */
+  .hero-blob-1 {
+    animation: hero-drift-1 18s ease-in-out infinite alternate;
+  }
+
+  .hero-blob-2 {
+    animation: hero-drift-2 22s ease-in-out infinite alternate;
+  }
+}

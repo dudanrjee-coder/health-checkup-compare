@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import HospitalMap from "@/components/HospitalMapLazy";
 import BgmPlayer from "@/components/BgmPlayer";
 import HeroVideo from "@/components/HeroVideo";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import HeroStatValue from "@/components/HeroStatValue";
 import SidoSelect from "@/components/SidoSelect";
 import TierFilter from "@/components/TierFilter";
 import HospitalCardChips from "@/components/HospitalCardChips";
@@ -249,8 +251,13 @@ export default function Home() {
     <main>
       {/* 시안처럼 좌우 여백 없이 화면 끝까지 채우는 풀블리드 배너다. 안쪽
           콘텐츠만 max-w-7xl로 가운데 정렬한다. */}
-      <header className="bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+      {/* 진입 모션은 히어로 안에만 있다. --hero-delay가 등장 순서를 만들고
+          (배지 0 → 원형 영상 60 → 제목 120 → 부제 180 → 통계 240 → BGM 300ms),
+          마지막 요소까지 680ms에 끝난다. 규칙은 app/globals.css에 모아 뒀다.
+          relative는 배경 빛 덩어리(HeroBackdrop)를 히어로 안에 가두기 위한 것이다. */}
+      <header className="relative overflow-hidden bg-gradient-to-br from-sky-100 via-indigo-50 to-pink-100 px-5 py-8 sm:px-10 sm:py-10">
+        <HeroBackdrop />
+        <div className="relative mx-auto flex max-w-7xl flex-col gap-6">
           {/*
             상단 네비게이션 — 시안에만 있는 디자인 목업용 요소다. 병원
             찾기/검진 항목/비용 비교/이용 안내 페이지도, 검진예약 기능도
@@ -278,22 +285,52 @@ export default function Home() {
           </nav>
 
           <div className="flex flex-col items-center gap-4 text-center">
-            <span className="w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+            <span
+              className="hero-fade w-fit rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white"
+              style={{ "--hero-delay": "0ms" } as CSSProperties}
+            >
               2026 국가건강검진 시즌
             </span>
             <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4">
-              <HeroVideo />
+              {/* 원형 영상은 HeroVideo가 그대로 그린다(마스킹·재생 속성 손대지
+                  않음). 여기서는 바깥에 궤도 링만 덧그린다 — 링은 형제 요소라
+                  영상 위에 겹치지 않고, pointer-events-none이라 호버로 소리를
+                  켜는 동작도 그대로다. */}
+              <div
+                className="hero-fade relative shrink-0"
+                style={{ "--hero-delay": "60ms" } as CSSProperties}
+              >
+                <span
+                  aria-hidden="true"
+                  className="hero-orbit pointer-events-none absolute -inset-2 rounded-full border border-dashed border-blue-500/45 md:-inset-3"
+                >
+                  {/* 링을 따라 도는 작은 점. 링이 회전하면 함께 돈다. */}
+                  <span className="absolute -top-[4.5px] left-1/2 block h-[9px] w-[9px] -translate-x-1/2 rounded-full bg-blue-600 ring-4 ring-blue-600/20" />
+                </span>
+                <HeroVideo />
+              </div>
               <div className="text-center md:text-left">
-                <h1 className="break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+                {/* h1·부제는 LCP 후보라 opacity를 건드리지 않고 transform만
+                    움직인다(globals.css의 hero-lift). */}
+                <h1
+                  className="hero-lift break-keep text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl"
+                  style={{ "--hero-delay": "120ms" } as CSSProperties}
+                >
                   전국 건강검진 병원
                 </h1>
-                <p className="mt-2 text-sm text-slate-600 sm:text-base">
+                <p
+                  className="hero-lift mt-2 text-sm text-slate-600 sm:text-base"
+                  style={{ "--hero-delay": "180ms" } as CSSProperties}
+                >
                   지역별 검진병원 정보를 한눈에 비교하세요
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2">
+            <div
+              className="hero-lift flex flex-wrap justify-center gap-2"
+              style={{ "--hero-delay": "240ms" } as CSSProperties}
+            >
               {[
                 { label: "전국 병원", value: headerStats.totalHospitals },
                 { label: "시·도", value: headerStats.sidoCount },
@@ -306,13 +343,20 @@ export default function Home() {
                   key={stat.label}
                   className="rounded-full border border-white/60 bg-white/70 px-4 py-1.5 text-sm font-medium text-slate-700 shadow-sm backdrop-blur"
                 >
-                  {stat.label} {stat.value}
+                  {stat.label} <HeroStatValue value={stat.value} />
                 </span>
               ))}
             </div>
 
-            {/* 배경음악 컨트롤. 통계 배지 줄 바로 아래 가운데에 둔다. */}
-            <BgmPlayer />
+            {/* 배경음악 컨트롤. 통계 배지 줄 바로 아래 가운데에 둔다.
+                등장 모션은 감싸는 <div>에만 걸었다 — BgmPlayer 안쪽(재생/정지
+                로직, 자동재생 금지, 웨이브폼)은 한 줄도 건드리지 않는다. */}
+            <div
+              className="hero-fade"
+              style={{ "--hero-delay": "300ms" } as CSSProperties}
+            >
+              <BgmPlayer />
+            </div>
           </div>
         </div>
       </header>
