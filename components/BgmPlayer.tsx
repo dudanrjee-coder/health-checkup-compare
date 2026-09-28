@@ -27,15 +27,42 @@ const VOLUME = 0.6;
 const LINE_COUNT = 64;
 /** 선 좌표계. preserveAspectRatio="none"으로 컨테이너 크기에 맞춰 늘린다. */
 const VIEW_WIDTH = 100;
-const VIEW_HEIGHT = 40;
+/**
+ * 세로 좌표계. 최대 길이를 34 → 48로 키우면서 함께 늘렸다.
+ * **바깥 버튼은 계속 `h-11`이라 히어로 레이아웃은 밀리지 않는다** — 늘어난
+ * 것은 이 안쪽 좌표계와 SVG 자체의 높이(h-6 → h-10, 44px 안에 들어감)뿐이다.
+ */
+const VIEW_HEIGHT = 54;
 /** 바닥선의 y. 세로선은 여기서 위로만 자란다. */
 const BASE_Y = VIEW_HEIGHT - 2;
 /** 소리가 가장 클 때 세로선 길이. */
-const MAX_LENGTH = 34;
+const MAX_LENGTH = 48;
 /** 정지 상태의 길이. 바닥선만 남는 느낌이 되도록 거의 0으로 둔다. */
 const IDLE_LENGTH = 0.8;
 /** reduce 모드에서 움직이지 않고 세워 둘 낮은 고정 높이(최대 길이 대비). */
 const REDUCED_LEVEL = 0.16;
+
+/**
+ * 스펙트럼이 덮는 주파수 범위(Hz). 이 구간을 로그 간격으로 64칸으로 나눈다.
+ *
+ * 예전에는 FFT 빈을 그대로 로그 분할했는데, 빈 하나가 43Hz(fftSize 1024,
+ * 44.1kHz)라 저음 쪽 칸 여러 개가 같은 빈을 보고 오른쪽은 한 칸이 수천 Hz를
+ * 뭉뚱그렸다. 사람이 듣는 음높이 기준으로 40Hz~16kHz를 나눠야 폭 전체가
+ * 고르게 움직인다. 저음 해상도를 위해 fftSize도 1024 → 4096으로 올렸다.
+ */
+const MIN_FREQ = 40;
+const MAX_FREQ = 16000;
+
+/** 자동 게인이 추적하는 선별 최근 최대값의 감쇠율과 하한. */
+const PEAK_DECAY = 0.9985;
+const MIN_PEAK = 0.02;
+/**
+ * 정규화할 때 최대값보다 조금 더 큰 값으로 나눈다. 1.0으로 나누면 최근
+ * 최대치를 낼 때마다 천장에 붙어서 선이 한 덩어리로 꽉 차 보인다.
+ */
+const HEADROOM = 1.3;
+/** 정규화한 값에 거는 지수. 클수록 큰 소리만 확 솟고 대비가 커진다. */
+const SHAPE_EXPONENT = 1.8;
 
 /** 선 색. 히어로 제목(text-slate-900)과 같은 짙은 남색이다. */
 const LINE_COLOR = "#0f172a";
@@ -50,17 +77,25 @@ function lineX(index: number) {
 }
 
 /**
- * 선 i의 기울기 가중치(0~1). 왼쪽(저음)이 1, 오른쪽(고음)으로 갈수록 0에
- * 가까워진다.
+ * 선 i의 기울기 가중치(0~1). 왼쪽이 1, 오른쪽으로 갈수록 0에 가까워진다.
  *
- * 스펙트럼을 그대로 그리면 요즘 음원은 고역도 제법 올라와서 오른쪽까지
- * 고르게 서 버린다. 참고한 모양은 왼쪽에 봉우리가 몰리고 오른쪽은 바닥선만
- * 남는 쪽이라, 지수 1.7로 오른쪽을 빠르게 눌렀다. 완전히 0으로 만들지 않고
- * 0.04를 남겨 둬서, 고음이 크게 들어오면 오른쪽도 아주 조금은 반응한다.
+ * **이제 소리에는 쓰지 않는다.** 재생 중에는 자동 게인이 폭 전체를 고르게
+ * 살리므로 여기를 곱하면 오른쪽이 다시 죽는다. 정지·reduce 모드에서 세워
+ * 두는 고정 모양(왼쪽이 조금 높은 완만한 내리막)에만 쓴다.
  */
 function tilt(index: number) {
   const t = index / (LINE_COUNT - 1);
   return 0.04 + 0.96 * Math.pow(1 - t, 1.7);
+}
+
+/**
+ * 선 i에만 걸리는 고정 배율(0.9~1.1). 이웃한 선이 똑같이 움직여 매끈한
+ * 곡선처럼 보이는 것을 막는다. 난수가 아니라 index로 정해지는 값이라
+ * 매 프레임·매 렌더에 같은 결과가 나온다.
+ */
+function jitter(index: number) {
+  const noise = Math.sin(index * 12.9898) * 43758.5453;
+  return 0.9 + 0.2 * (noise - Math.floor(noise));
 }
 
 export default function BgmPlayer({ className = "" }: { className?: string }) {
@@ -70,9 +105,17 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const frameRef = useRef<number | null>(null);
-  /** 선별 주파수 대역(로그 간격)과 직전 길이. 선끼리 따로 움직이게 하는 데 쓴다. */
-  const bandsRef = useRef<Array<{ from: number; to: number; decay: number }>>([]);
+  /**
+   * 선별 주파수 대역(40Hz~16kHz를 로그로 나눈 것)과 움직임 계수.
+   * - `boost`: 고역으로 갈수록 원 신호가 약해 그대로 두면 오른쪽이 안 움직인다.
+   * - `release`: 내려갈 때의 감쇠율. 선마다 달라야 한 덩어리로 움직이지 않는다.
+   */
+  const bandsRef = useRef<
+    Array<{ from: number; to: number; boost: number; release: number }>
+  >([]);
   const levelsRef = useRef<number[]>(new Array(LINE_COUNT).fill(0));
+  /** 자동 게인용. 선마다 최근 최대값을 들고 천천히 떨어뜨린다. */
+  const peaksRef = useRef<number[]>(new Array(LINE_COUNT).fill(MIN_PEAK));
   /** 루프를 걸지 말지 판단하는 값들. 이벤트 콜백이 state를 기다릴 수 없어 ref로 둔다. */
   const reducedRef = useRef(false);
   const visibleRef = useRef(true);
@@ -93,21 +136,32 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
 
   /**
    * 선 하나의 길이를 반영한다. 아래 끝은 바닥선에 고정이고 위로만 자란다.
-   * 소리에서 얻은 길이에 왼쪽으로 기운 가중치를 곱해, 같은 음량이어도
-   * 왼쪽 선이 높이 솟고 오른쪽 선은 바닥선에 붙어 남는다.
+   * level은 0~1이고 여기에 tilt를 곱하지 않는다 — 폭 전체가 고르게 움직여야
+   * 하므로 가로 방향 감쇠는 걸지 않는다.
    */
   const drawLine = useCallback((index: number, level: number) => {
     const line = linesRef.current[index];
     if (!line) return;
-    const length =
-      (IDLE_LENGTH + level * (MAX_LENGTH - IDLE_LENGTH)) * tilt(index);
+    const length = IDLE_LENGTH + level * (MAX_LENGTH - IDLE_LENGTH);
     line.setAttribute("y1", (BASE_Y - length).toFixed(2));
+  }, []);
+
+  /** 정지·reduce에서 세워 두는 고정 모양. 이쪽만 tilt로 완만한 내리막을 준다. */
+  const drawStatic = useCallback((level: number) => {
+    for (let i = 0; i < LINE_COUNT; i += 1) {
+      const line = linesRef.current[i];
+      if (!line) continue;
+      const length =
+        (IDLE_LENGTH + level * (MAX_LENGTH - IDLE_LENGTH)) * tilt(i);
+      line.setAttribute("y1", (BASE_Y - length).toFixed(2));
+    }
   }, []);
 
   const resetLines = useCallback(() => {
     levelsRef.current.fill(0);
-    for (let i = 0; i < LINE_COUNT; i += 1) drawLine(i, 0);
-  }, [drawLine]);
+    peaksRef.current.fill(MIN_PEAK);
+    drawStatic(0);
+  }, [drawStatic]);
 
   const runLoop = useCallback(() => {
     if (!linesRef.current[0]) return;
@@ -134,16 +188,23 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
           if (data[bin] > peak) peak = data[bin];
         }
         const average = sum / (band.to - band.from) / 255;
-        const raw = average * 0.7 + (peak / 255) * 0.3;
-        // 요즘 음원은 계속 크게 눌려 있어서 그대로 쓰면 선이 전부 천장에 붙는다.
-        // 거듭제곱으로 조용한 대역을 더 낮춰 선 사이 길이 차를 만든다.
-        const shaped = Math.pow(raw, 1.4);
-        // 예전에는 여기서 고역을 키웠는데(`1 + i/LINE_COUNT * 1.3`), 그러면
-        // 오른쪽까지 고르게 서서 "왼쪽에 봉우리가 몰린" 모양이 나오지 않는다.
-        // 지금은 tilt()가 가로 모양을 맡으므로 스펙트럼을 그대로 쓴다.
-        const target = Math.min(1, shaped);
-        // 선마다 다른 속도로 줄어들게 해서 한 덩어리로 움직이지 않게 한다.
-        const previous = levelsRef.current[i] * band.decay;
+        // 고역 보정. 오른쪽 대역은 원 신호가 약해 보정 없이는 거의 안 선다.
+        const raw = (average * 0.6 + (peak / 255) * 0.4) * band.boost;
+
+        // 자동 게인 — 이 선이 최근에 낸 최대값을 기준으로 0~1로 정규화한다.
+        // 최대값은 천천히 떨어지므로(PEAK_DECAY), 조용한 곡이든 큰 곡이든
+        // 몇 초 안에 폭 전체가 제 높이를 찾는다. MIN_PEAK는 0으로 나누는
+        // 것을 막는 하한이자, 완전한 무음에서 선이 치솟지 않게 하는 바닥이다.
+        const decayed = peaksRef.current[i] * PEAK_DECAY;
+        const nextPeak = raw > decayed ? raw : decayed;
+        peaksRef.current[i] = nextPeak > MIN_PEAK ? nextPeak : MIN_PEAK;
+        const normalized = Math.min(1, raw / (peaksRef.current[i] * HEADROOM));
+
+        // 지수를 걸어 큰 소리는 확 솟고 작은 소리는 낮게 — 높낮이 대비를 키운다.
+        const target = Math.min(1, Math.pow(normalized, SHAPE_EXPONENT) * jitter(i));
+
+        // attack은 즉시, release는 선마다 조금씩 다른 속도로 천천히.
+        const previous = levelsRef.current[i] * band.release;
         levelsRef.current[i] = target > previous ? target : previous;
       }
     } else {
@@ -171,10 +232,11 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     try {
       const ctx = new Ctor();
       const analyser = ctx.createAnalyser();
-      // 해상도를 충분히 주고 스무딩을 낮춰야 선마다 다른 소리를 잡는다.
-      analyser.fftSize = 1024;
-      // 값이 프레임마다 튀지 않게 충분히 부드럽게 둔다.
-      analyser.smoothingTimeConstant = 0.8;
+      // 저음 쪽 해상도를 위해 크게 잡는다. 1024면 빈 하나가 43Hz라
+      // 40~200Hz 구간의 칸 여러 개가 같은 빈을 보게 된다.
+      analyser.fftSize = 4096;
+      // 0.8은 너무 매끈해서 강약이 뭉개진다. 낮춰서 반응을 빠르게 한다.
+      analyser.smoothingTimeConstant = 0.55;
       ctx.createMediaElementSource(audio).connect(analyser);
       analyser.connect(ctx.destination);
 
@@ -182,17 +244,26 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
       analyserRef.current = analyser;
       dataRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount));
 
-      // 사람이 듣는 음높이는 로그 간격이라, 대역도 로그로 갈라야 저음 쪽과
-      // 고음 쪽이 서로 다른 악기를 따라간다. 균등 분할하면 전부 같이 출렁인다.
-      const minBin = 2;
-      const maxBin = Math.max(minBin + LINE_COUNT, Math.floor(analyser.frequencyBinCount * 0.55));
-      const ratio = Math.pow(maxBin / minBin, 1 / LINE_COUNT);
+      // **빈 번호가 아니라 주파수(Hz)를 로그로 나눈다.** 빈을 로그 분할하면
+      // 실제 주파수 간격이 어긋나, 저음에 칸이 몰리고 오른쪽 한 칸이 수천
+      // Hz를 뭉뚱그린다. 40Hz~16kHz를 64칸으로 나눠야 폭이 고르게 산다.
+      const binCount = analyser.frequencyBinCount;
+      const nyquist = ctx.sampleRate / 2;
+      const toBin = (hz: number) =>
+        Math.min(binCount - 1, Math.max(0, Math.round((hz / nyquist) * binCount)));
+      const ratio = Math.pow(MAX_FREQ / MIN_FREQ, 1 / LINE_COUNT);
+
       bandsRef.current = Array.from({ length: LINE_COUNT }, (_, i) => {
-        const from = Math.floor(minBin * Math.pow(ratio, i));
+        const from = toBin(MIN_FREQ * Math.pow(ratio, i));
+        const to = Math.max(from + 1, toBin(MIN_FREQ * Math.pow(ratio, i + 1)));
+        const t = i / (LINE_COUNT - 1);
         return {
           from,
-          to: Math.max(from + 1, Math.floor(minBin * Math.pow(ratio, i + 1))),
-          decay: 0.75 + (i % 5) * 0.02,
+          to,
+          // 오른쪽으로 갈수록 크게 — 자동 게인이 자리 잡기 전에도 고역이 선다.
+          boost: 1 + Math.pow(t, 1.3) * 5,
+          // 선마다 다른 감쇠율(0.86~0.92). 한 덩어리로 내려오지 않게 한다.
+          release: 0.86 + ((i * 7) % 5) * 0.015,
         };
       });
       return analyser;
@@ -224,8 +295,8 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
 
     stopLoop();
     levelsRef.current.fill(REDUCED_LEVEL);
-    for (let i = 0; i < LINE_COUNT; i += 1) drawLine(i, REDUCED_LEVEL);
-  }, [drawLine, stopLoop]);
+    drawStatic(REDUCED_LEVEL);
+  }, [drawStatic, stopLoop]);
 
   /**
    * 히어로가 스크롤로 화면 밖에 나가면 루프를 끊는다. 보이지도 않는 선
@@ -338,7 +409,7 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
         viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
         preserveAspectRatio="none"
         aria-hidden="true"
-        className="h-6 w-48"
+        className="h-10 w-48"
       >
         {/* 가로로 쭉 이어진 바닥선. 세로선이 전부 내려앉아도 이 선은 남는다. */}
         <line
