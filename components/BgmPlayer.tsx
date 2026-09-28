@@ -64,6 +64,23 @@ const HEADROOM = 1.3;
 /** 정규화한 값에 거는 지수. 클수록 큰 소리만 확 솟고 대비가 커진다. */
 const SHAPE_EXPONENT = 1.8;
 
+/**
+ * 플레이 버튼을 바닥선 위에 얹기 위한 값들. **아래 두 값은 렌더링에 쓰는
+ * Tailwind 클래스(버튼 `h-11`, 파형 SVG `h-10`)와 반드시 같아야 한다.**
+ *
+ * 원을 40px → 20px로 줄이면서 세로 가운데 정렬을 그대로 뒀더니 원이
+ * 바닥선에서 8px쯤 떠 보였다. 큰 원일 때는 아래쪽이 바닥선까지 내려와
+ * 닿아 있어서 드러나지 않던 문제다. 그래서 가운데 정렬 대신 원의 아래가
+ * 바닥선에 닿도록 바닥에서 띄운다.
+ */
+const BUTTON_HEIGHT_PX = 44;
+const WAVE_HEIGHT_PX = 40;
+/** 바닥선이 버튼 아래 끝에서 몇 px 위에 있는지. */
+const BASELINE_FROM_BOTTOM_PX =
+  BUTTON_HEIGHT_PX -
+  ((BUTTON_HEIGHT_PX - WAVE_HEIGHT_PX) / 2 +
+    (WAVE_HEIGHT_PX * BASE_Y) / VIEW_HEIGHT);
+
 /** 선 색. 히어로 제목(text-slate-900)과 같은 짙은 남색이다. */
 const LINE_COLOR = "#0f172a";
 /** 세로선 불투명도. 요청 범위(40~55%) 안에서 은은한 쪽으로 잡았다. */
@@ -444,10 +461,23 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
         ))}
       </svg>
 
-      {/* 첫 재생 전에만 선 한가운데에 뜨는 원형 플레이 버튼. */}
+      {/*
+        첫 재생 전에만 선 한가운데에 뜨는 원형 플레이 버튼.
+
+        **보이는 원만 작고, 누르는 영역은 그대로다.** 이 <span>은
+        `pointer-events-none`이라 클릭을 받지 않는다. 클릭은 전부 바깥
+        <button>이 받고, 그 버튼은 높이 h-11(44px) · 너비 w-48(192px)로
+        이퀄라이저 전체를 덮는다. 그래서 원을 40px → 20px로 줄여도 누를 수
+        있는 면적은 하나도 줄지 않는다.
+      */}
       {!started && (
-        <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-[0_0_16px_rgba(34,211,238,0.6)] ring-1 ring-cyan-400/70 backdrop-blur">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-[2px] h-5 w-5 fill-cyan-700">
+        <span
+          className="pointer-events-none absolute left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-white/90 shadow-[0_0_6px_rgba(34,211,238,0.45)] ring-1 ring-cyan-400/60 backdrop-blur"
+          style={{ bottom: `${BASELINE_FROM_BOTTOM_PX}px` }}
+        >
+          {/* 삼각형은 시각적 무게중심이 왼쪽에 쏠려서, 원 정가운데에 두면
+              왼쪽으로 치우쳐 보인다. 크기에 맞춰 0.5px만 오른쪽으로 민다. */}
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-[0.5px] h-2 w-2 fill-cyan-700">
             <path d="M8 4.5 19 12 8 19.5Z" />
           </svg>
         </span>
