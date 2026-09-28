@@ -14,13 +14,36 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * 파스텔이라 흰색 계열은 보이지 않고, 진하게 칠하면 제목보다 먼저 눈에
  * 들어오기 때문이다.
  *
- * 재생 중에는 AnalyserNode로 실제 bgm.mp3의 주파수를 읽어 선마다 길이를
+ * 재생 중에는 AnalyserNode로 실제 재생 중인 곡의 주파수를 읽어 선마다 길이를
  * 매 프레임 다시 쓴다. React state로 돌리면 초당 60번 리렌더가 되므로
  * ref로 DOM을 직접 만진다.
  *
  * **루프는 소리가 날 때만, 그리고 화면에 보일 때만 돈다.** 정지 중이거나
  * 히어로가 스크롤로 화면 밖에 나가면 requestAnimationFrame을 끊는다.
+ *
+ * 곡은 8곡 재생목록을 순서대로 돌고 마지막 곡 다음에 1번으로 돌아간다.
+ * **<audio> 요소는 하나뿐이고 src만 바꾼다** — 새 Audio 객체를 만들면
+ * iOS Safari에서 첫 클릭으로 얻은 재생 권한이 그 객체에는 없어서 소리가
+ * 나지 않는다. 같은 이유로 AudioContext와 분석기도 한 번 만든 뒤 계속 쓴다
+ * (createMediaElementSource는 src가 아니라 **요소**에 묶이므로 곡을 바꿔도
+ * 연결이 유지된다).
  */
+
+/**
+ * 재생 목록. **순서를 바꾸려면 이 배열만 고치면 된다.**
+ * `title`은 화면에 쓰지 않는다 — 파일명만으로는 어떤 곡인지 알 수 없어
+ * 순서를 손볼 때 헷갈리지 않도록 적어 둔 것이다.
+ */
+const PLAYLIST = [
+  { title: "가을비가 내리면", src: "/bgm/01-autumn-rain.mp3" },
+  { title: "낙엽이 지면", src: "/bgm/02-falling-leaves.mp3" },
+  { title: "노을이 물든 길", src: "/bgm/03-sunset-road.mp3" },
+  { title: "마른 잎", src: "/bgm/04-dry-leaf.mp3" },
+  { title: "바람은 네 이름을 데려와", src: "/bgm/05-wind-brings-your-name.mp3" },
+  { title: "비 오는 가을", src: "/bgm/06-rainy-autumn.mp3" },
+  { title: "아침 햇살", src: "/bgm/07-morning-sunlight.mp3" },
+  { title: "지는 노을처럼", src: "/bgm/08-like-a-fading-sunset.mp3" },
+] as const;
 
 const VOLUME = 0.6;
 /** 세로선 수. 주파수 대역도 이 수만큼 나눈다. */
@@ -141,6 +164,14 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
 
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
+  /** 지금 몇 번째 곡인지. 처음 재생은 항상 0번(1번 곡)에서 시작한다. */
+  const [trackIndex, setTrackIndex] = useState(0);
+  /**
+   * 곡이 끝나 다음 곡으로 넘어가는 중인지. `trackIndex`가 바뀐 뒤 effect가
+   * 이 값을 보고 새 src를 이어서 재생한다. 사용자가 직접 고른 곡이 아니라
+   * 자동 전환일 때만 true다.
+   */
+  const advancingRef = useRef(false);
   // 문서 클릭 리스너가 state 갱신을 기다리지 않고 바로 볼 수 있어야 한다.
   const startedRef = useRef(false);
 
@@ -339,6 +370,29 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     return () => observer.disconnect();
   }, [runLoop, stopLoop]);
 
+  /**
+   * 곡이 끝나 `trackIndex`가 바뀐 뒤, 새로 걸린 src를 이어서 재생한다.
+   * React가 커밋 단계에서 `<audio>`의 src를 이미 바꿔 놓은 뒤에 effect가
+   * 돌기 때문에 여기서 play()를 부르면 새 곡이 나온다.
+   *
+   * **자동 게인은 곡이 바뀔 때 초기화한다.** 선별 최근 최대값은 천천히
+   * 떨어지도록(PEAK_DECAY 0.9985) 해 뒀는데, 앞 곡이 크고 다음 곡이 작으면
+   * 그 큰 기준이 한동안 남아 새 곡에서 선이 낮게 눌린다. 레벨(levelsRef)은
+   * 건드리지 않아서 곡이 바뀌는 순간에도 파형이 끊기지 않는다.
+   */
+  useEffect(() => {
+    if (!advancingRef.current) return;
+    advancingRef.current = false;
+
+    peaksRef.current.fill(MIN_PEAK);
+
+    audioRef.current?.play()?.catch((err) => {
+      if (process.env.NODE_ENV !== "production") {
+        console.debug("[BgmPlayer] 다음 곡 재생 실패:", err?.name, err?.message);
+      }
+    });
+  }, [trackIndex]);
+
   const startPlayback = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || !audio.paused) return;
@@ -402,12 +456,34 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
     frameRef.current = requestAnimationFrame(runLoop);
   }
 
+  /**
+   * **곡이 끝나서 난 pause는 무시한다.** HTML 명세상 재생이 끝나면 `pause`가
+   * 먼저 뜨고 그다음에 `ended`가 뜬다. 그대로 두면 곡이 넘어가는 순간마다
+   * 아이콘이 ▶로 한 번 깜박이고 파형도 바닥으로 내려앉는다. 사용자가 직접
+   * 멈춘 경우에만 정지 상태로 바꾼다.
+   *
+   * 판정은 `audio.ended`로 한다. 이 값은 재생 위치가 끝에 닿는 순간 참이
+   * 되므로 `pause` 시점에 이미 참이다. 혹시 브라우저가 다르게 굴더라도
+   * 남은 시간이 0.5초 이내면 끝난 것으로 본다.
+   */
   function handlePause() {
+    const audio = audioRef.current;
+    if (audio) {
+      const almostOver =
+        Number.isFinite(audio.duration) && audio.duration - audio.currentTime < 0.5;
+      if (audio.ended || almostOver) return;
+    }
     setPlaying(false);
     playingRef.current = false;
     stopLoop();
     if (reducedRef.current) return;
     resetLines();
+  }
+
+  /** 곡이 끝나면 다음 곡으로. 마지막 곡 다음은 다시 1번이다(전체 반복). */
+  function handleEnded() {
+    advancingRef.current = true;
+    setTrackIndex((index) => (index + 1) % PLAYLIST.length);
   }
 
   return (
@@ -496,13 +572,17 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
         )}
       </span>
 
+      {/* 요소는 하나뿐이고 src만 바뀐다. `loop`를 쓰지 않는 이유는 한 곡을
+          무한 반복하면 `ended`가 오지 않아 다음 곡으로 넘어갈 수 없어서다 —
+          전체 반복은 handleEnded가 인덱스를 돌려 만든다. `preload="none"`이라
+          지금 곡만 받고 나머지 7곡은 건드리지 않는다. */}
       <audio
         ref={audioRef}
-        src="/bgm.mp3"
-        loop
+        src={PLAYLIST[trackIndex].src}
         preload="none"
         onPlay={handlePlay}
         onPause={handlePause}
+        onEnded={handleEnded}
       />
     </button>
   );
