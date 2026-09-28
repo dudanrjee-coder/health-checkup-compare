@@ -462,26 +462,39 @@ export default function BgmPlayer({ className = "" }: { className?: string }) {
       </svg>
 
       {/*
-        첫 재생 전에만 선 한가운데에 뜨는 원형 플레이 버튼.
+        바닥선 가운데에 얹혀 있는 원형 컨트롤. **재생 중에도 사라지지 않고**
+        안의 아이콘만 ▶ ↔ ❚❚로 바뀐다.
+
+        아이콘을 가르는 `playing`은 클릭이 아니라 **오디오의 실제 상태**에서
+        온다 — <audio>의 onPlay/onPause가 setPlaying을 부른다. 그래서 자동재생
+        정책에 막혀 play()가 실패하면 ▶ 그대로 남고, 브라우저·OS가 밖에서
+        음악을 멈춰도 표시가 따라간다.
 
         **보이는 원만 작고, 누르는 영역은 그대로다.** 이 <span>은
         `pointer-events-none`이라 클릭을 받지 않는다. 클릭은 전부 바깥
         <button>이 받고, 그 버튼은 높이 h-11(44px) · 너비 w-48(192px)로
-        이퀄라이저 전체를 덮는다. 그래서 원을 40px → 20px로 줄여도 누를 수
-        있는 면적은 하나도 줄지 않는다.
+        이퀄라이저 전체를 덮는다.
+
+        배경을 반투명(bg-white/90)에서 불투명으로 올렸다. 재생 중에는 뒤로
+        세로선이 계속 지나가는데, 비쳐 보이면 아이콘과 겹쳐 지저분하다.
       */}
-      {!started && (
-        <span
-          className="pointer-events-none absolute left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-white/90 shadow-[0_0_6px_rgba(34,211,238,0.45)] ring-1 ring-cyan-400/60 backdrop-blur"
-          style={{ bottom: `${BASELINE_FROM_BOTTOM_PX}px` }}
-        >
-          {/* 삼각형은 시각적 무게중심이 왼쪽에 쏠려서, 원 정가운데에 두면
-              왼쪽으로 치우쳐 보인다. 크기에 맞춰 0.5px만 오른쪽으로 민다. */}
+      <span
+        className="pointer-events-none absolute left-1/2 flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full bg-white shadow-[0_0_6px_rgba(34,211,238,0.45)] ring-1 ring-cyan-400/60"
+        style={{ bottom: `${BASELINE_FROM_BOTTOM_PX}px` }}
+      >
+        {playing ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-2 w-2 fill-cyan-700">
+            <path d="M8 5h2.6v14H8zM13.4 5H16v14h-2.6z" />
+          </svg>
+        ) : (
+          // 삼각형은 시각적 무게중심이 왼쪽에 쏠려서, 원 정가운데에 두면
+          // 왼쪽으로 치우쳐 보인다. 크기에 맞춰 0.5px만 오른쪽으로 민다.
+          // ❚❚는 좌우 대칭이라 이 보정이 필요 없다.
           <svg viewBox="0 0 24 24" aria-hidden="true" className="ml-[0.5px] h-2 w-2 fill-cyan-700">
             <path d="M8 4.5 19 12 8 19.5Z" />
           </svg>
-        </span>
-      )}
+        )}
+      </span>
 
       <audio
         ref={audioRef}
