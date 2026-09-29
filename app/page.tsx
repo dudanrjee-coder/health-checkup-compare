@@ -260,28 +260,20 @@ export default function Home() {
         <div className="relative mx-auto flex max-w-7xl flex-col gap-6">
           {/*
             상단 네비게이션 — 시안에만 있는 디자인 목업용 요소다. 병원
-            찾기/검진 항목/비용 비교/이용 안내 페이지도, 검진예약 기능도
-            실제로는 없다. 실제 페이지가 생기기 전까지는 눌러도 아무 동작을
-            하지 않는 순수 시각 요소로만 둔다(href 없음, onClick 없음).
+            찾기/검진 항목/비용 비교/이용 안내 페이지는 실제로는 없다. 실제
+            페이지가 생기기 전까지는 눌러도 아무 동작을 하지 않는 순수 시각
+            요소로만 둔다(href 없음, onClick 없음). 로고 텍스트와 검진예약
+            버튼을 걷어낸 뒤로는 좌우에 짝이 되는 요소가 없어서, 그리드 대신
+            가운데 정렬 한 줄로 둔다. 모바일에서는 nav가 통째로 비지 않도록
+            메뉴를 그대로 노출하고, 폭이 모자라면 줄바꿈시킨다.
           */}
-          <nav className="grid grid-cols-2 items-center gap-3 sm:grid-cols-3">
-            <span className="text-sm font-semibold text-slate-900">
-              전국 건강검진 병원
-            </span>
-            <ul className="col-span-2 hidden items-center justify-center gap-6 text-sm text-slate-600 sm:col-span-1 sm:flex">
+          <nav className="flex items-center justify-center">
+            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-600 sm:gap-x-6">
               <li>병원 찾기</li>
               <li>검진 항목</li>
               <li>비용 비교</li>
               <li>이용 안내</li>
             </ul>
-            <div className="justify-self-end">
-              <button
-                type="button"
-                className="rounded-full bg-[#0c1425] px-4 py-1.5 text-xs font-semibold text-white"
-              >
-                검진예약
-              </button>
-            </div>
           </nav>
 
           <div className="flex flex-col items-center gap-4 text-center">
