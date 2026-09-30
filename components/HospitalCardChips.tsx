@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useId, useState } from "react";
 import { Hospital } from "@/types/hospital";
 import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
+import { detailPath, hasDetailPage } from "@/lib/detailPages";
 import { tierBadgeStyle } from "@/lib/tierColors";
 
 /**
@@ -78,6 +80,12 @@ export default function HospitalCardChips({
 
   const chips = deriveChips(hospital);
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
+  /**
+   * 상세 페이지가 만들어진 병원에만 링크를 붙인다(지금은 시험용 1곳).
+   * 판단 기준은 lib/detailPages.ts 하나뿐이라, 페이지가 없는 병원에 링크가
+   * 생겨 404가 나는 일이 없다.
+   */
+  const detailUrl = hasDetailPage(hospital.id) ? detailPath(hospital.id) : null;
 
   const values: Record<string, string | undefined> = {
     price: hospital.priceRange,
@@ -114,7 +122,17 @@ export default function HospitalCardChips({
         {/* 헤더: 병원명 + tier 배지 + 검진센터 바로가기 */}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <h3 className="text-base font-semibold leading-tight text-slate-900">
-            {hospital.name}
+            {detailUrl ? (
+              <Link
+                href={detailUrl}
+                onClick={stop}
+                className="hover:text-blue-700 hover:underline"
+              >
+                {hospital.name}
+              </Link>
+            ) : (
+              hospital.name
+            )}
           </h3>
           <span
             className="rounded-full px-2 py-0.5 text-[11px] font-medium"
@@ -304,6 +322,18 @@ export default function HospitalCardChips({
             </div>
           </div>
         </div>
+
+        {/* 상세 페이지가 있는 병원에만 붙는다. 카드 클릭(지도 선택)과 겹치지
+            않도록 stopPropagation한다. */}
+        {detailUrl && (
+          <Link
+            href={detailUrl}
+            onClick={stop}
+            className="flex h-11 w-full items-center justify-center rounded-lg bg-blue-50 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+          >
+            병원 상세 페이지 보기 →
+          </Link>
+        )}
       </div>
     </div>
   );

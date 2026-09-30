@@ -111,6 +111,12 @@ interface HospitalMapProps {
   /** 사용자가 지도를 직접 드래그/줌했을 때만 호출된다(코드가 일으킨
    * flyTo/setView/fitBounds는 포함하지 않는다) — 유휴 자동 순환을 멈추는 데 쓴다. */
   onUserInteraction?: () => void;
+  /**
+   * 지도 최소 높이 Tailwind 클래스. 목록 화면은 기본값(320px)을 쓰고,
+   * 병원 상세 페이지처럼 더 낮은 지도가 필요한 곳만 바꿔 넣는다.
+   * 기본값을 그대로 두면 상세 페이지에서 지정한 200px 높이를 이 값이 덮어쓴다.
+   */
+  minHeightClass?: string;
 }
 
 /**
@@ -317,6 +323,7 @@ export default function HospitalMap({
   onSelect,
   shrinkMarkers = false,
   onUserInteraction,
+  minHeightClass = "min-h-[320px]",
 }: HospitalMapProps) {
   // 카드에서 선택했을 때도 말풍선이 열리도록 MapController가 이 참조를 쓴다.
   const markerRefs = useRef<Record<string, L.Marker | null>>({});
@@ -325,7 +332,7 @@ export default function HospitalMap({
   const programmaticMoveRef = useRef(false);
 
   return (
-    <div className="relative h-full min-h-[320px] w-full">
+    <div className={`relative h-full w-full ${minHeightClass}`}>
       {!hospitals.length && (
         <p className="pointer-events-none absolute inset-x-0 top-3 z-[1000] mx-auto w-fit rounded-full bg-slate-900/75 px-3 py-1.5 text-xs text-white">
           {searchActive
@@ -345,7 +352,7 @@ export default function HospitalMap({
         zoom={NATIONWIDE_VIEW.zoom}
         scrollWheelZoom
         fadeAnimation={false}
-        className="h-full min-h-[320px] w-full rounded-xl border border-slate-200"
+        className={`h-full w-full rounded-xl border border-slate-200 ${minHeightClass}`}
       >
         {/* 한때 채도를 낮추는 CSS filter(saturate/brightness/contrast)를
             `.leaflet-container`에 걸어 "차분한 톤"으로 조정했었는데, 그러니

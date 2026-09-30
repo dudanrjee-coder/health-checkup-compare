@@ -19,7 +19,7 @@ import dynamic from "next/dynamic";
 const HospitalMapLazy = dynamic(() => import("@/components/HospitalMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full min-h-[320px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-400">
+    <div className="flex h-full min-h-[200px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-400">
       지도를 불러오는 중…
     </div>
   ),
