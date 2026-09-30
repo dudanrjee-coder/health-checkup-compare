@@ -579,6 +579,17 @@ export default function Home() {
                 selectedTier === null ||
                 selectedTier === "병원"
               }
+              /**
+               * 같은 이유로 줌도 고정한다 — 순환 중에는 등급이 바뀌어도 전국
+               * 범위를 유지하고, 순환이 멈추면 선택된 병원들에 맞춰 확대한다.
+               *
+               * 단 **시·도를 고르거나 검색 중이면 고정하지 않는다.** 시·도 선택과
+               * 검색은 stopIdleCycle을 부르지 않아 순환이 계속 돌기 때문에,
+               * idleCycleActive만 보면 서울을 골라도 지도가 전국에 묶여 버린다.
+               */
+              lockNationwideView={
+                idleCycleActive && !selectedSido && !isSearching
+              }
             />
           </div>
         </div>

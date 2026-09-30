@@ -14,7 +14,7 @@ import "leaflet/dist/leaflet.css";
 import "./leaflet-overrides.css";
 import { MappableHospital, Sido, Tier } from "@/types/hospital";
 import { TIER_COLORS } from "@/lib/tierColors";
-import { NATIONWIDE_VIEW, SIDO_VIEW } from "@/lib/regions";
+import { NATIONWIDE_BOUNDS, NATIONWIDE_VIEW, SIDO_VIEW } from "@/lib/regions";
 import { useHoverCapable } from "@/lib/useHoverCapable";
 
 /** 선택한 병원으로 이동하는 애니메이션 길이(초) */
@@ -109,6 +109,12 @@ interface HospitalMapProps {
    * "병원" 등급만 단독 선택된 경우, 그리고 유휴 자동 순환이 도는 동안 true
    * (순환 중 크기가 튀지 않도록 — 판단은 app/page.tsx에서 한다) */
   shrinkMarkers?: boolean;
+  /**
+   * 유휴 자동 순환이 도는 동안 true. 등급 필터가 바뀌어도 화면 범위를 선택된
+   * 병원들에 맞추지 않고 전국 범위(NATIONWIDE_BOUNDS)로 고정한다.
+   * 순환이 멈추면(사용자가 조작하면) false가 되어 기존 fitBounds 동작으로 돌아간다.
+   */
+  lockNationwideView?: boolean;
   /** 사용자가 지도를 직접 드래그/줌했을 때만 호출된다(코드가 일으킨
    * flyTo/setView/fitBounds는 포함하지 않는다) — 유휴 자동 순환을 멈추는 데 쓴다. */
   onUserInteraction?: () => void;
@@ -147,12 +153,15 @@ function MapController({
   selectedId,
   markerRefs,
   programmaticMoveRef,
+  lockNationwideView,
 }: {
   hospitals: MappableHospital[];
   selectedSido: Sido | null;
   searchActive: boolean;
   selectedId: string | null;
   markerRefs: React.MutableRefObject<Record<string, L.Marker | null>>;
+  /** 유휴 자동 순환 중이면 true — 등급이 바뀌어도 전국 범위를 유지한다. */
+  lockNationwideView: boolean;
   /** true인 동안의 movestart/zoomstart는 코드가 일으킨 이동이지 사용자
    * 조작이 아니다 — 유휴 자동 순환이 지도 이동으로 오인해 멈추지 않도록
    * InteractionWatcher가 이 값을 참고한다. */
@@ -178,13 +187,43 @@ function MapController({
   const lastFitRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const signature = [selectedSido ?? "", searchActive, boundsKey].join("|");
+    const signature = [
+      selectedSido ?? "",
+      searchActive,
+      boundsKey,
+      lockNationwideView,
+    ].join("|");
     const isFirstRun = lastFitRef.current === null;
     const alreadyFitted = lastFitRef.current === signature;
     lastFitRef.current = signature;
 
     // StrictMode가 같은 상태로 다시 부른 경우 — 이미 맞춘 범위다.
     if (alreadyFitted) return;
+
+    /**
+     * 유휴 자동 순환 중에는 등급이 바뀌어도 전국 범위로 고정한다.
+     *
+     * 이 분기가 최초 렌더 예외보다 **앞에** 있어야 한다. MapContainer의 초기
+     * 뷰는 고정 줌(7)이라 모바일에서 제주가 잘리는데, 순환은 첫 화면부터
+     * 돌기 때문이다. 범위로 맞추면 컨테이너 높이와 무관하게 제주까지 들어온다.
+     *
+     * NATIONWIDE_BOUNDS는 상수라 등급이 바뀌어도 같은 범위로 다시 맞추는 것이고,
+     * 실제 이동 거리가 0이므로 화면이 흔들리지 않는다. 카드 목록 클릭은 순환을
+     * 멈추지 않으므로(지도 마커 클릭과 다르다) 그때 확대된 화면도 다음 순환에서
+     * 이 범위로 돌아온다.
+     */
+    if (lockNationwideView) {
+      // animate:false라 동기적으로 끝난다. moveend에 플래그 해제를 걸면
+      // 이동 거리가 0일 때 이벤트가 안 떠서 플래그가 true로 고착되므로
+      // (아래 본 경로와 같은 이유) 반드시 try/finally로 즉시 되돌린다.
+      programmaticMoveRef.current = true;
+      try {
+        map.fitBounds(NATIONWIDE_BOUNDS, { padding: [24, 24], animate: false });
+      } finally {
+        programmaticMoveRef.current = false;
+      }
+      return;
+    }
 
     // 최초 진입 상태(지역 선택도 검색도 없음)에서는 MapContainer에 지정한
     // 전국 뷰를 그대로 둔다. 그 뒤로는 전국 뷰에서도 목록이 바뀌면 맞춘다.
@@ -225,7 +264,7 @@ function MapController({
     }
     // boundsKey로 목록이 실제로 바뀐 경우에만 다시 맞춘다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, selectedSido, searchActive, boundsKey]);
+  }, [map, selectedSido, searchActive, boundsKey, lockNationwideView]);
 
   useEffect(() => {
     const selected = hospitals.find((h) => h.id === selectedId);
@@ -318,6 +357,7 @@ export default function HospitalMap({
   onSelect,
   shrinkMarkers = false,
   onUserInteraction,
+  lockNationwideView = false,
 }: HospitalMapProps) {
   // 카드에서 선택했을 때도 말풍선이 열리도록 MapController가 이 참조를 쓴다.
   const markerRefs = useRef<Record<string, L.Marker | null>>({});
@@ -370,6 +410,7 @@ export default function HospitalMap({
           selectedId={selectedId}
           markerRefs={markerRefs}
           programmaticMoveRef={programmaticMoveRef}
+          lockNationwideView={lockNationwideView}
         />
 
         <InteractionWatcher
