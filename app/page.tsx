@@ -561,7 +561,24 @@ export default function Home() {
               selectedId={selectedHospitalId}
               onSelect={handleMapMarkerSelect}
               onUserInteraction={stopIdleCycle}
-              shrinkMarkers={selectedTier === null || selectedTier === "병원"}
+              /**
+               * 유휴 자동 순환 중에는 등급이 바뀌어도 마커 크기를 50%로 고정한다.
+               *
+               * 순환 순서가 "전체 → 상급종합병원 → 종합병원 → 병원 → 의료원"이라,
+               * 크기 규칙(전체·병원 50% / 나머지 100%)을 그대로 따르면 전체(50%)
+               * 에서 상급종합병원(100%)으로 넘어갈 때 마커가 한 번에 2배가 된다.
+               * 가만히 보고 있으면 이 급변이 "보라색 마커만 유독 크다"로 읽힌다
+               * (실제로는 상급종합·종합·의료원 마커가 22×29px로 완전히 같다).
+               *
+               * 사용자가 필터를 직접 누르면 stopIdleCycle로 순환이 멈추므로 그때부터는
+               * 원래의 50%/100% 규칙이 그대로 적용된다. 그 시점의 크기 변화는 자기가
+               * 누른 것에 대한 반응이라 급변으로 느껴지지 않는다.
+               */
+              shrinkMarkers={
+                idleCycleActive ||
+                selectedTier === null ||
+                selectedTier === "병원"
+              }
             />
           </div>
         </div>
