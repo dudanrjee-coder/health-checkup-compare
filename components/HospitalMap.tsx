@@ -106,7 +106,8 @@ interface HospitalMapProps {
   selectedId: string | null;
   onSelect: (id: string) => void;
   /** 마커를 절반 크기로 축소할지 여부. 등급 필터가 "전체"(미선택)이거나
-   * "병원" 등급만 단독 선택된 경우 true */
+   * "병원" 등급만 단독 선택된 경우, 그리고 유휴 자동 순환이 도는 동안 true
+   * (순환 중 크기가 튀지 않도록 — 판단은 app/page.tsx에서 한다) */
   shrinkMarkers?: boolean;
   /** 사용자가 지도를 직접 드래그/줌했을 때만 호출된다(코드가 일으킨
    * flyTo/setView/fitBounds는 포함하지 않는다) — 유휴 자동 순환을 멈추는 데 쓴다. */
