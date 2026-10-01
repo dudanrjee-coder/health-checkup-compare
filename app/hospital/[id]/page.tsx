@@ -3,7 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import HospitalDetailMap from "@/components/HospitalDetailMap";
 import { hospitals } from "@/lib/hospitals";
-import { DETAIL_PAGE_IDS, detailPath } from "@/lib/detailPages";
+import {
+  DETAIL_PAGE_IDS,
+  detailPath,
+  detailTitle,
+  isIndexable,
+} from "@/lib/detailPages";
 import { INFO_ICONS } from "@/lib/infoIcons";
 import { splitAccessInfo } from "@/lib/noteChips";
 import { SITE_URL } from "@/lib/site";
@@ -57,7 +62,7 @@ export async function generateMetadata({
         ? "국가건강검진 미지정"
         : "국가건강검진 지정 여부 미확인";
 
-  const title = `${hospital.name} 건강검진 정보 | 전국 건강검진 병원`;
+  const title = detailTitle(hospital);
   const description = `${sido} ${sigungu} ${hospital.tier}, ${designation}. ${hospital.name}의 검진비용·결과통보·주차·교통·예약 방법을 한눈에 확인하세요.`;
   const canonical = detailPath(hospital.id);
 
@@ -67,6 +72,9 @@ export async function generateMetadata({
     title: { absolute: title },
     description,
     alternates: { canonical },
+    // 검진 정보가 전부 비어 있는 페이지는 색인하지 않는다(링크는 따라가도 됨).
+    // 기준은 sitemap과 같은 isIndexable 하나다. 색인 대상이면 레이아웃 기본값을 따른다.
+    ...(isIndexable(hospital) ? {} : { robots: { index: false, follow: true } }),
     openGraph: {
       type: "article",
       locale: "ko_KR",

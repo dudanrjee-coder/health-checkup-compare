@@ -1,4 +1,6 @@
 import { hospitals } from "@/lib/hospitals";
+import { splitAccessInfo } from "@/lib/noteChips";
+import { Hospital, Sido } from "@/types/hospital";
 
 /**
  * 상세 페이지(`/hospital/[id]`)가 만들어져 있는 병원 id 목록.
@@ -23,4 +25,67 @@ export function hasDetailPage(id: string): boolean {
 /** 상세 페이지 경로. 링크를 만드는 곳이 여러 군데라 문자열을 흩지 않는다. */
 export function detailPath(id: string): string {
   return `/hospital/${id}`;
+}
+
+/**
+ * 상세 페이지를 검색엔진 색인 대상으로 둘지. **페이지 메타(robots)와 sitemap이
+ * 이 함수 하나만 본다.**
+ *
+ * 기준: 상세 페이지 "검진 정보" 표 6항목(검진비용·결과통보·소요시간·식사제공·
+ * 주차·교통) 중 하나라도 값이 있으면 색인한다. 전부 비어 "병원문의"만 나오는
+ * 페이지는 내용이 빈약해 noindex(follow는 허용)로 두고 sitemap에서 뺀다.
+ * 페이지 자체와 홈 카드 링크는 그대로다.
+ *
+ * 데이터에서 매번 계산하므로 조사로 값이 채워지면 자동으로 색인 대상이 된다.
+ * 소요시간은 아직 스키마에 필드가 없어 판단에 넣지 않는다(항상 비어 있다).
+ * 주차·교통은 표와 같은 splitAccessInfo로 나눈 결과를 본다.
+ */
+export function isIndexable(hospital: Hospital): boolean {
+  const filled = (v?: string) => Boolean(v && v.trim());
+  const { parking, transit } = splitAccessInfo(hospital.accessInfo);
+  return [
+    hospital.priceRange,
+    hospital.resultNotice,
+    hospital.mealProvided,
+    parking,
+    transit,
+  ].some(filled);
+}
+
+/**
+ * 제목에 넣는 시·도 약칭. Record<Sido, …>라 시·도가 늘면 컴파일 단계에서 걸린다.
+ * 전남광주통합특별시는 README 9번 항목에 적힌 공식 약칭 "광주특별시"를 쓴다.
+ */
+const SIDO_SHORT: Record<Sido, string> = {
+  서울특별시: "서울",
+  부산광역시: "부산",
+  대구광역시: "대구",
+  인천광역시: "인천",
+  전남광주통합특별시: "광주특별시",
+  대전광역시: "대전",
+  울산광역시: "울산",
+  세종특별자치시: "세종",
+  경기도: "경기",
+  강원특별자치도: "강원",
+  충청북도: "충북",
+  충청남도: "충남",
+  전북특별자치도: "전북",
+  경상북도: "경북",
+  경상남도: "경남",
+  제주특별자치도: "제주",
+};
+
+/** 제목용 지역 표기. 예: "인천 남동구". 시군구가 없으면 시·도 약칭만. */
+export function regionLabel(hospital: Hospital): string {
+  const short = SIDO_SHORT[hospital.region.sido];
+  const sigungu = hospital.region.sigungu?.trim();
+  return sigungu ? `${short} ${sigungu}` : short;
+}
+
+/**
+ * 상세 페이지 title. 지역을 넣는 이유는 이름이 같은 병원(예: 서울여성병원이
+ * 김포·부천에 각각 있다)의 제목이 서로 달라지게 하기 위해서다.
+ */
+export function detailTitle(hospital: Hospital): string {
+  return `${hospital.name} 건강검진 정보 (${regionLabel(hospital)}) | 전국 건강검진 병원`;
 }
