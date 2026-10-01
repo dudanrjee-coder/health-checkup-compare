@@ -61,6 +61,12 @@ export interface Hospital {
   priceRange?: string;
   /** 예약 대기 기간 (예: "성수기 기준 약 1~2개월"). 변동성이 커 대략적인 범위로만 기재 */
   waitingPeriod?: string;
+  /**
+   * 검진 소요시간. 일반(기본) 검진 기준 하나만, 홈페이지 표기 그대로
+   * (예: "약 2~4시간(검사내용에 따라 차이)"). waitingPeriod(예약 대기 기간)와는
+   * 다른 개념이다. 확인 안 되면 생략한다.
+   */
+  examDuration?: string;
   /** 주차/대중교통 접근성 정보 */
   accessInfo?: string;
   /** 결과 통보 방식 */

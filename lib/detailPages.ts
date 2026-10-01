@@ -37,7 +37,7 @@ export function detailPath(id: string): string {
  * 페이지 자체와 홈 카드 링크는 그대로다.
  *
  * 데이터에서 매번 계산하므로 조사로 값이 채워지면 자동으로 색인 대상이 된다.
- * 소요시간은 아직 스키마에 필드가 없어 판단에 넣지 않는다(항상 비어 있다).
+ * 소요시간은 examDuration 필드를 본다(2026-10-01 추가).
  * 주차·교통은 표와 같은 splitAccessInfo로 나눈 결과를 본다.
  */
 export function isIndexable(hospital: Hospital): boolean {
@@ -46,6 +46,7 @@ export function isIndexable(hospital: Hospital): boolean {
   return [
     hospital.priceRange,
     hospital.resultNotice,
+    hospital.examDuration,
     hospital.mealProvided,
     parking,
     transit,

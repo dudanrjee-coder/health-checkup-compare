@@ -272,10 +272,13 @@ export default async function HospitalDetailPage({
                 label="결과통보"
                 value={hospital.resultNotice}
               />
-              {/* 검진 소요시간은 현재 스키마에 필드가 없다. waitingPeriod는
-                  "예약 대기 기간"이라 다른 개념이므로 끌어다 쓰지 않는다.
-                  note를 파싱하지도 않는다 — 값이 생기면 여기에 연결한다. */}
-              <InfoRow icon={INFO_ICONS.duration} label="소요시간" />
+              {/* 검진 소요시간은 examDuration 필드다. waitingPeriod("예약 대기
+                  기간")와는 다른 개념이라 섞어 쓰지 않는다. */}
+              <InfoRow
+                icon={INFO_ICONS.duration}
+                label="소요시간"
+                value={hospital.examDuration}
+              />
               <InfoRow
                 icon={INFO_ICONS.meal}
                 label="식사제공"
