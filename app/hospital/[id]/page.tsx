@@ -148,18 +148,11 @@ export default async function HospitalDetailPage({
     <main className="min-h-screen bg-slate-50 pb-12">
       {/* 1) 상단 바 */}
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
+        {/* 홈으로 가는 길은 아래 위치 표시의 "‹ 홈으로" 버튼이 맡는다 */}
         <div className="mx-auto flex h-14 max-w-[1120px] items-center gap-3 px-4">
-          <Link
-            href="/"
-            className="flex h-11 shrink-0 items-center rounded-lg px-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-          >
-            ‹ 목록
-          </Link>
           <span className="flex-1 text-center text-sm font-semibold text-slate-900">
             전국 건강검진 병원
           </span>
-          {/* 좌우 균형용 빈 칸 — 가운데 제목이 실제로 가운데 오게 한다 */}
-          <span className="h-11 w-[52px] shrink-0" aria-hidden />
         </div>
       </header>
 
@@ -365,12 +358,12 @@ export default async function HospitalDetailPage({
             </p>
           </section>
 
-          {/* 10) 목록으로 돌아가기 */}
+          {/* 10) 이 병원이 속한 시·도의 병원 목록으로 */}
           <Link
-            href="/"
+            href={sidoPath(sido)}
             className="flex h-12 w-full items-center justify-center rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50"
           >
-            ‹ 목록으로 돌아가기
+            {`‹ ${sido} 병원 목록`}
           </Link>
         </div>
       </div>
