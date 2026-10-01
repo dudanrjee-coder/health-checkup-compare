@@ -5,6 +5,7 @@ import { useId, useState } from "react";
 import { Hospital } from "@/types/hospital";
 import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
 import { detailPath, hasDetailPage } from "@/lib/detailPages";
+import { INFO_ICONS } from "@/lib/infoIcons";
 import { tierBadgeStyle } from "@/lib/tierColors";
 
 /**
@@ -48,13 +49,14 @@ type DetailRow = { key: string; label: string; icon: string; reserved?: boolean 
 
 const EMPTY_TEXT = "병원문의";
 
+// 아이콘은 상세 페이지와 공유한다(lib/infoIcons.ts).
 const DETAIL_ROWS: DetailRow[] = [
-  { key: "price", label: "검진비용", icon: "💰" },
-  { key: "result", label: "결과통보", icon: "📄" },
-  { key: "meal", label: "식사제공", icon: "🍚" },
-  { key: "access", label: "주차·교통", icon: "🚗" },
-  { key: "address", label: "주소", icon: "📍" },
-  { key: "reserved", label: "예비", icon: "➕", reserved: true },
+  { key: "price", label: "검진비용", icon: INFO_ICONS.price },
+  { key: "result", label: "결과통보", icon: INFO_ICONS.result },
+  { key: "meal", label: "식사제공", icon: INFO_ICONS.meal },
+  { key: "access", label: "주차·교통", icon: INFO_ICONS.access },
+  { key: "address", label: "주소", icon: INFO_ICONS.address },
+  { key: "reserved", label: "예비", icon: INFO_ICONS.reserved, reserved: true },
 ];
 
 interface Props {

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import HospitalDetailMap from "@/components/HospitalDetailMap";
 import { hospitals } from "@/lib/hospitals";
 import { DETAIL_PAGE_IDS, detailPath } from "@/lib/detailPages";
+import { INFO_ICONS } from "@/lib/infoIcons";
 import { splitAccessInfo } from "@/lib/noteChips";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
@@ -75,11 +76,22 @@ export async function generateMetadata({
 }
 
 /** 검진 정보 표의 한 줄. 값이 없어도 행을 숨기지 않는다(카드와 같은 규칙). */
-function InfoRow({ label, value }: { label: string; value?: string }) {
+function InfoRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: string;
+  label: string;
+  value?: string;
+}) {
   const filled = Boolean(value && value.trim());
   return (
     <div className="flex gap-3 px-4 py-3">
-      <dt className="w-20 shrink-0 text-sm font-medium text-slate-500">
+      {/* 아이콘 배치는 카드 표와 같은 방식(flex + gap-1 + whitespace-nowrap).
+          글자가 카드보다 커서(14px) 칸을 w-24로 넓혀 390px에서도 한 줄을 지킨다. */}
+      <dt className="flex w-24 shrink-0 items-start gap-1 whitespace-nowrap text-sm font-medium text-slate-500">
+        <span aria-hidden>{icon}</span>
         {label}
       </dt>
       <dd
@@ -227,15 +239,27 @@ export default async function HospitalDetailPage({
               검진 정보
             </h2>
             <dl className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
-              <InfoRow label="검진비용" value={hospital.priceRange} />
-              <InfoRow label="결과통보" value={hospital.resultNotice} />
+              <InfoRow
+                icon={INFO_ICONS.price}
+                label="검진비용"
+                value={hospital.priceRange}
+              />
+              <InfoRow
+                icon={INFO_ICONS.result}
+                label="결과통보"
+                value={hospital.resultNotice}
+              />
               {/* 검진 소요시간은 현재 스키마에 필드가 없다. waitingPeriod는
                   "예약 대기 기간"이라 다른 개념이므로 끌어다 쓰지 않는다.
                   note를 파싱하지도 않는다 — 값이 생기면 여기에 연결한다. */}
-              <InfoRow label="소요시간" />
-              <InfoRow label="식사제공" value={hospital.mealProvided} />
-              <InfoRow label="주차" value={parking} />
-              <InfoRow label="교통" value={transit} />
+              <InfoRow icon={INFO_ICONS.duration} label="소요시간" />
+              <InfoRow
+                icon={INFO_ICONS.meal}
+                label="식사제공"
+                value={hospital.mealProvided}
+              />
+              <InfoRow icon={INFO_ICONS.parking} label="주차" value={parking} />
+              <InfoRow icon={INFO_ICONS.transit} label="교통" value={transit} />
             </dl>
             <p className="mt-2 text-xs leading-relaxed text-slate-400">
               「{EMPTY_TEXT}」는 병원 홈페이지에서 확인하지 못한 항목입니다.
