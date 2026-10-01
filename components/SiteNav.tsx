@@ -9,12 +9,12 @@ import { usePathname } from "next/navigation";
  * 스타일 규칙(항목별로 자동 적용 — href만 채우면 된다):
  *  - href가 없는 항목: 글자만. 눌러도 아무 동작이 없는 순수 시각 요소다.
  *  - href가 있는 항목: 히어로 통계 배지("전국 병원 842")와 같은 흰 알약.
- *  - 지금 보고 있는 페이지의 항목: 파란 채움 + aria-current="page".
+ *  - 지금 보고 있는 페이지(또는 그 하위 경로)의 항목: 파란 채움 + aria-current="page".
  *
  * 한 줄 메뉴라 PC·모바일이 같은 요소를 쓰고, 폭이 모자라면 줄바꿈한다.
  */
 const MENU: { label: string; href?: string }[] = [
-  { label: "병원 찾기" },
+  { label: "병원 찾기", href: "/hospitals" },
   { label: "검진 항목" },
   { label: "비용 비교" },
   { label: "이용 안내", href: "/guide" },
@@ -36,7 +36,9 @@ export default function SiteNav() {
       <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-600 sm:gap-x-6">
         {MENU.map((item) => {
           if (!item.href) return <li key={item.label}>{item.label}</li>;
-          const current = pathname === item.href;
+          // 하위 경로(예: /hospitals/daegu)에서도 상위 메뉴를 현재 페이지로 표시한다.
+          const current =
+            pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <li key={item.label}>
               <Link

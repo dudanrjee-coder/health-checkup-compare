@@ -1,0 +1,205 @@
+<title>병원 찾기 시안</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* layout: 960px 목차형 페이지 — 1단계 시·도 카드 그리드, 2단계 시군구별 목록 */
+:root{
+  --bg:#f7f9fc; --surface:#ffffff; --fg:#0f172a; --muted:#516075; --line:#e3e8f0; --soft:#f1f5f9;
+  --accent:#2563eb; --accent-soft:#eaf1ff; --mint:#dcfce7; --mint-fg:#166534;
+  --t1:#7c3aed; --t2:#16a34a; --t3:#ea580c; --t4:#ca8a04;
+  --hero-a:#dbeafe; --hero-b:#fce7f3;
+  --display:"Gothic A1","Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1320; --surface:#151d2e; --fg:#e8edf6; --muted:#a3afc2; --line:#26324a; --soft:#1b2436;
+  --accent:#6b9bff; --accent-soft:#1b2a4a; --mint:#123524; --mint-fg:#7ee2a6;
+  --t1:#a78bfa; --t2:#4ade80; --t3:#fb923c; --t4:#facc15; --hero-a:#16264a; --hero-b:#3a1a33; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1320; --surface:#151d2e; --fg:#e8edf6; --muted:#a3afc2; --line:#26324a; --soft:#1b2436;
+  --accent:#6b9bff; --accent-soft:#1b2a4a; --mint:#123524; --mint-fg:#7ee2a6;
+  --t1:#a78bfa; --t2:#4ade80; --t3:#fb923c; --t4:#facc15; --hero-a:#16264a; --hero-b:#3a1a33; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.note{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px;background:var(--accent-soft);font-size:13px;color:var(--fg)}
+.views{display:flex;gap:6px}
+.views button{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;font-size:14px}
+.nav a{padding:6px 14px;border-radius:999px;color:var(--fg);text-decoration:none}
+.nav a.live{background:var(--surface);border:1px solid var(--line)}
+.nav a.cur{background:var(--accent);color:#fff;border-color:var(--accent)}
+.crumb{font-size:13px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap}
+.crumb a{color:var(--muted);text-decoration:none}
+.head{border-radius:22px;padding:28px 24px;background:radial-gradient(380px 220px at 0% 0%,var(--hero-a),transparent 70%),radial-gradient(380px 220px at 100% 100%,var(--hero-b),transparent 70%),var(--surface);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1.2;margin:0;letter-spacing:-.02em;text-wrap:balance}
+.head p{margin:0;color:var(--muted);max-width:60ch}
+.stats{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.stat{font-size:13px;padding:5px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+/* 1단계 카드 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.sido{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--fg);transition:border-color .2s,transform .2s}
+.sido:hover,.sido:focus-visible{border-color:var(--accent);transform:translateY(-2px)}
+.sido .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sido b{font-size:16px}
+.sido .cnt{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--soft)}
+.bar i{display:block;height:100%}
+.sido .go{font-size:12.5px;color:var(--accent);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+/* 2단계 */
+.tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.f{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.f[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.maplink{font-size:13px;color:var(--accent);font-weight:700;text-decoration:none;padding:6px 2px}
+.districts{display:flex;flex-direction:column;gap:12px}
+details{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;font-weight:700;font-size:16px}
+summary::-webkit-details-marker{display:none}
+summary .c{font-size:13px;color:var(--muted);font-weight:500;font-variant-numeric:tabular-nums}
+summary .arr{transition:transform .25s;color:var(--muted)}
+details[open] summary .arr{transform:rotate(180deg)}
+.list{border-top:1px solid var(--line)}
+.h{display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--fg)}
+.h:last-child{border-bottom:0}
+.h:hover,.h:focus-visible{background:var(--soft)}
+.h .nm{font-weight:500;min-width:0}
+.h .nm.ph{color:var(--muted)}
+.tags{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;white-space:nowrap}
+.p1{color:var(--t1);background:color-mix(in srgb,var(--t1) 14%,transparent)}
+.p2{color:var(--t2);background:color-mix(in srgb,var(--t2) 14%,transparent)}
+.p3{color:var(--t3);background:color-mix(in srgb,var(--t3) 14%,transparent)}
+.p4{color:var(--t4);background:color-mix(in srgb,var(--t4) 16%,transparent)}
+.pm{color:var(--mint-fg);background:var(--mint)}
+.chev{color:var(--muted)}
+.empty{padding:14px 16px;color:var(--muted);font-size:13px}
+.foot{font-size:13px;color:var(--muted)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){.h .pill.pm{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="note">
+    <span>시안입니다. 대구 80곳·병원급 66곳 외의 숫자와 ○○ 표시는 실제 데이터로 자동 계산됩니다.</span>
+    <div class="views" role="group" aria-label="화면 전환">
+      <button type="button" id="v1" aria-pressed="true">① 전국 시·도</button>
+      <button type="button" id="v2" aria-pressed="false">② 대구광역시</button>
+    </div>
+  </div>
+
+  <nav class="nav" aria-label="사이트 메뉴">
+    <a href="#" class="live cur" aria-current="page">병원 찾기</a><a href="#">검진 항목</a><a href="#">비용 비교</a><a href="#" class="live">이용 안내</a>
+  </nav>
+
+  <!-- 1단계 -->
+  <div id="step1" style="display:flex;flex-direction:column;gap:20px">
+    <div class="crumb"><a href="#">홈</a><span>›</span><span>병원 찾기</span></div>
+    <header class="head">
+      <h1>지역별 건강검진 병원</h1>
+      <p>지역을 고르면 시·군·구별로 정리된 검진 병원 목록을 볼 수 있습니다. 병원 이름을 누르면 검진비용, 결과 받는 방법, 주차·교통 정보가 있는 병원별 안내로 이동합니다.</p>
+      <div class="stats">
+        <span class="stat">전국 842곳</span>
+        <span class="stat"><i class="dot" style="background:var(--t1)"></i>상급종합 39</span>
+        <span class="stat"><i class="dot" style="background:var(--t2)"></i>종합병원 140</span>
+        <span class="stat"><i class="dot" style="background:var(--t3)"></i>병원 617</span>
+        <span class="stat"><i class="dot" style="background:var(--t4)"></i>의료원 46</span>
+      </div>
+    </header>
+    <div class="legend" aria-hidden="true"><span><i class="dot" style="background:var(--t1)"></i>상급종합</span><span><i class="dot" style="background:var(--t2)"></i>종합병원</span><span><i class="dot" style="background:var(--t3)"></i>병원</span><span><i class="dot" style="background:var(--t4)"></i>의료원</span><span>막대 = 지역 안 등급 비율</span></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <!-- 2단계 -->
+  <div id="step2" style="display:none;flex-direction:column;gap:20px">
+    <div class="crumb"><a href="#">홈</a><span>›</span><a href="#" id="backTo1">병원 찾기</a><span>›</span><span>대구광역시</span></div>
+    <header class="head">
+      <h1>대구광역시 건강검진 병원 80곳</h1>
+      <p>대구광역시의 검진 병원을 시·군·구별로 모았습니다. 병원 이름을 누르면 병원별 안내로 이동합니다.</p>
+      <div class="stats">
+        <span class="stat"><i class="dot" style="background:var(--t1)"></i>상급종합 ○</span>
+        <span class="stat"><i class="dot" style="background:var(--t2)"></i>종합병원 ○</span>
+        <span class="stat"><i class="dot" style="background:var(--t3)"></i>병원 66</span>
+        <span class="stat"><i class="dot" style="background:var(--t4)"></i>의료원 ○</span>
+        <span class="stat" style="background:var(--mint);color:var(--mint-fg);border-color:transparent">국가검진 지정 ○</span>
+      </div>
+    </header>
+    <div class="tools">
+      <div class="chips" role="group" aria-label="등급으로 거르기">
+        <button class="f" data-t="all" aria-pressed="true">전체</button>
+        <button class="f" data-t="1" aria-pressed="false">상급종합</button>
+        <button class="f" data-t="2" aria-pressed="false">종합병원</button>
+        <button class="f" data-t="3" aria-pressed="false">병원</button>
+        <button class="f" data-t="4" aria-pressed="false">의료원</button>
+      </div>
+      <a href="#" class="maplink">지도에서 대구 병원 보기 →</a>
+    </div>
+    <div class="districts" id="districts"></div>
+    <p class="foot">시·군·구는 병원이 많은 순서로 보여줍니다. 병원 정보가 다르면 이용 안내의 오류 제보로 알려주세요.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* 1단계: 시·도 카드. 비율 막대는 시안용 모양 예시 */
+  var sido=[
+    ["서울특별시","○",[30,45,20,5]],["부산광역시","○",[10,40,45,5]],["대구광역시","80",[8,10,82,0]],["인천광역시","○",[25,60,0,15]],
+    ["광주광역시","○",[8,30,60,2]],["대전광역시","○",[10,30,55,5]],["울산광역시","○",[5,20,75,0]],["세종특별자치시","○",[0,40,40,20]],
+    ["경기도","○",[5,15,75,5]],["강원특별자치도","○",[5,15,65,15]],["충청북도","○",[5,15,65,15]],["충청남도","○",[5,15,65,15]],
+    ["전북특별자치도","○",[6,3,70,21]],["전남광주통합특별시","○",[5,15,65,15]],["경상북도","○",[5,15,65,15]],["경상남도","○",[3,12,80,5]],["제주특별자치도","○",[0,40,40,20]]
+  ];
+  var cols=["var(--t1)","var(--t2)","var(--t3)","var(--t4)"], grid=document.getElementById('grid');
+  sido.forEach(function(s){
+    var a=document.createElement('a');a.className='sido';a.href='#';
+    a.innerHTML='<div class="top"><b>'+s[0]+'</b><span class="cnt">'+s[1]+'곳</span></div><div class="bar" aria-hidden="true">'+s[2].map(function(v,i){return v?'<i style="width:'+v+'%;background:'+cols[i]+'"></i>':'';}).join('')+'</div><span class="go">목록 보기 ›</span>';
+    if(s[0]==="대구광역시"){a.addEventListener('click',function(e){e.preventDefault();show(2);});}
+    else a.addEventListener('click',function(e){e.preventDefault();});
+    grid.appendChild(a);
+  });
+
+  /* 2단계: 대구 시군구 목록 (강남종합병원·대구기독병원 외는 자리 표시) */
+  var tierName={1:"상급종합",2:"종합병원",3:"병원",4:"의료원"};
+  var data=[
+    ["수성구","○",[["○○병원",3,1],["○○병원",3,1],["○○병원",3,0],["○○병원",3,1]]],
+    ["중구","○",[["○○대학교병원",1,1],["○○병원",3,1],["○○병원",3,1]]],
+    ["동구","○",[["강남종합병원",2,1],["○○병원",3,1],["○○병원",3,0]]],
+    ["남구","○",[["대구기독병원",3,1],["○○병원",3,1]]],
+    ["달서구","○",[["○○병원",2,1],["○○병원",3,1],["○○병원",3,1]]],
+    ["군위군","0",[]]
+  ];
+  var box=document.getElementById('districts');
+  data.forEach(function(d,idx){
+    var det=document.createElement('details'); if(idx<3) det.open=true;
+    var rows=d[2].map(function(h){
+      var ph=h[0].indexOf('○')>-1;
+      return '<a class="h" href="#" data-t="'+h[1]+'"><i class="dot" style="background:'+cols[h[1]-1]+'"></i><span class="nm'+(ph?' ph':'')+'">'+h[0]+'</span><span class="tags"><span class="pill p'+h[1]+'">'+tierName[h[1]]+'</span>'+(h[2]?'<span class="pill pm">국가검진 지정</span>':'')+'<span class="chev" aria-hidden="true">›</span></span></a>';
+    }).join('');
+    det.innerHTML='<summary><span>'+d[0]+' <span class="c">'+d[1]+'곳</span></span><span class="arr" aria-hidden="true">▾</span></summary><div class="list">'+(rows||'<div class="empty">아직 등록된 검진 병원이 없습니다.</div>')+'</div>';
+    box.appendChild(det);
+  });
+  box.addEventListener('click',function(e){var a=e.target.closest('a.h');if(a)e.preventDefault();});
+
+  /* 등급 필터 */
+  var fs=[].slice.call(document.querySelectorAll('.f'));
+  fs.forEach(function(b){b.addEventListener('click',function(){
+    fs.forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+    var t=b.dataset.t;
+    [].forEach.call(document.querySelectorAll('a.h'),function(a){a.hidden=(t!=='all'&&a.dataset.t!==t);});
+    [].forEach.call(document.querySelectorAll('#districts details'),function(det){
+      var vis=[].some.call(det.querySelectorAll('a.h'),function(a){return !a.hidden;});
+      det.hidden=!vis&&det.querySelectorAll('a.h').length>0;
+    });
+  });});
+
+  /* 화면 전환 */
+  var s1=document.getElementById('step1'), s2=document.getElementById('step2'), v1=document.getElementById('v1'), v2=document.getElementById('v2');
+  function show(n){s1.style.display=n===1?'flex':'none';s2.style.display=n===2?'flex':'none';v1.setAttribute('aria-pressed',String(n===1));v2.setAttribute('aria-pressed',String(n===2));window.scrollTo(0,0);}
+  v1.addEventListener('click',function(){show(1);}); v2.addEventListener('click',function(){show(2);});
+  document.getElementById('backTo1').addEventListener('click',function(e){e.preventDefault();show(1);});
+  [].forEach.call(document.querySelectorAll('.nav a,.crumb a:not(#backTo1),.maplink'),function(a){a.addEventListener('click',function(e){e.preventDefault();});});
+})();
+</script>

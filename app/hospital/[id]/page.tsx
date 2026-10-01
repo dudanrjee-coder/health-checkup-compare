@@ -10,6 +10,7 @@ import {
   isIndexable,
 } from "@/lib/detailPages";
 import { INFO_ICONS } from "@/lib/infoIcons";
+import { sidoPath } from "@/lib/sidoSlugs";
 import { splitAccessInfo } from "@/lib/noteChips";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
@@ -170,7 +171,10 @@ export default async function HospitalDetailPage({
               홈
             </Link>
             <span className="mx-1.5 text-slate-300">›</span>
-            <span>{sido}</span>
+            {/* 시·도는 병원 찾기의 시·도 목록 페이지로 연결한다 */}
+            <Link href={sidoPath(sido)} className="hover:text-slate-700 hover:underline">
+              {sido}
+            </Link>
             <span className="mx-1.5 text-slate-300">›</span>
             {/* 시군구가 비어 있으면 이 단계만 생략한다 */}
             {sigungu && (

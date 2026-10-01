@@ -77,6 +77,11 @@ const SIDO_SHORT: Record<Sido, string> = {
   제주특별자치도: "제주",
 };
 
+/** 시·도 약칭(예: 충청북도 → 충북). 병원 찾기 페이지의 지도 링크 문구도 쓴다. */
+export function sidoShort(sido: Sido): string {
+  return SIDO_SHORT[sido];
+}
+
 /** 제목용 지역 표기. 예: "인천 남동구". 시군구가 없으면 시·도 약칭만. */
 export function regionLabel(hospital: Hospital): string {
   const short = SIDO_SHORT[hospital.region.sido];

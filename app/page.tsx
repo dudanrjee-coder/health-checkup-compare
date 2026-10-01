@@ -4,6 +4,7 @@ import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import HospitalMap from "@/components/HospitalMapLazy";
 import SiteNav from "@/components/SiteNav";
 import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
+import { sidoFromSlug } from "@/lib/sidoSlugs";
 import BgmPlayer from "@/components/BgmPlayer";
 import HeroVideo from "@/components/HeroVideo";
 import HeroBackdrop from "@/components/HeroBackdrop";
@@ -93,6 +94,24 @@ export default function Home() {
     }, IDLE_CYCLE_INTERVAL_MS);
     return () => clearInterval(timer);
   }, [idleCycleActive]);
+
+  /**
+   * `/?sido=daegu`처럼 시·도 slug가 붙어 오면 그 시·도를 미리 선택한다
+   * (병원 찾기의 "지도에서 ○○ 병원 보기" 링크). 드롭다운으로 고른 것과 같은
+   * handleSidoChange를 쓴다. 모르는 slug면 아무것도 하지 않는다.
+   *
+   * useSearchParams 대신 마운트 때 location.search를 한 번 읽는다 — 이 페이지에서
+   * useSearchParams를 쓰면 Suspense 경계가 필요해지고 홈 전체가 정적 프리렌더에서
+   * 빠진다. 파라미터가 없으면 기존 동작과 완전히 같다.
+   */
+  useEffect(() => {
+    const sido = sidoFromSlug(
+      new URLSearchParams(window.location.search).get("sido")
+    );
+    if (sido) handleSidoChange(sido);
+    // 최초 1회만 읽는다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 입력할 때마다 필터링하지 않도록 200ms 디바운스를 둔다.
   useEffect(() => {

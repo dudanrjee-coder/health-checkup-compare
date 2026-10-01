@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { hospitals } from "@/lib/hospitals";
 import { detailPath, isIndexable } from "@/lib/detailPages";
+import { sidosWithHospitals } from "@/lib/regionStats";
+import { sidoPath } from "@/lib/sidoSlugs";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -26,6 +28,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    // 병원 찾기: 전국 시·도 목록과 병원이 있는 시·도 페이지 전부
+    {
+      url: `${SITE_URL}/hospitals`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...sidosWithHospitals().map((sido) => ({
+      url: `${SITE_URL}${sidoPath(sido)}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
     ...detailPages,
   ];
 }
