@@ -28,6 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    // 운영 안내(사이트 소개·개인정보처리방침·문의)
+    ...["/about", "/privacy", "/contact"].map((path) => ({
+      url: `${SITE_URL}${path}`,
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    })),
     // 병원 찾기: 전국 시·도 목록과 병원이 있는 시·도 페이지 전부
     {
       url: `${SITE_URL}/hospitals`,
