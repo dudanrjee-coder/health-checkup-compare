@@ -31,10 +31,14 @@ export function detailPath(id: string): string {
  * 상세 페이지를 검색엔진 색인 대상으로 둘지. **페이지 메타(robots)와 sitemap이
  * 이 함수 하나만 본다.**
  *
- * 기준: 상세 페이지 "검진 정보" 표 6항목(검진비용·결과통보·소요시간·식사제공·
- * 주차·교통) 중 하나라도 값이 있으면 색인한다. 전부 비어 "병원문의"만 나오는
- * 페이지는 내용이 빈약해 noindex(follow는 허용)로 두고 sitemap에서 뺀다.
- * 페이지 자체와 홈 카드 링크는 그대로다.
+ * 기준(2026-10-01 강화): 상세 페이지 "검진 정보" 표 6항목(검진비용·결과통보·
+ * 소요시간·식사제공·주차·교통) 중
+ *  - **검진비용 또는 결과통보가 있거나**(검진 고유 정보라 하나만으로도 가치가 있다),
+ *  - **6항목 중 2개 이상**이 채워져 있으면 색인한다.
+ * 그 밖의 페이지(전부 비었거나 주차·교통 같은 일반 정보 하나뿐)는 내용이 빈약해
+ * noindex(follow는 허용)로 두고 sitemap에서 뺀다. 페이지 자체·홈 카드 링크·
+ * 데이터는 그대로다. 예전 기준은 "1개 이상"이었는데, 네이버의 "주차 가능" 한 줄
+ * 만으로 색인되는 페이지가 생겨 강화했다.
  *
  * 데이터에서 매번 계산하므로 조사로 값이 채워지면 자동으로 색인 대상이 된다.
  * 소요시간은 examDuration 필드를 본다(2026-10-01 추가).
@@ -43,14 +47,14 @@ export function detailPath(id: string): string {
 export function isIndexable(hospital: Hospital): boolean {
   const filled = (v?: string) => Boolean(v && v.trim());
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
-  return [
-    hospital.priceRange,
-    hospital.resultNotice,
+  if (filled(hospital.priceRange) || filled(hospital.resultNotice)) return true;
+  const count = [
     hospital.examDuration,
     hospital.mealProvided,
     parking,
     transit,
-  ].some(filled);
+  ].filter(filled).length;
+  return count >= 2;
 }
 
 /**
