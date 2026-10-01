@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import HomeBreadcrumb from "@/components/HomeBreadcrumb";
 import HospitalDetailMap from "@/components/HospitalDetailMap";
 import { hospitals } from "@/lib/hospitals";
 import {
@@ -166,25 +167,14 @@ export default async function HospitalDetailPage({
         {/* ── 왼쪽 단(모바일에서는 위쪽): 2~6 ── */}
         <div className="flex flex-col gap-5">
           {/* 2) 위치 표시 */}
-          <nav aria-label="현재 위치" className="text-xs text-slate-500">
-            <Link href="/" className="hover:text-slate-700 hover:underline">
-              홈
-            </Link>
-            <span className="mx-1.5 text-slate-300">›</span>
-            {/* 시·도는 병원 찾기의 시·도 목록 페이지로 연결한다 */}
-            <Link href={sidoPath(sido)} className="hover:text-slate-700 hover:underline">
-              {sido}
-            </Link>
-            <span className="mx-1.5 text-slate-300">›</span>
-            {/* 시군구가 비어 있으면 이 단계만 생략한다 */}
-            {sigungu && (
-              <>
-                <span>{sigungu}</span>
-                <span className="mx-1.5 text-slate-300">›</span>
-              </>
-            )}
-            <span className="text-slate-700">{hospital.name}</span>
-          </nav>
+          {/* 시·도는 병원 찾기의 시·도 목록 페이지로 연결하고, 시군구가 비어 있으면 그 단계만 생략한다 */}
+          <HomeBreadcrumb
+            trail={[
+              { label: sido, href: sidoPath(sido) },
+              ...(sigungu ? [{ label: sigungu }] : []),
+              { label: hospital.name },
+            ]}
+          />
 
           {/* 3) 병원명 + 배지 + 주소 */}
           <section className="flex flex-col gap-3">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import HomeBreadcrumb from "@/components/HomeBreadcrumb";
 import SiteNav from "@/components/SiteNav";
 import SidoDistrictList, { type DistrictData } from "@/components/SidoDistrictList";
 import { DesignatedPill, TierStatPills } from "@/components/RegionBits";
@@ -72,17 +73,7 @@ export default async function SidoPage({ params }: { params: Promise<{ sido: str
       <div className="mx-auto flex max-w-[960px] flex-col gap-5 pt-5">
         <SiteNav />
 
-        <nav aria-label="현재 위치" className="flex flex-wrap gap-1.5 text-[13px] text-slate-500">
-          <Link href="/" className="hover:text-slate-700 hover:underline">
-            홈
-          </Link>
-          <span aria-hidden="true">›</span>
-          <Link href="/hospitals" className="hover:text-slate-700 hover:underline">
-            병원 찾기
-          </Link>
-          <span aria-hidden="true">›</span>
-          <span className="text-slate-700">{sido}</span>
-        </nav>
+        <HomeBreadcrumb trail={[{ label: "병원 찾기", href: "/hospitals" }, { label: sido }]} />
 
         <header className="flex flex-col gap-2.5 rounded-[22px] border border-slate-200 bg-gradient-to-br from-sky-100 via-white to-pink-100 px-6 py-7">
           <h1 className="m-0 text-[clamp(26px,5vw,38px)] font-extrabold leading-tight tracking-tight">

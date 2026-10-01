@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HomeBreadcrumb from "@/components/HomeBreadcrumb";
 import SiteNav from "@/components/SiteNav";
 import { StatPill, TierBar, TierLegend, TierStatPills } from "@/components/RegionBits";
 import { hospitals } from "@/lib/hospitals";
@@ -39,13 +40,7 @@ export default function HospitalsPage() {
       <div className="mx-auto flex max-w-[960px] flex-col gap-5 pt-5">
         <SiteNav />
 
-        <nav aria-label="현재 위치" className="flex flex-wrap gap-1.5 text-[13px] text-slate-500">
-          <Link href="/" className="hover:text-slate-700 hover:underline">
-            홈
-          </Link>
-          <span aria-hidden="true">›</span>
-          <span className="text-slate-700">병원 찾기</span>
-        </nav>
+        <HomeBreadcrumb trail={[{ label: "병원 찾기" }]} />
 
         <header className="flex flex-col gap-2.5 rounded-[22px] border border-slate-200 bg-gradient-to-br from-sky-100 via-white to-pink-100 px-6 py-7">
           <h1 className="m-0 text-[clamp(26px,5vw,38px)] font-extrabold leading-tight tracking-tight">

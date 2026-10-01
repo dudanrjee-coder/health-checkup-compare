@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   CardDemo,
   type CardDemoChip,
@@ -10,6 +9,7 @@ import {
   type SearchDemoRow,
   StepsDemo,
 } from "@/components/GuideDemos";
+import HomeBreadcrumb from "@/components/HomeBreadcrumb";
 import { hospitals } from "@/lib/hospitals";
 import { regionLabel } from "@/lib/detailPages";
 import { deriveChips, splitAccessInfo } from "@/lib/noteChips";
@@ -162,13 +162,8 @@ export default function GuidePage() {
       <GuideReveal />
       <div className="mx-auto flex max-w-[760px] flex-col gap-14">
         {/* 상단 바 */}
-        <div className="flex items-center py-[18px] text-sm">
-          <Link
-            href="/"
-            className="-my-3 py-3 font-medium text-slate-900 hover:underline"
-          >
-            ‹ 홈
-          </Link>
+        <div className="pt-5">
+          <HomeBreadcrumb trail={[{ label: "이용 안내" }]} />
         </div>
 
         {/* 히어로 */}
