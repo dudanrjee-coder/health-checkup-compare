@@ -1,8 +1,8 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import HospitalMap from "@/components/HospitalMapLazy";
+import SiteNav from "@/components/SiteNav";
 import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
 import BgmPlayer from "@/components/BgmPlayer";
 import HeroVideo from "@/components/HeroVideo";
@@ -255,28 +255,13 @@ export default function Home() {
             상단 네비게이션 — 시안에서 온 요소다. "이용 안내"만 실제 페이지
             (/guide)가 있어 링크로 연결했다. 병원 찾기/검진 항목/비용 비교는
             아직 페이지가 없어, 생기기 전까지는 눌러도 아무 동작을 하지 않는
-            순수 시각 요소로 둔다(href 없음, onClick 없음). 로고 텍스트와 검진예약
+            순수 시각 요소로 둔다(href 없음, onClick 없음). 항목 목록과 링크·알약·
+            현재 페이지 스타일 규칙은 components/SiteNav.tsx에 있다. 로고 텍스트와 검진예약
             버튼을 걷어낸 뒤로는 좌우에 짝이 되는 요소가 없어서, 그리드 대신
             가운데 정렬 한 줄로 둔다. 모바일에서는 nav가 통째로 비지 않도록
             메뉴를 그대로 노출하고, 폭이 모자라면 줄바꿈시킨다.
           */}
-          <nav className="flex items-center justify-center">
-            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-600 sm:gap-x-6">
-              <li>병원 찾기</li>
-              <li>검진 항목</li>
-              <li>비용 비교</li>
-              <li>
-                {/* 한 줄 메뉴라 PC·모바일이 같은 요소를 쓴다. 터치 영역은
-                    세로 패딩으로 넓히고 음수 마진으로 상쇄해 줄 높이는 그대로 둔다. */}
-                <Link
-                  href="/guide"
-                  className="-my-3 inline-block py-3 hover:text-slate-900 hover:underline"
-                >
-                  이용 안내
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <SiteNav />
 
           <div className="flex flex-col items-center gap-4 text-center">
             <span
