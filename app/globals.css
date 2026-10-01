@@ -91,3 +91,34 @@
     animation: hero-drift-2 22s ease-in-out infinite alternate;
   }
 }
+
+/* ===========================================================================
+   이용 안내(/guide) 전용 모션 — 클래스 이름은 전부 `guide-`로 시작한다.
+
+   히어로 모션과 같은 원칙으로 **움직임은 전부 no-preference 안에만 둔다.**
+   reduce 모드에서는 커서가 깜빡이지 않고, 스크롤 등장 클래스도 붙지 않는다
+   (GuideReveal이 reduce면 아무것도 하지 않음). 숨김 클래스(guide-pre)는 JS가
+   마운트된 뒤에만 붙으므로 JS가 꺼져 있어도 글은 처음부터 보인다.
+   =========================================================================== */
+@keyframes guide-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guide-caret {
+    animation: guide-blink 1s steps(1) infinite;
+  }
+  .guide-pre {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  .guide-show {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s ease,
+      transform 0.7s ease;
+  }
+}

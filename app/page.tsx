@@ -1,7 +1,9 @@
 "use client";
 
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import HospitalMap from "@/components/HospitalMapLazy";
+import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
 import BgmPlayer from "@/components/BgmPlayer";
 import HeroVideo from "@/components/HeroVideo";
 import HeroBackdrop from "@/components/HeroBackdrop";
@@ -115,18 +117,9 @@ export default function Home() {
     setTodayLabel(`${pad(today.getMonth() + 1)}/${pad(today.getDate())}`);
   }, []);
   // 문의 이메일 클립보드 복사 — 복사 성공 시 잠깐 "복사됨"으로 바뀌었다가 되돌아간다.
-  const [contactEmailCopied, setContactEmailCopied] = useState(false);
-  const handleCopyContactEmail = async () => {
-    const email = "youngmukjee@gmail.com";
-    try {
-      await navigator.clipboard.writeText(email);
-      setContactEmailCopied(true);
-      setTimeout(() => setContactEmailCopied(false), 2000);
-    } catch {
-      // 클립보드 API를 못 쓰는 환경(권한 거부, 구형 브라우저 등)에서는
-      // 조용히 무시한다 — 이메일 주소는 화면에 그대로 보이므로 수동 복사가 가능하다.
-    }
-  };
+  // 이용 안내 페이지와 같은 로직을 쓰도록 lib/useCopyEmail.ts로 옮겼다.
+  const { copied: contactEmailCopied, copy: handleCopyContactEmail } =
+    useCopyEmail();
   // 검색 중에는 지역 선택을 무시하므로 등급 목록도 전국 기준으로 계산한다.
   const tiersWithData = useMemo(
     () => getTiersWithData(isSearching ? null : selectedSido),
@@ -259,10 +252,10 @@ export default function Home() {
         <HeroBackdrop />
         <div className="relative mx-auto flex max-w-7xl flex-col gap-6">
           {/*
-            상단 네비게이션 — 시안에만 있는 디자인 목업용 요소다. 병원
-            찾기/검진 항목/비용 비교/이용 안내 페이지는 실제로는 없다. 실제
-            페이지가 생기기 전까지는 눌러도 아무 동작을 하지 않는 순수 시각
-            요소로만 둔다(href 없음, onClick 없음). 로고 텍스트와 검진예약
+            상단 네비게이션 — 시안에서 온 요소다. "이용 안내"만 실제 페이지
+            (/guide)가 있어 링크로 연결했다. 병원 찾기/검진 항목/비용 비교는
+            아직 페이지가 없어, 생기기 전까지는 눌러도 아무 동작을 하지 않는
+            순수 시각 요소로 둔다(href 없음, onClick 없음). 로고 텍스트와 검진예약
             버튼을 걷어낸 뒤로는 좌우에 짝이 되는 요소가 없어서, 그리드 대신
             가운데 정렬 한 줄로 둔다. 모바일에서는 nav가 통째로 비지 않도록
             메뉴를 그대로 노출하고, 폭이 모자라면 줄바꿈시킨다.
@@ -272,7 +265,16 @@ export default function Home() {
               <li>병원 찾기</li>
               <li>검진 항목</li>
               <li>비용 비교</li>
-              <li>이용 안내</li>
+              <li>
+                {/* 한 줄 메뉴라 PC·모바일이 같은 요소를 쓴다. 터치 영역은
+                    세로 패딩으로 넓히고 음수 마진으로 상쇄해 줄 높이는 그대로 둔다. */}
+                <Link
+                  href="/guide"
+                  className="-my-3 inline-block py-3 hover:text-slate-900 hover:underline"
+                >
+                  이용 안내
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -601,7 +603,7 @@ export default function Home() {
             onClick={handleCopyContactEmail}
             className="font-medium text-sky-600 underline underline-offset-2 hover:text-sky-700"
           >
-            youngmukjee@gmail.com
+            {CONTACT_EMAIL}
           </button>
           <span
             className={`text-xs text-emerald-600 transition-opacity ${

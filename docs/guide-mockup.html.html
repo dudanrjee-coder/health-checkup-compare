@@ -1,0 +1,297 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>이용 안내 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* layout: 760px 단일 칼럼 읽기 페이지, 섹션마다 작게 움직이는 실연 패널 */
+:root{
+  --bg:#f7f9fc; --surface:#ffffff; --fg:#0f172a; --muted:#516075; --line:#e3e8f0;
+  --accent:#2563eb; --accent-soft:#eaf1ff; --mint:#dcfce7; --mint-fg:#166534;
+  --t1:#7c3aed; --t2:#16a34a; --t3:#ea580c; --t4:#ca8a04;
+  --hero-a:#dbeafe; --hero-b:#fce7f3;
+  --display:"Gothic A1","Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+  --body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1320; --surface:#151d2e; --fg:#e8edf6; --muted:#a3afc2; --line:#26324a;
+  --accent:#6b9bff; --accent-soft:#1b2a4a; --mint:#123524; --mint-fg:#7ee2a6;
+  --t1:#a78bfa; --t2:#4ade80; --t3:#fb923c; --t4:#facc15;
+  --hero-a:#16264a; --hero-b:#3a1a33; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1320; --surface:#151d2e; --fg:#e8edf6; --muted:#a3afc2; --line:#26324a;
+  --accent:#6b9bff; --accent-soft:#1b2a4a; --mint:#123524; --mint-fg:#7ee2a6;
+  --t1:#a78bfa; --t2:#4ade80; --t3:#fb923c; --t4:#facc15;
+  --hero-a:#16264a; --hero-b:#3a1a33; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+.bar{display:flex;justify-content:space-between;align-items:center;padding-block:18px;font-size:14px;color:var(--muted)}
+.bar a{color:var(--fg);text-decoration:none;font-weight:500}
+.tag{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700}
+.hero{position:relative;border-radius:24px;padding:40px 28px;overflow:hidden;background:radial-gradient(420px 260px at 0% 0%,var(--hero-a),transparent 70%),radial-gradient(420px 260px at 100% 100%,var(--hero-b),transparent 70%),var(--surface);border:1px solid var(--line)}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,6vw,44px);line-height:1.2;margin:0 0 12px;letter-spacing:-.02em;text-wrap:balance}
+.hero p{margin:0;color:var(--muted);max-width:52ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.toc a{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none}
+.toc a:hover,.toc a:focus-visible{border-color:var(--accent);color:var(--accent)}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+h2{font-family:var(--display);font-weight:800;font-size:24px;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.eyebrow{font-size:12px;letter-spacing:.08em;color:var(--accent);font-weight:700}
+p{margin:0;max-width:65ch}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+li{max-width:63ch}
+b{font-weight:700}
+.demo{border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:20px;min-width:0}
+.cap{font-size:12px;color:var(--muted);margin-top:10px}
+/* 검색 실연 */
+.sbox{display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;border:1.5px solid var(--accent);border-radius:12px;font-size:15px}
+.sbox svg{flex:none;color:var(--muted)}
+.caret{display:inline-block;width:2px;height:18px;background:var(--accent);margin-left:1px;vertical-align:middle;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.results{display:flex;flex-direction:column;gap:8px;margin-top:12px;min-height:116px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;transition:opacity .35s,transform .35s}
+.row.out{opacity:0;transform:translateY(-4px);height:0;padding-block:0;border-width:0;margin-top:-8px;overflow:hidden}
+.pill{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:700;white-space:nowrap}
+.p1{color:var(--t1);background:color-mix(in srgb,var(--t1) 14%,transparent)}
+.p2{color:var(--t2);background:color-mix(in srgb,var(--t2) 14%,transparent)}
+.p3{color:var(--t3);background:color-mix(in srgb,var(--t3) 14%,transparent)}
+.p4{color:var(--t4);background:color-mix(in srgb,var(--t4) 16%,transparent)}
+.row small{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}
+/* 필터 + 지도 실연 */
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.f{font-size:13px;padding:5px 12px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--fg);font-family:inherit;cursor:pointer;transition:background .3s,color .3s,border-color .3s}
+.f[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.map{position:relative;height:220px;margin-top:14px;border-radius:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--t2) 10%,var(--surface)),color-mix(in srgb,var(--accent) 10%,var(--surface)));overflow:hidden}
+.dot{position:absolute;width:12px;height:12px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);transition:opacity .45s,transform .45s}
+.dot.dim{opacity:.12;transform:rotate(-45deg) scale(.7)}
+/* 카드 실연 */
+.card{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:17px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.chip{padding:4px 10px;border-radius:999px;background:var(--accent);color:#fff}
+.chip.m{background:var(--mint);color:var(--mint-fg)}
+.cardfoot{display:flex;justify-content:flex-end;gap:16px;font-size:13px}
+.cardfoot button{background:none;border:0;padding:8px 2px;font:inherit;color:var(--muted);cursor:pointer}
+.cardfoot .lnk{color:var(--accent);font-weight:700}
+.table{display:grid;grid-template-columns:auto 1fr;font-size:13px;border:1px solid var(--line);border-radius:10px;overflow:hidden;max-height:0;opacity:0;transition:max-height .6s ease,opacity .4s}
+.card.open .table{max-height:260px;opacity:1}
+.table div{padding:8px 12px;border-bottom:1px solid var(--line)}
+.table div:nth-last-child(-n+2){border-bottom:0}
+.table .k{color:var(--muted);white-space:nowrap}
+/* 등급 */
+.tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tier{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.tier .pin{width:14px;height:14px;border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.tier b{font-size:15px}
+.tier span{font-size:14px;color:var(--muted)}
+/* 용어 */
+.terms{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.term{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);font-size:14px}
+.term:last-child{border-bottom:0}
+.term p{color:var(--muted)}
+/* 수집 원칙 단계 */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;position:relative}
+.step{border:1.5px solid var(--line);border-radius:14px;padding:14px;background:var(--surface);display:flex;flex-direction:column;gap:6px;transition:border-color .4s,box-shadow .4s}
+.step .n{font-family:var(--display);font-weight:800;color:var(--muted);font-size:13px;transition:color .4s}
+.step b{font-size:14px;line-height:1.45}
+.step span{font-size:12.5px;color:var(--muted);line-height:1.55}
+.step.on{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.step.on .n{color:var(--accent)}
+.prog{height:3px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:12px}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s}
+/* 문의 */
+.mail{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.mail code{font-family:var(--body);font-size:15px;padding:8px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line);user-select:all}
+.mail button{height:40px;padding:0 16px;border-radius:10px;border:0;background:var(--fg);color:var(--bg);font:inherit;font-weight:700;cursor:pointer}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 스크롤 등장: JS가 화면 밖 섹션에만 .pre를 붙임 */
+.pre{opacity:0;transform:translateY(18px)}
+.show{opacity:1;transform:none;transition:opacity .7s ease,transform .7s ease}
+@media (max-width:600px){
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .term{grid-template-columns:1fr;gap:2px}
+  .tiers{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="wrap">
+  <div class="bar"><a href="#top">‹ 홈</a><span class="tag">이용 안내 페이지 시안</span></div>
+
+  <header class="hero" id="top">
+    <h1>이용 안내</h1>
+    <p>병원마다 홈페이지를 하나하나 열어보지 않아도, 지역별 건강검진 병원 정보를 한곳에서 비교할 수 있도록 만든 사이트입니다. 찾는 법부터 정보를 모은 원칙까지 안내합니다.</p>
+    <nav class="toc" aria-label="목차">
+      <a href="#about">이 사이트는</a><a href="#find">병원 찾는 법</a><a href="#tier">병원 등급</a><a href="#terms">표시되는 말의 뜻</a><a href="#source">정보 수집 원칙</a><a href="#notice">유의사항</a><a href="#contact">오류 제보</a>
+    </nav>
+  </header>
+
+  <section id="about" class="rv">
+    <h2>이 사이트는</h2>
+    <p>건강검진 받을 병원을 고를 때 필요한 정보(검진비용, 결과 받는 방법, 주차와 교통, 예약 방법)를 지역별로 모아 비교할 수 있게 정리했습니다.</p>
+    <p>특정 병원이나 기관과 관계없는 개인이 운영합니다. 병원 목록은 가나다순이며, 광고나 제휴 여부가 순서나 표시 내용에 영향을 주지 않습니다.</p>
+  </section>
+
+  <section id="find" class="rv">
+    <h2>병원 찾는 법</h2>
+    <div class="demo" aria-hidden="true">
+      <div class="sbox"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span id="typed"></span><span class="caret"></span></div>
+      <div class="results" id="results">
+        <div class="row" data-k="인천 남동구"><span class="pill p1">상급종합</span>가천대학교 길병원<small>인천 남동구</small></div>
+        <div class="row" data-k="서울 서초구"><span class="pill p1">상급종합</span>가톨릭대학교 서울성모병원<small>서울 서초구</small></div>
+        <div class="row" data-k="서울 강남구"><span class="pill p1">상급종합</span>강남세브란스병원<small>서울 강남구</small></div>
+      </div>
+    </div>
+    <ul>
+      <li><b>검색</b>: 병원 이름이나 지역 이름(예: 수성구, 강릉)을 입력해 찾을 수 있습니다. 검색창 오른쪽 키보드 버튼으로 화면 키보드를 쓸 수도 있습니다.</li>
+      <li><b>시·도 선택</b>: 원하는 시·도를 고르면 그 지역 병원만 보입니다.</li>
+    </ul>
+
+    <div class="demo">
+      <div class="filters" role="group" aria-label="등급 필터 예시">
+        <button class="f" data-t="all" aria-pressed="true">전체</button>
+        <button class="f" data-t="1" aria-pressed="false">상급종합병원</button>
+        <button class="f" data-t="2" aria-pressed="false">종합병원</button>
+        <button class="f" data-t="3" aria-pressed="false">병원</button>
+        <button class="f" data-t="4" aria-pressed="false">의료원</button>
+      </div>
+      <div class="map" id="map" aria-hidden="true"></div>
+      <div class="cap">예시 화면입니다. 등급을 누르면 해당 병원만 지도에 남습니다.</div>
+    </div>
+    <ul>
+      <li><b>등급 필터</b>: 상급종합병원·종합병원·병원·의료원 중 하나를 골라 볼 수 있습니다.</li>
+      <li><b>국가검진 지정만</b>: 스위치를 켜면 국민건강보험공단 지정 검진기관으로 확인된 병원만 보입니다.</li>
+      <li><b>지도</b>: 병원 위치가 등급별 색으로 표시됩니다. 표시를 누르면 병원 이름과 전화번호가 보입니다. 화면을 그대로 두면 등급 보기가 몇 초마다 자동으로 바뀌고, 필터를 직접 누르면 멈춥니다.</li>
+    </ul>
+
+    <div class="demo">
+      <div class="card" id="card">
+        <h3>가천대학교 길병원 <span class="pill p1">상급종합병원</span></h3>
+        <div style="font-size:14px;color:var(--muted)">인천광역시 남동구</div>
+        <div class="chips"><span class="chip">온라인예약 바로가기 ↗</span><span class="chip">전화 1577-2299</span><span class="chip m">국가검진 지정기관</span></div>
+        <div class="cardfoot"><span class="lnk" style="padding:8px 2px">상세 페이지 ›</span><button type="button" id="cardBtn" aria-expanded="false">자세히 보기 ▾</button></div>
+        <div class="table">
+          <div class="k">검진비용</div><div>기본검진 남 64만원/여 68만원, 특화검진 6종</div>
+          <div class="k">결과통보</div><div>방문·전화·모바일·E-Mail·우편, 약 7~10일</div>
+          <div class="k">식사제공</div><div>제공(검진 종료 후 간단한 간식)</div>
+          <div class="k">주차·교통</div><div>구월 팬더아파트 정류장 도보 3분 / 기본 20분 무료</div>
+        </div>
+      </div>
+    </div>
+    <ul>
+      <li><b>병원 카드</b>: 온라인 예약, 전화, 국가검진 지정 여부를 한눈에 볼 수 있습니다. "자세히 보기"를 누르면 검진비용·결과통보·식사·주차·교통 정보가 펼쳐집니다.</li>
+      <li><b>상세 페이지</b>: "상세 페이지"를 누르면 병원별 안내 페이지에서 위치 지도와 같은 지역의 다른 검진 병원까지 볼 수 있습니다.</li>
+    </ul>
+  </section>
+
+  <section id="tier" class="rv">
+    <h2>병원 등급 안내</h2>
+    <div class="tiers">
+      <div class="tier"><i class="pin" style="background:var(--t1)"></i><b>상급종합병원</b><span>보건복지부가 중증 질환 진료 역량 등을 평가해 지정한 대형 병원입니다.</span></div>
+      <div class="tier"><i class="pin" style="background:var(--t2)"></i><b>종합병원</b><span>일정 규모 이상의 병상과 여러 진료과를 갖춘 병원입니다.</span></div>
+      <div class="tier"><i class="pin" style="background:var(--t3)"></i><b>병원</b><span>종합병원보다 규모가 작은 병원급 의료기관입니다.</span></div>
+      <div class="tier"><i class="pin" style="background:var(--t4)"></i><b>의료원</b><span>지방의료원·보건의료원 등 지역 공공의료를 맡는 병원입니다.</span></div>
+    </div>
+    <p style="color:var(--muted);font-size:14px">등급은 진료 규모를 나누는 기준일 뿐, 검진 품질의 순위를 뜻하지 않습니다.</p>
+  </section>
+
+  <section id="terms" class="rv">
+    <h2>표시되는 말의 뜻</h2>
+    <div class="terms">
+      <div class="term"><span class="pill" style="justify-self:start;background:var(--mint);color:var(--mint-fg)">국가검진 지정기관</span><p>국민건강보험공단 검진기관 조회에서 일반검진 또는 암검진 기관으로 확인된 병원입니다.</p></div>
+      <div class="term"><span class="pill p4" style="justify-self:start">국가검진 미지정</span><p>공단 조회에서 지정 내역을 확인하지 못한 병원입니다. 병원 자체 검진은 운영할 수 있습니다.</p></div>
+      <div class="term"><b>병원문의</b><p>병원 공식 홈페이지에서 해당 정보를 찾지 못한 항목입니다. 정보가 없다는 뜻이 아니라 공개되지 않았다는 뜻이니 병원에 직접 확인해 주세요.</p></div>
+      <div class="term"><b>온라인예약(미제공)</b><p>홈페이지에서 검진 온라인 예약 기능을 찾지 못한 경우입니다. 전화로 예약할 수 있습니다.</p></div>
+      <div class="term"><b>정보 확인일</b><p>해당 병원 정보를 마지막으로 확인한 날짜입니다.</p></div>
+    </div>
+  </section>
+
+  <section id="source" class="rv">
+    <h2>정보는 이렇게 모았습니다</h2>
+    <div class="demo">
+      <div class="steps" id="steps">
+        <div class="step"><span class="n">1단계</span><b>공공 자료로 병원 목록 정리</b><span>건강보험심사평가원·국민건강보험공단 정보로 지역별 목록을 만듭니다.</span></div>
+        <div class="step"><span class="n">2단계</span><b>공식 홈페이지 끝까지 확인</b><span>첫 화면만이 아니라 검진센터의 비용·절차·결과·오시는 길·예약 메뉴를 모두 엽니다.</span></div>
+        <div class="step"><span class="n">3단계</span><b>공단 조회와 대조</b><span>같은 이름의 병원은 주소와 사업자 정보로 구분합니다.</span></div>
+        <div class="step"><span class="n">4단계</span><b>모르는 건 비워 둡니다</b><span>확인하지 못한 항목은 추측하지 않고 "병원문의"로 남깁니다.</span></div>
+      </div>
+      <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+    </div>
+    <p>홈페이지와 공공 자료가 서로 다르면 공식 자료를 우선합니다. 지도는 OpenStreetMap을 사용합니다.</p>
+  </section>
+
+  <section id="notice" class="rv">
+    <h2>이용 시 유의사항</h2>
+    <ul>
+      <li>검진비용, 예약 방법, 운영 시간은 병원 사정에 따라 바뀔 수 있습니다. 예약 전에 꼭 병원에 확인해 주세요.</li>
+      <li>이 사이트의 정보는 병원 선택을 돕는 참고 자료이며, 의학적 상담이나 진단을 대신하지 않습니다.</li>
+      <li>국가건강검진 대상 여부와 검진 항목은 국민건강보험공단 고객센터(1577-1000)나 공단 홈페이지에서 확인할 수 있습니다.</li>
+    </ul>
+  </section>
+
+  <section id="contact" class="rv">
+    <h2>오류 제보·문의</h2>
+    <p>잘못된 정보, 폐업하거나 이전한 병원, 추가했으면 하는 병원을 알려주시면 확인 후 반영합니다.</p>
+    <div class="mail"><code id="mail">youngmukjee@gmail.com</code><button type="button" id="copy">주소 복사</button><span id="copied" style="font-size:13px;color:var(--muted)"></span></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 스크롤 등장: 첫 화면 밖 섹션만 숨겼다가 보이면 표시 */
+  if(!reduce && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');e.target.classList.remove('pre');io.unobserve(e.target);}});},{threshold:.12});
+    document.querySelectorAll('.rv').forEach(function(el){
+      if(el.getBoundingClientRect().top > window.innerHeight){el.classList.add('pre');io.observe(el);}
+    });
+  }
+
+  /* 검색 타이핑 */
+  var typed=document.getElementById('typed'), rows=[].slice.call(document.querySelectorAll('#results .row'));
+  var words=['서울','남동구','길병원'];
+  function filter(q){rows.forEach(function(r){var hit=!q||r.dataset.k.indexOf(q)>-1||r.textContent.indexOf(q)>-1;r.classList.toggle('out',!hit);});}
+  if(reduce){typed.textContent='서울';filter('서울');}
+  else{
+    var wi=0;
+    (function cycle(){
+      var w=words[wi%words.length], i=0; typed.textContent=''; filter('');
+      var t=setInterval(function(){i++;typed.textContent=w.slice(0,i);if(i>=w.length){clearInterval(t);setTimeout(function(){filter(w);},250);setTimeout(function(){wi++;cycle();},2600);}},260);
+    })();
+  }
+
+  /* 지도 점 */
+  var map=document.getElementById('map');
+  var pts=[[22,18,1],[30,24,1],[26,30,2],[35,20,3],[40,28,3],[28,40,2],[45,45,4],[52,22,4],[60,35,3],[65,55,2],[72,60,1],[78,70,3],[55,62,3],[48,70,2],[38,62,3],[30,72,4],[42,82,3],[58,80,2],[70,82,1],[80,50,3],[68,25,4],[20,52,3],[34,50,1],[62,46,2],[50,55,3],[24,62,2]];
+  var colors={1:'var(--t1)',2:'var(--t2)',3:'var(--t3)',4:'var(--t4)'};
+  pts.forEach(function(p){var d=document.createElement('i');d.className='dot';d.style.left=p[0]+'%';d.style.top=p[1]+'%';d.style.background=colors[p[2]];d.dataset.t=p[2];map.appendChild(d);});
+  var dots=[].slice.call(map.children), btns=[].slice.call(document.querySelectorAll('.f'));
+  function setTier(t){btns.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.t===t));});dots.forEach(function(d){d.classList.toggle('dim',t!=='all'&&d.dataset.t!==t);});}
+  var order=['all','1','2','3','4'], oi=0, auto=null;
+  if(!reduce){auto=setInterval(function(){oi=(oi+1)%order.length;setTier(order[oi]);},2400);}
+  btns.forEach(function(b){b.addEventListener('click',function(){if(auto){clearInterval(auto);auto=null;}setTier(b.dataset.t);});});
+
+  /* 카드 펼침 */
+  var card=document.getElementById('card'), cbtn=document.getElementById('cardBtn'), cauto=null;
+  function setOpen(o){card.classList.toggle('open',o);cbtn.setAttribute('aria-expanded',String(o));cbtn.textContent=o?'접기 ▴':'자세히 보기 ▾';}
+  if(reduce){setOpen(true);}else{cauto=setInterval(function(){setOpen(!card.classList.contains('open'));},3200);}
+  cbtn.addEventListener('click',function(){if(cauto){clearInterval(cauto);cauto=null;}setOpen(!card.classList.contains('open'));});
+
+  /* 수집 단계 */
+  var steps=[].slice.call(document.querySelectorAll('#steps .step')), bar=document.getElementById('progBar');
+  function setStep(i){steps.forEach(function(s,j){s.classList.toggle('on',j<=i);});bar.style.width=((i+1)/steps.length*100)+'%';}
+  if(reduce){setStep(3);}else{var si=-1;setStep(0);si=0;setInterval(function(){si=(si+1)%(steps.length+1);if(si===steps.length){steps.forEach(function(s){s.classList.remove('on');});bar.style.width='0';}else setStep(si);},1500);}
+
+  /* 메일 복사 */
+  document.getElementById('copy').addEventListener('click',function(){
+    var out=document.getElementById('copied'), txt=document.getElementById('mail').textContent;
+    try{navigator.clipboard.writeText(txt).then(function(){out.textContent='복사했습니다';},function(){sel();});}catch(e){sel();}
+    function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('mail'));var s=getSelection();s.removeAllRanges();s.addRange(r);out.textContent='주소를 선택했습니다. Ctrl+C로 복사하세요';}
+  });
+})();
+</script>
+
+</body></html>

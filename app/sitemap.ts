@@ -21,6 +21,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
+    {
+      url: `${SITE_URL}/guide`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
     ...detailPages,
   ];
 }
