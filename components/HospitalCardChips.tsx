@@ -212,7 +212,19 @@ export default function HospitalCardChips({
         </ul>
 
         {/* 접힌 상태에서는 펼치기 버튼만 둔다. 확인일·출처는 카드에 상시 노출하지 않는다. */}
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-4">
+          {/* 상세 페이지가 있는 병원에만. 겉모양은 12px 텍스트지만 터치 영역은
+              세로 패딩으로 44px을 확보하고, 같은 크기의 음수 마진으로 상쇄해
+              카드 높이가 다른 병원 카드와 같게 유지한다. */}
+          {detailUrl && (
+            <Link
+              href={detailUrl}
+              onClick={stop}
+              className="-my-[14px] rounded py-[14px] text-xs font-semibold leading-4 text-blue-600 hover:text-blue-800 hover:underline"
+            >
+              상세 페이지 ›
+            </Link>
+          )}
           <button
             type="button"
             aria-expanded={expanded}
@@ -243,6 +255,20 @@ export default function HospitalCardChips({
               <dl className="flex flex-col divide-y divide-slate-100 rounded-lg border border-slate-100 bg-slate-50/60">
                 {DETAIL_ROWS.map((row) => {
                   if (row.reserved) {
+                    // 상세 페이지가 있는 병원은 여유 칸 자리에 상세 페이지 버튼을 둔다.
+                    if (detailUrl) {
+                      return (
+                        <div key={row.key} className="p-2">
+                          <Link
+                            href={detailUrl}
+                            onClick={stop}
+                            className="flex h-11 w-full items-center justify-center rounded-md bg-[#eff6ff] text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+                          >
+                            병원 상세 페이지 보기 →
+                          </Link>
+                        </div>
+                      );
+                    }
                     return (
                       <div key={row.key} className="flex gap-2 px-3 py-1.5">
                         <dt className="flex w-20 shrink-0 items-start gap-1 whitespace-nowrap text-xs font-medium italic text-slate-300">
@@ -322,18 +348,6 @@ export default function HospitalCardChips({
             </div>
           </div>
         </div>
-
-        {/* 상세 페이지가 있는 병원에만 붙는다. 카드 클릭(지도 선택)과 겹치지
-            않도록 stopPropagation한다. */}
-        {detailUrl && (
-          <Link
-            href={detailUrl}
-            onClick={stop}
-            className="flex h-11 w-full items-center justify-center rounded-lg bg-blue-50 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100"
-          >
-            병원 상세 페이지 보기 →
-          </Link>
-        )}
       </div>
     </div>
   );
