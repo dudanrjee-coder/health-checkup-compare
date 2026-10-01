@@ -8,7 +8,7 @@ import { sidoPath } from "@/lib/sidoSlugs";
 import { SITE_URL } from "@/lib/site";
 
 /**
- * 병원 찾기 1단계 — 전국 시·도 카드 목록(시안 docs/hospitals-mockup.html.html ①).
+ * 병원 찾기 1단계 — 전국 시·도 카드 목록(시안 docs/hospitals-mockup.html ①).
  * 서버 컴포넌트라 숫자·시·도 이름·링크가 HTML에 그대로 들어간다. 이 페이지에는
  * 움직이는 부분이 없어 클라이언트 컴포넌트가 상단 메뉴뿐이다.
  * 숫자와 시·도 목록은 전부 hospitals.json에서 계산한다(하드코딩 없음).

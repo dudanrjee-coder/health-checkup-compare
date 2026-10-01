@@ -18,7 +18,7 @@ import { TIER_COLORS } from "@/lib/tierColors";
 import { Hospital, Tier } from "@/types/hospital";
 
 /**
- * 이용 안내 페이지. 시안(docs/guide-mockup.html.html)을 옮긴 것이다.
+ * 이용 안내 페이지. 시안(docs/guide-mockup.html)을 옮긴 것이다.
  *
  * **서버 컴포넌트다** — 본문 글이 HTML에 그대로 들어가야 검색엔진과 애드센스가
  * 읽을 수 있다. 움직이는 실연(검색 타이핑·등급 필터와 지도 점·카드 펼침·
