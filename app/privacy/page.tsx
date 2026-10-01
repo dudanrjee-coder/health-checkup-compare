@@ -44,7 +44,9 @@ export default function PrivacyPage() {
       <InfoSection heading="3. 접속 기록">
         <p className={INFO_P}>
           사이트는 Vercel(미국) 서버에서 운영됩니다. 서비스 운영 과정에서 접속 IP,
-          브라우저 종류, 접속 시각 같은 기록이 Vercel에 자동으로 남을 수 있습니다.
+          브라우저 종류, 접속 시각 같은 기록이 Vercel에 자동으로 남을 수 있습니다. 또한
+          지도를 보여주기 위해 OpenStreetMap 서버에서 지도 이미지를 불러오며, 이때 접속
+          IP가 OpenStreetMap 측에 전달됩니다.
         </p>
       </InfoSection>
 
