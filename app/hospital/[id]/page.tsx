@@ -15,9 +15,12 @@ import { Hospital, hasCoords } from "@/types/hospital";
  * 들어가야 검색엔진과 애드센스가 읽을 수 있다. 클라이언트로 내려가는 것은 지도뿐이다
  * (`HospitalDetailMap`).
  *
- * 구조는 전체 병원용으로 만들었지만, 지금은 시험 단계라 `DETAIL_PAGE_IDS`에 있는
- * 병원만 경로를 만들고 `dynamicParams = false`로 나머지 id는 404가 나게 한다.
- * 전체로 넓힐 때는 `lib/detailPages.ts`만 고치면 이 파일은 그대로 쓸 수 있다.
+ * hospitals.json의 전체 병원(`DETAIL_PAGE_IDS`)을 빌드 때 정적으로 만들고,
+ * `dynamicParams = false`로 목록에 없는 id는 404가 나게 한다.
+ *
+ * 데이터가 고르지 않은 병원도 같은 페이지로 그린다 — 좌표가 없으면 지도 대신
+ * 주소만, 시군구가 없으면 위치 표시에서 그 단계만, 같은 시군구 병원이 없으면
+ * 그 섹션을 숨긴다. 검진 정보 표는 항목이 전부 비어도 그대로 둔다(병원문의).
  */
 
 /** 값이 없는 칸 표기. 기존 카드(HospitalCardChips)와 같은 문구를 쓴다 — 두 화면이
@@ -119,14 +122,17 @@ export default async function HospitalDetailPage({
   // 두 화면이 같은 문장을 같은 칸에 넣는다.
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
 
-  const nearby = hospitals
-    .filter(
-      (h) =>
-        h.id !== hospital.id &&
-        h.region.sido === sido &&
-        h.region.sigungu === sigungu
-    )
-    .slice(0, NEARBY_LIMIT);
+  // 시군구가 비어 있으면 "같은 시군구"를 정할 수 없으므로 목록을 만들지 않는다.
+  const nearby = sigungu
+    ? hospitals
+        .filter(
+          (h) =>
+            h.id !== hospital.id &&
+            h.region.sido === sido &&
+            h.region.sigungu === sigungu
+        )
+        .slice(0, NEARBY_LIMIT)
+    : [];
 
   return (
     <main className="min-h-screen bg-slate-50 pb-12">
@@ -158,8 +164,13 @@ export default async function HospitalDetailPage({
             <span className="mx-1.5 text-slate-300">›</span>
             <span>{sido}</span>
             <span className="mx-1.5 text-slate-300">›</span>
-            <span>{sigungu}</span>
-            <span className="mx-1.5 text-slate-300">›</span>
+            {/* 시군구가 비어 있으면 이 단계만 생략한다 */}
+            {sigungu && (
+              <>
+                <span>{sigungu}</span>
+                <span className="mx-1.5 text-slate-300">›</span>
+              </>
+            )}
             <span className="text-slate-700">{hospital.name}</span>
           </nav>
 
@@ -278,19 +289,23 @@ export default async function HospitalDetailPage({
 
         {/* ── 오른쪽 단(모바일에서는 아래쪽): 7~10 ── */}
         <div className="mt-5 flex flex-col gap-5 md:mt-0">
-          {/* 7) 지도 */}
-          {hasCoords(hospital) && (
-            <section>
-              <h2 className="mb-2 text-base font-semibold text-slate-900">
-                위치
-              </h2>
+          {/* 7) 지도. 좌표가 없는 병원은 빈 지도를 띄우지 않고 주소만 보여 준다. */}
+          <section>
+            <h2 className="mb-2 text-base font-semibold text-slate-900">
+              위치
+            </h2>
+            {hasCoords(hospital) ? (
               <div className="h-[200px] w-full md:h-[300px]">
                 <HospitalDetailMap hospital={hospital} />
               </div>
-            </section>
-          )}
+            ) : (
+              <p className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-600">
+                📍 {hospital.address || `${sido} ${sigungu}`.trim()}
+              </p>
+            )}
+          </section>
 
-          {/* 8) 같은 시군구의 다른 검진병원 — 상세 페이지가 아직 없어 링크 없이 텍스트 */}
+          {/* 8) 같은 시군구의 다른 검진병원 — 각 병원 상세 페이지로 연결 */}
           {nearby.length > 0 && (
             <section>
               {/* 텍스트 노드를 쪼개면 SSR HTML에 `<!-- -->` 구분자가 끼므로
@@ -300,19 +315,21 @@ export default async function HospitalDetailPage({
               </h2>
               <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
                 {nearby.map((h) => (
-                  <li
-                    key={h.id}
-                    className="flex items-center justify-between gap-3 px-4 py-3"
-                  >
-                    <span className="min-w-0 truncate text-sm text-slate-700">
-                      {h.name}
-                    </span>
-                    <span
-                      className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium"
-                      style={tierBadgeStyle(h.tier)}
+                  <li key={h.id}>
+                    <Link
+                      href={detailPath(h.id)}
+                      className="flex min-h-[44px] items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
                     >
-                      {h.tier}
-                    </span>
+                      <span className="min-w-0 truncate text-sm text-slate-700">
+                        {h.name}
+                      </span>
+                      <span
+                        className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium"
+                        style={tierBadgeStyle(h.tier)}
+                      >
+                        {h.tier}
+                      </span>
+                    </Link>
                   </li>
                 ))}
               </ul>

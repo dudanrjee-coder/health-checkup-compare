@@ -83,7 +83,7 @@ export default function HospitalCardChips({
   const chips = deriveChips(hospital);
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
   /**
-   * 상세 페이지가 만들어진 병원에만 링크를 붙인다(지금은 시험용 1곳).
+   * 상세 페이지가 만들어진 병원에만 링크를 붙인다(지금은 전체 병원).
    * 판단 기준은 lib/detailPages.ts 하나뿐이라, 페이지가 없는 병원에 링크가
    * 생겨 404가 나는 일이 없다.
    */

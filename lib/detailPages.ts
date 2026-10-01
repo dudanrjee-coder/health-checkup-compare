@@ -1,15 +1,17 @@
+import { hospitals } from "@/lib/hospitals";
+
 /**
  * 상세 페이지(`/hospital/[id]`)가 만들어져 있는 병원 id 목록.
  *
- * **이 배열이 유일한 기준이다.** `generateStaticParams`(어떤 경로를 미리 만들지)와
- * 카드의 "병원 상세 페이지 보기" 버튼(어떤 카드에 링크를 붙일지)이 같은 값을 봐야
- * 링크는 있는데 404가 나거나, 페이지는 있는데 들어갈 길이 없는 상태를 막을 수 있다.
+ * **이 배열이 유일한 기준이다.** `generateStaticParams`(어떤 경로를 미리 만들지),
+ * 카드의 상세 페이지 링크(어떤 카드에 링크를 붙일지), `app/sitemap.ts`(어떤 주소를
+ * 색인에 올릴지)가 같은 값을 봐야 링크는 있는데 404가 나거나, 페이지는 있는데
+ * 들어갈 길이 없는 상태를 막을 수 있다.
  *
- * 지금은 시험용으로 가천대학교 길병원 한 곳뿐이다. 전체 병원으로 넓힐 때는
- * 여기에 id를 추가하거나, hospitals 전체를 반환하도록 바꾸면 된다.
- * (`app/sitemap.ts`에는 아직 넣지 않았다 — 시험 단계라 색인은 보류.)
+ * 처음에는 시험용으로 가천대학교 길병원 한 곳만 있었고, 지금은 hospitals.json의
+ * 전체 병원이다. id는 공개 URL이 되므로 한 번 공개한 뒤에는 바꾸지 않는다.
  */
-export const DETAIL_PAGE_IDS = ["incheon-gachon-gil"] as const;
+export const DETAIL_PAGE_IDS: readonly string[] = hospitals.map((h) => h.id);
 
 const DETAIL_PAGE_ID_SET: ReadonlySet<string> = new Set(DETAIL_PAGE_IDS);
 
