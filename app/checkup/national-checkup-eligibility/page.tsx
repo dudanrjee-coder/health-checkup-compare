@@ -76,22 +76,23 @@ export default function NationalCheckupEligibilityPage() {
           </InfoSection>
 
           <InfoSection id="cancer" heading={heading("cancer")}>
-            {/* 표만 가로 스크롤 — 페이지 전체가 옆으로 밀리지 않게 한다 */}
+            {/* 모바일은 글씨·여백을 줄이고 긴 칸은 단어 단위로 줄바꿈해 화면 폭에 맞춘다.
+                아주 좁은 화면에서 그래도 넘치면 표만 가로 스크롤(페이지는 밀리지 않음) */}
             <div className="overflow-x-auto rounded-[14px] border border-slate-200 bg-white">
-              <table className="w-full min-w-[420px] border-collapse text-left text-[15px]">
+              <table className="w-full break-keep border-collapse text-left text-[14px] sm:text-[15px]">
                 <thead className="bg-slate-100 text-sm text-slate-600">
                   <tr>
-                    <th scope="col" className="px-4 py-2.5 font-bold">암 종류</th>
-                    <th scope="col" className="px-4 py-2.5 font-bold">대상</th>
-                    <th scope="col" className="px-4 py-2.5 font-bold">주기</th>
+                    <th scope="col" className="px-3 py-2 sm:px-4 sm:py-2.5 font-bold">암 종류</th>
+                    <th scope="col" className="px-3 py-2 sm:px-4 sm:py-2.5 font-bold">대상</th>
+                    <th scope="col" className="px-3 py-2 sm:px-4 sm:py-2.5 font-bold">주기</th>
                   </tr>
                 </thead>
                 <tbody>
                   {CANCER_ROWS.map(([name, target, cycle]) => (
                     <tr key={name} className="border-t border-slate-100">
-                      <th scope="row" className="whitespace-nowrap px-4 py-2.5 font-bold text-slate-900">{name}</th>
-                      <td className="px-4 py-2.5 text-slate-700">{target}</td>
-                      <td className="whitespace-nowrap px-4 py-2.5 text-slate-700">{cycle}</td>
+                      <th scope="row" className="whitespace-nowrap px-3 py-2 sm:px-4 sm:py-2.5 font-bold text-slate-900">{name}</th>
+                      <td className="px-3 py-2 sm:px-4 sm:py-2.5 text-slate-700">{target}</td>
+                      <td className="whitespace-nowrap px-3 py-2 sm:px-4 sm:py-2.5 text-slate-700">{cycle}</td>
                     </tr>
                   ))}
                 </tbody>
