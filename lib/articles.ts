@@ -28,6 +28,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       {
         title: "일반검진에서 받는 검사 항목",
         summary: "문진부터 혈액·소변 검사까지 무엇을 하는지",
+        slug: "general-checkup-items",
       },
       {
         title: "검진을 미뤘다면? 추가 수검 안내",
@@ -56,6 +57,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       {
         title: "검진 전날과 당일 준비사항",
         summary: "금식 시간, 복용 중인 약, 대장내시경 장 정리",
+        slug: "checkup-preparation",
       },
       {
         title: "국가검진과 종합검진은 무엇이 다를까",
