@@ -10,6 +10,7 @@ import {
   StepsDemo,
 } from "@/components/GuideDemos";
 import HomeBreadcrumb from "@/components/HomeBreadcrumb";
+import SiteNav from "@/components/SiteNav";
 import { hospitals } from "@/lib/hospitals";
 import { regionLabel } from "@/lib/detailPages";
 import { deriveChips, splitAccessInfo } from "@/lib/noteChips";
@@ -161,8 +162,9 @@ export default function GuidePage() {
     <main className="min-h-screen bg-slate-50 px-4 pb-16 text-base leading-[1.7] text-slate-900">
       <GuideReveal />
       <div className="mx-auto flex max-w-[760px] flex-col gap-14">
-        {/* 상단 바 */}
-        <div className="pt-5">
+        {/* 상단 메뉴 + 위치 표시 — 다른 하위 페이지와 같은 간격(gap-5) */}
+        <div className="flex flex-col gap-5 pt-5">
+          <SiteNav />
           <HomeBreadcrumb trail={[{ label: "이용 안내" }]} />
         </div>
 

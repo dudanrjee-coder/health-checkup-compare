@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import HomeBreadcrumb from "@/components/HomeBreadcrumb";
 import HospitalDetailMap from "@/components/HospitalDetailMap";
+import SiteNav from "@/components/SiteNav";
 import { hospitals } from "@/lib/hospitals";
 import {
   DETAIL_PAGE_IDS,
@@ -146,17 +147,12 @@ export default async function HospitalDetailPage({
 
   return (
     <main className="min-h-screen bg-slate-50 pb-12">
-      {/* 1) 상단 바 */}
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-        {/* 홈으로 가는 길은 아래 위치 표시의 "‹ 홈으로" 버튼이 맡는다 */}
-        <div className="mx-auto flex h-14 max-w-[1120px] items-center gap-3 px-4">
-          <span className="flex-1 text-center text-sm font-semibold text-slate-900">
-            전국 건강검진 병원
-          </span>
-        </div>
-      </header>
+      {/* 1) 상단 메뉴 — 다른 하위 페이지와 같은 위치(pt-5)·간격(아래 20px) */}
+      <div className="mx-auto max-w-[1120px] px-4 pt-5">
+        <SiteNav />
+      </div>
 
-      <div className="mx-auto max-w-[1120px] px-4 pt-4 md:grid md:grid-cols-[minmax(0,1fr)_360px] md:items-start md:gap-6">
+      <div className="mx-auto max-w-[1120px] px-4 pt-5 md:grid md:grid-cols-[minmax(0,1fr)_360px] md:items-start md:gap-6">
         {/* ── 왼쪽 단(모바일에서는 위쪽): 2~6 ── */}
         <div className="flex flex-col gap-5">
           {/* 2) 위치 표시 */}

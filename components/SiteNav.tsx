@@ -14,8 +14,10 @@ import { usePathname } from "next/navigation";
  *
  * 한 줄 메뉴라 PC·모바일이 같은 요소를 쓰고, 폭이 모자라면 줄바꿈한다.
  */
-const MENU: { label: string; href?: string }[] = [
-  { label: "병원 찾기", href: "/hospitals" },
+/** also: href 하위 경로 말고도 이 항목을 현재 페이지로 칠 경로 접두어 */
+const MENU: { label: string; href?: string; also?: string[] }[] = [
+  // 병원 상세(/hospital/[id])도 병원 찾기에 속한다
+  { label: "병원 찾기", href: "/hospitals", also: ["/hospital/"] },
   { label: "검진 안내", href: "/checkup" },
   { label: "이용 안내", href: "/guide" },
 ];
@@ -38,7 +40,9 @@ export default function SiteNav() {
           if (!item.href) return <li key={item.label}>{item.label}</li>;
           // 하위 경로(예: /hospitals/daegu)에서도 상위 메뉴를 현재 페이지로 표시한다.
           const current =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`) ||
+            (item.also ?? []).some((prefix) => pathname.startsWith(prefix));
           return (
             <li key={item.label}>
               <Link
