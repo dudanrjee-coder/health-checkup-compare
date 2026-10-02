@@ -32,6 +32,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       {
         title: "검진을 미뤘다면? 추가 수검 안내",
         summary: "기한을 넘겼을 때 받을 수 있는 방법",
+        slug: "missed-checkup",
       },
     ],
   },
@@ -41,6 +42,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       {
         title: "6대 암검진 한눈에 보기",
         summary: "위·대장·간·유방·자궁경부·폐암, 나이와 주기",
+        slug: "six-cancer-screenings",
       },
       {
         title: "위내시경과 위장조영촬영, 무엇을 고를까",
@@ -58,6 +60,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       {
         title: "국가검진과 종합검진은 무엇이 다를까",
         summary: "비용, 검사 범위, 함께 받는 방법",
+        slug: "national-vs-comprehensive",
       },
       {
         title: "검진 결과 읽는 법과 재검 안내",
