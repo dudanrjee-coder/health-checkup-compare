@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { articlePath, publishedArticleSlugs } from "@/lib/articles";
 import { hospitals } from "@/lib/hospitals";
 import { detailPath, isIndexable } from "@/lib/detailPages";
 import { sidosWithHospitals } from "@/lib/regionStats";
@@ -28,6 +29,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    // 검진 안내 목록과 발행된 글(글 목록은 lib/articles.ts)
+    {
+      url: `${SITE_URL}/checkup`,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    ...publishedArticleSlugs().map((slug) => ({
+      url: `${SITE_URL}${articlePath(slug)}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     // 운영 안내(사이트 소개·개인정보처리방침·문의)
     ...["/about", "/privacy", "/contact"].map((path) => ({
       url: `${SITE_URL}${path}`,

@@ -10,18 +10,27 @@ import SiteNav from "@/components/SiteNav";
 export default function InfoPage({
   title,
   subtitle,
+  trail,
+  wide = false,
+  bare = false,
   children,
 }: {
   title: string;
   subtitle: string;
+  /** 위치 표시의 "홈으로" 뒤 경로. 생략하면 제목 하나 */
+  trail?: { label: string; href?: string }[];
+  /** 카드 그리드·사이드 목차처럼 넓은 본문이 필요한 페이지 */
+  wide?: boolean;
+  /** 본문을 좁은 글 단(article)으로 감싸지 않고 그대로 그린다 */
+  bare?: boolean;
   children: ReactNode;
 }) {
   return (
     <main className="min-h-screen overflow-x-hidden break-keep bg-slate-50 px-4 pb-16 text-base leading-[1.75] text-slate-900">
-      <div className="mx-auto flex max-w-[760px] flex-col gap-5 pt-5">
+      <div className={`mx-auto flex flex-col gap-5 pt-5 ${wide ? "max-w-[1000px]" : "max-w-[760px]"}`}>
         <SiteNav />
 
-        <HomeBreadcrumb trail={[{ label: title }]} />
+        <HomeBreadcrumb trail={trail ?? [{ label: title }]} />
 
         <header className="flex flex-col gap-2.5 rounded-[22px] border border-slate-200 bg-gradient-to-br from-sky-100 via-white to-pink-100 px-6 py-7">
           <h1 className="m-0 text-[clamp(26px,5vw,38px)] font-extrabold leading-tight tracking-tight">
@@ -30,16 +39,27 @@ export default function InfoPage({
           <p className="m-0 max-w-[60ch] text-slate-600">{subtitle}</p>
         </header>
 
-        <article className="flex max-w-[65ch] flex-col gap-9 pt-4">{children}</article>
+        {bare ? children : <article className={INFO_ARTICLE}>{children}</article>}
       </div>
     </main>
   );
 }
 
-/** 소제목 + 문단 한 묶음 */
-export function InfoSection({ heading, children }: { heading: string; children: ReactNode }) {
+/** 좁은 글 단(한 줄 65자 안팎) */
+export const INFO_ARTICLE = "flex max-w-[65ch] flex-col gap-9 pt-4";
+
+/** 소제목 + 문단 한 묶음. id를 주면 목차 링크의 도착점이 된다 */
+export function InfoSection({
+  heading,
+  id,
+  children,
+}: {
+  heading: string;
+  id?: string;
+  children: ReactNode;
+}) {
   return (
-    <section className="flex flex-col gap-3">
+    <section id={id} className="flex scroll-mt-6 flex-col gap-3">
       <h2 className="m-0 text-xl font-extrabold tracking-tight text-slate-900">{heading}</h2>
       {children}
     </section>

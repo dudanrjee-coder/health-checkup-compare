@@ -279,10 +279,8 @@ export default function Home() {
         <HeroBackdrop />
         <div className="relative mx-auto flex max-w-7xl flex-col gap-6">
           {/*
-            상단 네비게이션 — 시안에서 온 요소다. "이용 안내"만 실제 페이지
-            (/guide)가 있어 링크로 연결했다. 병원 찾기/검진 항목/비용 비교는
-            아직 페이지가 없어, 생기기 전까지는 눌러도 아무 동작을 하지 않는
-            순수 시각 요소로 둔다(href 없음, onClick 없음). 항목 목록과 링크·알약·
+            상단 네비게이션 — 병원 찾기(/hospitals)·검진 안내(/checkup)·이용 안내
+            (/guide) 세 항목 모두 실제 페이지로 연결된다. 항목 목록과 링크·알약·
             현재 페이지 스타일 규칙은 components/SiteNav.tsx에 있다. 로고 텍스트와 검진예약
             버튼을 걷어낸 뒤로는 좌우에 짝이 되는 요소가 없어서, 그리드 대신
             가운데 정렬 한 줄로 둔다. 모바일에서는 nav가 통째로 비지 않도록

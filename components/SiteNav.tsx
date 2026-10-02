@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 /**
- * 상단 메뉴. 시안에서 온 요소라 아직 페이지가 없는 항목이 섞여 있다.
+ * 상단 메뉴. 지금은 세 항목 모두 실제 페이지가 있다("비용 비교"는 데이터가 부족해
+ * 뺐고, "검진 항목"은 "검진 안내"(/checkup)로 바꿨다).
  *
  * 스타일 규칙(항목별로 자동 적용 — href만 채우면 된다):
  *  - href가 없는 항목: 글자만. 눌러도 아무 동작이 없는 순수 시각 요소다.
@@ -15,8 +16,7 @@ import { usePathname } from "next/navigation";
  */
 const MENU: { label: string; href?: string }[] = [
   { label: "병원 찾기", href: "/hospitals" },
-  { label: "검진 항목" },
-  { label: "비용 비교" },
+  { label: "검진 안내", href: "/checkup" },
   { label: "이용 안내", href: "/guide" },
 ];
 
