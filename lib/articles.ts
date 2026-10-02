@@ -48,6 +48,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       {
         title: "위내시경과 위장조영촬영, 무엇을 고를까",
         summary: "두 검사의 차이와 선택 기준",
+        slug: "endoscopy-vs-upper-gi",
       },
     ],
   },
@@ -66,7 +67,8 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
       },
       {
         title: "검진 결과 읽는 법과 재검 안내",
-        summary: "정상A·B, 질환의심 판정의 의미",
+        summary: "결과 받는 시기, 판정 구분, 확진검사 안내",
+        slug: "reading-checkup-results",
       },
     ],
   },
