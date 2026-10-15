@@ -38,6 +38,9 @@ const FOOTER_LINKS = [
 const IDLE_CYCLE_SEQUENCE: (Tier | null)[] = [null, ...TIER_LIST];
 const IDLE_CYCLE_INTERVAL_MS = 5000;
 
+/** 서버 HTML에 미리 넣어 둘 병원 카드 수. 첫 화면을 채우고도 남는 정도면 된다. */
+const SSR_CARD_LIMIT = 20;
+
 export default function Home() {
   const [selectedSido, setSelectedSido] = useState<Sido | null>(null);
   // 등급 필터는 단일 선택이다(라디오 버튼처럼) — null이면 "전체".
@@ -175,6 +178,18 @@ export default function Home() {
   );
 
   const mappableResults = useMemo(() => results.filter(hasCoords), [results]);
+
+  /**
+   * 빌드 때 만드는 홈 HTML에는 카드 앞 SSR_CARD_LIMIT장만 넣고, 나머지는
+   * 마운트 직후 그린다. 전체 971곳을 HTML에 넣으면 홈 한 장이 4.7MB가 되어
+   * Vercel Fast Origin Transfer를 대부분 잡아먹는다. 첫 렌더는 서버와 같아야
+   * 하므로(하이드레이션 불일치 방지) useEffect로만 전체 목록으로 넘긴다.
+   */
+  const [listMounted, setListMounted] = useState(false);
+  useEffect(() => setListMounted(true), []);
+  const renderedResults = listMounted
+    ? results
+    : results.slice(0, SSR_CARD_LIMIT);
 
   // 검색 결과가 바뀌면 이전에 고른 병원이 목록에서 빠질 수 있으므로 선택을 푼다.
   useEffect(() => {
@@ -536,7 +551,7 @@ export default function Home() {
               </p>
             )}
 
-            {results.map((hospital, index) => (
+            {renderedResults.map((hospital, index) => (
               <HospitalCardChips
                 key={hospital.id}
                 hospital={hospital}

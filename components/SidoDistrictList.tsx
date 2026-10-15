@@ -128,6 +128,7 @@ export default function SidoDistrictList({
                   <li key={h.id} hidden={!visible(h)} className="border-b border-slate-200 last:border-b-0">
                     <Link
                       href={h.href}
+                      prefetch={false}
                       className="flex min-h-[52px] items-center gap-2.5 px-4 py-2 hover:bg-slate-50"
                     >
                       <i

@@ -312,6 +312,7 @@ export default async function HospitalDetailPage({
                   <li key={h.id}>
                     <Link
                       href={detailPath(h.id)}
+                      prefetch={false}
                       className="flex min-h-[44px] items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-50"
                     >
                       <span className="min-w-0 truncate text-sm text-slate-700">

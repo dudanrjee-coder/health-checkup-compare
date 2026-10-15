@@ -127,6 +127,7 @@ export default function HospitalCardChips({
             {detailUrl ? (
               <Link
                 href={detailUrl}
+                prefetch={false}
                 onClick={stop}
                 className="hover:text-blue-700 hover:underline"
               >
@@ -221,6 +222,7 @@ export default function HospitalCardChips({
           {detailUrl && (
             <Link
               href={detailUrl}
+              prefetch={false}
               onClick={stop}
               className="-my-[14px] rounded py-[14px] text-xs font-semibold leading-4 text-blue-600 hover:text-blue-800 hover:underline"
             >
@@ -263,6 +265,7 @@ export default function HospitalCardChips({
                         <div key={row.key} className="p-2">
                           <Link
                             href={detailUrl}
+                            prefetch={false}
                             onClick={stop}
                             className="flex h-11 w-full items-center justify-center rounded-md bg-[#eff6ff] text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100"
                           >
