@@ -62,6 +62,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
+      <head>
+        {/*
+          구글 애드센스 사이트 연결 코드. 광고 단위는 두지 않고 승인 후 자동 광고로 설정한다.
+          next/script는 쓰지 않는다 — Next 14에서는 서버 HTML에 태그 없이 JS로 <body>에 넣고
+          data-nscript 속성을 붙여 애드센스가 "AdSense head tag doesn't support data-nscript
+          attribute" 경고를 낸다. 일반 <script>는 서버 HTML의 <head>에 그대로 들어간다.
+        */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7557818401283330"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="bg-white text-slate-900 antialiased">{children}</body>
     </html>
   );
