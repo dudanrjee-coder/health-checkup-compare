@@ -15,6 +15,7 @@ import { INFO_ICONS } from "@/lib/infoIcons";
 import { sidoPath } from "@/lib/sidoSlugs";
 import { splitAccessInfo } from "@/lib/noteChips";
 import { pilotNoteBody } from "@/lib/noteBody";
+import { articlePath, relatedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
 import { Hospital, hasCoords } from "@/types/hospital";
@@ -139,6 +140,9 @@ export default async function HospitalDetailPage({
   const noteBlocks = pilotNoteBody(hospital).blocks;
   const noteProse = noteBlocks.filter((b) => b.kind === "prose");
   const noteNational = noteBlocks.filter((b) => b.kind === "national");
+
+  // 이 병원과 이어지는 검진 안내 글 2편
+  const related = relatedArticles(hospital);
 
   // 시군구가 비어 있으면 "같은 시군구"를 정할 수 없으므로 목록을 만들지 않는다.
   const nearby = sigungu
@@ -378,6 +382,36 @@ export default async function HospitalDetailPage({
                   </li>
                 ))}
               </ul>
+            </section>
+          )}
+
+          {/* 8-2) 관련 검진 안내 글 — 병원 데이터로 고른 2편(lib/articles.ts) */}
+          {related.length > 0 && (
+            <section>
+              <h2 className="mb-2 text-base font-semibold text-slate-900">
+                검진 전에 읽어 두면 좋은 글
+              </h2>
+              <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white">
+                {related.map((a) => (
+                  <li key={a.slug}>
+                    <Link
+                      href={articlePath(a.slug!)}
+                      className="flex min-h-[44px] flex-col justify-center gap-0.5 px-4 py-3 transition-colors hover:bg-slate-50"
+                    >
+                      <span className="text-sm font-medium text-slate-800">
+                        {a.title}
+                      </span>
+                      <span className="text-xs text-slate-500">{a.summary}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/checkup"
+                className="mt-2 inline-block text-xs text-blue-600 hover:underline"
+              >
+                검진 안내 전체 보기 →
+              </Link>
             </section>
           )}
 

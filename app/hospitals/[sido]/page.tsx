@@ -5,6 +5,7 @@ import HomeBreadcrumb from "@/components/HomeBreadcrumb";
 import SiteNav from "@/components/SiteNav";
 import SidoDistrictList, { type DistrictData } from "@/components/SidoDistrictList";
 import { DesignatedPill, TierStatPills } from "@/components/RegionBits";
+import { articlePath, basicArticles } from "@/lib/articles";
 import { detailPath, sidoShort } from "@/lib/detailPages";
 import {
   countByTier,
@@ -93,6 +94,34 @@ export default async function SidoPage({ params }: { params: Promise<{ sido: str
           mapHref={homeWithSidoPath(sido)}
           mapLabel={`지도에서 ${sidoShort(sido)} 병원 보기 →`}
         />
+
+        {/* 검진 안내 글로 가는 길 — 목록만 있는 페이지에 읽을거리를 잇는다 */}
+        <section className="rounded-[18px] border border-slate-200 bg-white px-5 py-4">
+          <h2 className="m-0 text-base font-semibold text-slate-900">
+            검진 전에 읽어 두면 좋은 글
+          </h2>
+          <ul className="mt-2.5 flex flex-col gap-1.5">
+            {basicArticles().map((a) => (
+              <li key={a.slug}>
+                <Link
+                  href={articlePath(a.slug!)}
+                  className="text-[14px] text-blue-600 hover:underline"
+                >
+                  {a.title}
+                </Link>
+                <span className="ml-1.5 text-[13px] text-slate-500">
+                  {a.summary}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/checkup"
+            className="mt-2.5 inline-block text-[13px] text-blue-600 hover:underline"
+          >
+            검진 안내 전체 보기 →
+          </Link>
+        </section>
 
         <p className="m-0 text-[13px] text-slate-500">
           시·군·구는 병원이 많은 순서로 보여줍니다. 병원 정보가 다르면{" "}

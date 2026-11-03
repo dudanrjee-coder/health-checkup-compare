@@ -79,6 +79,57 @@ export function articlePath(slug: string): string {
   return `/checkup/${slug}`;
 }
 
+/** 발행된 글 전체(그룹을 펼친 순서 그대로) */
+export function publishedArticles(): Article[] {
+  return ARTICLE_GROUPS.flatMap((g) => g.articles).filter((a) => a.slug);
+}
+
+/** slug로 글 하나를 찾는다. 없으면 undefined. */
+export function articleBySlug(slug: string): Article | undefined {
+  return publishedArticles().find((a) => a.slug === slug);
+}
+
+/**
+ * 어느 병원 페이지에서나 도움이 되는 기본 글 3편. 시·도 목록 페이지가 쓴다.
+ * 지역마다 다른 글을 고를 근거(지역별 데이터)가 없어 세 편을 고정으로 둔다.
+ */
+export const BASIC_ARTICLE_SLUGS = [
+  "national-checkup-eligibility",
+  "six-cancer-screenings",
+  "checkup-preparation",
+] as const;
+
+export function basicArticles(): Article[] {
+  return BASIC_ARTICLE_SLUGS.map(articleBySlug).filter(
+    (a): a is Article => Boolean(a)
+  );
+}
+
+/**
+ * 병원 상세에 붙일 관련 글 2편을 **병원 데이터로** 고른다. 추측이 들어가지
+ * 않도록 가진 필드만 본다.
+ *
+ * - 국가검진 지정기관이면 "내가 대상인지"부터가 궁금하다.
+ * - 미지정·미확인이면 국가검진과 종합검진의 차이를 먼저 보는 게 맞다.
+ * - 종합검진 가격이 올라와 있는 병원이면 국가검진과의 차이가 바로 이어진다.
+ */
+export function relatedArticles(hospital: {
+  nationalScreeningDesignated?: boolean;
+  priceRange?: string;
+}): Article[] {
+  const designated = hospital.nationalScreeningDesignated === true;
+  const first = designated
+    ? "national-checkup-eligibility"
+    : "national-vs-comprehensive";
+  const second =
+    designated && hospital.priceRange
+      ? "national-vs-comprehensive"
+      : "checkup-preparation";
+  return [first, second]
+    .map(articleBySlug)
+    .filter((a): a is Article => Boolean(a));
+}
+
 /** 페이지가 있는(발행된) 글의 slug 목록 — 사이트맵이 쓴다 */
 export function publishedArticleSlugs(): string[] {
   return ARTICLE_GROUPS.flatMap((g) => g.articles)
