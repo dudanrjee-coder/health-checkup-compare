@@ -12,7 +12,7 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./leaflet-overrides.css";
-import { MappableHospital, Sido, Tier } from "@/types/hospital";
+import { MapHospital, Sido, Tier } from "@/types/hospital";
 import { TIER_COLORS } from "@/lib/tierColors";
 import { NATIONWIDE_BOUNDS, NATIONWIDE_VIEW, SIDO_VIEW } from "@/lib/regions";
 import { useHoverCapable } from "@/lib/useHoverCapable";
@@ -99,7 +99,7 @@ function createPinIcon(tier: Tier, selected: boolean, shrinkMarkers: boolean) {
 }
 
 interface HospitalMapProps {
-  hospitals: MappableHospital[];
+  hospitals: MapHospital[];
   selectedSido: Sido | null;
   /** 검색 중이면 지역 대신 검색 결과에 맞춰 지도를 움직인다 */
   searchActive?: boolean;
@@ -161,7 +161,7 @@ function MapController({
   programmaticMoveRef,
   lockNationwideView,
 }: {
-  hospitals: MappableHospital[];
+  hospitals: MapHospital[];
   selectedSido: Sido | null;
   searchActive: boolean;
   selectedId: string | null;

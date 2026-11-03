@@ -105,6 +105,32 @@ export interface Hospital {
 /** lat/lng 이 채워져 지도에 표시할 수 있는 병원 */
 export type MappableHospital = Hospital & { lat: number; lng: number };
 
+/**
+ * **지도가 실제로 쓰는 값만** 담은 좁은 타입.
+ *
+ * 지도는 클라이언트 컴포넌트라 넘긴 객체가 통째로 HTML 안 RSC 페이로드로
+ * 따라 내려간다. 병원 객체를 그대로 넘기면 `note`(평균 1,111자)까지 브라우저로
+ * 가는데, 화면에는 한 글자도 쓰이지 않는다. 그래서 마커와 말풍선이 쓰는 필드만
+ * 추려서 넘긴다. `MappableHospital`은 이 타입에 그대로 대입된다.
+ */
+export type MapHospital = Pick<
+  Hospital,
+  "id" | "name" | "tier" | "phone" | "region"
+> & { lat: number; lng: number };
+
+/** 병원 객체에서 지도에 넘길 값만 뽑는다 */
+export function toMapHospital(hospital: MappableHospital): MapHospital {
+  return {
+    id: hospital.id,
+    name: hospital.name,
+    tier: hospital.tier,
+    phone: hospital.phone,
+    region: hospital.region,
+    lat: hospital.lat,
+    lng: hospital.lng,
+  };
+}
+
 export function hasCoords(hospital: Hospital): hospital is MappableHospital {
   return typeof hospital.lat === "number" && typeof hospital.lng === "number";
 }

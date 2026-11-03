@@ -18,7 +18,7 @@ import { nationalStatement } from "@/lib/nationalStatement";
 import { articlePath, relatedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
-import { Hospital, hasCoords } from "@/types/hospital";
+import { Hospital, hasCoords, toMapHospital } from "@/types/hospital";
 
 /**
  * 병원 상세 페이지. **서버 컴포넌트다** — 병원명·주소·검진 정보가 HTML에 그대로
@@ -343,7 +343,9 @@ export default async function HospitalDetailPage({
             </h2>
             {hasCoords(hospital) ? (
               <div className="h-[200px] w-full md:h-[300px]">
-                <HospitalDetailMap hospital={hospital} />
+                {/* 지도가 쓰는 값만 넘긴다 — 병원 객체를 통째로 넘기면 note까지
+                    브라우저로 따라 내려간다(화면에는 쓰이지 않는다) */}
+                <HospitalDetailMap hospital={toMapHospital(hospital)} />
               </div>
             ) : (
               <p className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-600">

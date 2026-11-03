@@ -1,7 +1,7 @@
 "use client";
 
 import HospitalMapLazy from "@/components/HospitalMapLazy";
-import { MappableHospital } from "@/types/hospital";
+import { MapHospital } from "@/types/hospital";
 
 /**
  * 상세 페이지의 지도. **상세 페이지를 서버 컴포넌트로 유지하기 위한 경계다.**
@@ -16,7 +16,7 @@ import { MappableHospital } from "@/types/hospital";
  * 고정해 지도가 이 위치로 맞춰지게 하고, `onSelect`는 빈 함수를 준다.
  */
 interface Props {
-  hospital: MappableHospital;
+  hospital: MapHospital;
 }
 
 export default function HospitalDetailMap({ hospital }: Props) {
