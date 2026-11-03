@@ -5,7 +5,10 @@ import { CSSProperties, Fragment, useEffect, useMemo, useRef, useState } from "r
 import HospitalMap from "@/components/HospitalMapLazy";
 import SiteNav from "@/components/SiteNav";
 import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
-import { sidoFromSlug } from "@/lib/sidoSlugs";
+import { sidoFromSlug, sidoPath } from "@/lib/sidoSlugs";
+import { articlePath, publishedArticles } from "@/lib/articles";
+import { sidoShort } from "@/lib/detailPages";
+import { sidosWithHospitals } from "@/lib/regionStats";
 import BgmPlayer from "@/components/BgmPlayer";
 import HeroVideo from "@/components/HeroVideo";
 import HeroBackdrop from "@/components/HeroBackdrop";
@@ -33,6 +36,15 @@ const FOOTER_LINKS = [
   { label: "개인정보처리방침", href: "/privacy" },
   { label: "문의", href: "/contact" },
 ];
+
+/**
+ * 홈에 거는 검진 안내 글 4편. 글에 작성일 필드가 없어 "최신순"을 만들 수 없으므로
+ * `ARTICLE_GROUPS`에 적힌 순서(국가건강검진 → 암검진 → 검진 전후)의 앞 4편을 쓴다.
+ */
+const HOME_ARTICLES = publishedArticles().slice(0, 4);
+
+/** 홈에 거는 시·도 링크 — 병원이 한 곳이라도 있는 시·도만 */
+const HOME_SIDOS = sidosWithHospitals();
 
 /** 유휴 자동 순환이 도는 등급 필터 순서. null은 "전체"다. */
 const IDLE_CYCLE_SEQUENCE: (Tier | null)[] = [null, ...TIER_LIST];
@@ -620,6 +632,67 @@ export default function Home() {
             />
           </div>
         </div>
+
+        {/*
+          검진 안내 글·시·도 목록으로 가는 길. 홈의 내부 링크가 병원 카드로만
+          나 있어서 글과 지역 페이지로 들어갈 입구가 없었다. 시·도 선택은
+          상태(state)로 지도만 움직이므로, 크롤러와 키보드 사용자를 위해 각 시·도
+          목록 페이지로 가는 진짜 링크를 따로 둔다.
+        */}
+        <section className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+            <h2 className="m-0 text-base font-semibold text-slate-900">
+              검진 안내
+            </h2>
+            <ul className="mt-3 flex flex-col gap-2.5">
+              {HOME_ARTICLES.map((a) => (
+                <li key={a.slug}>
+                  <Link
+                    href={articlePath(a.slug!)}
+                    className="text-sm font-medium text-slate-800 hover:text-blue-700 hover:underline"
+                  >
+                    {a.title}
+                  </Link>
+                  <p className="m-0 text-xs leading-relaxed text-slate-500">
+                    {a.summary}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/checkup"
+              className="mt-3 inline-block text-xs text-blue-600 hover:underline"
+            >
+              검진 안내 전체 보기 →
+            </Link>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+            <h2 className="m-0 text-base font-semibold text-slate-900">
+              지역별 병원 목록
+            </h2>
+            <nav
+              aria-label="시·도별 병원 목록"
+              className="mt-3 flex flex-wrap gap-x-3 gap-y-2"
+            >
+              {HOME_SIDOS.map((sido) => (
+                <Link
+                  key={sido}
+                  href={sidoPath(sido)}
+                  className="text-sm text-slate-700 hover:text-blue-700 hover:underline"
+                >
+                  {sidoShort(sido)}
+                </Link>
+              ))}
+            </nav>
+            <Link
+              href="/hospitals"
+              className="mt-3 inline-block text-xs text-blue-600 hover:underline"
+            >
+              병원 찾기 전체 보기 →
+            </Link>
+          </div>
+        </section>
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-600 shadow-sm">
           <span>병원 정보 오류 제보 · 제휴 문의</span>
