@@ -14,6 +14,7 @@ import {
 import { INFO_ICONS } from "@/lib/infoIcons";
 import { sidoPath } from "@/lib/sidoSlugs";
 import { splitAccessInfo } from "@/lib/noteChips";
+import { pilotNoteBody } from "@/lib/noteBody";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
 import { Hospital, hasCoords } from "@/types/hospital";
@@ -132,6 +133,12 @@ export default async function HospitalDetailPage({
   // 주차·교통은 accessInfo 한 필드에 합쳐져 있다. 카드와 같은 함수로 나눠야
   // 두 화면이 같은 문장을 같은 칸에 넣는다.
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
+
+  // note 본문화 시범(10곳)에서만 값이 들어온다. 나머지 병원은 빈 배열이라
+  // 아래 섹션 자체가 그려지지 않는다.
+  const noteBlocks = pilotNoteBody(hospital).blocks;
+  const noteProse = noteBlocks.filter((b) => b.kind === "prose");
+  const noteNational = noteBlocks.filter((b) => b.kind === "national");
 
   // 시군구가 비어 있으면 "같은 시군구"를 정할 수 없으므로 목록을 만들지 않는다.
   const nearby = sigungu
@@ -271,6 +278,49 @@ export default async function HospitalDetailPage({
               정확한 내용은 병원에 문의해 주세요.
             </p>
           </section>
+
+          {/*
+            5-2) 조사 때 확인한 내용 본문 — **note 본문화 시범 적용 10곳만**
+            (`lib/noteBody.ts`의 NOTE_BODY_PILOT_IDS). 표시 규칙이 고른 문단을
+            **원문 그대로** 내보낸다(요약·재작성 없음). 문단이 하나도 통과하지
+            않으면 섹션을 만들지 않는다.
+          */}
+          {noteProse.length > 0 && (
+            <section>
+              <h2 className="mb-2 text-base font-semibold text-slate-900">
+                {`${hospital.name} 검진 안내`}
+              </h2>
+              <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4">
+                {noteProse.map((block, i) => (
+                  <p
+                    key={i}
+                    className="text-sm leading-relaxed text-slate-700"
+                  >
+                    {block.text}
+                  </p>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 5-3) 국가검진 지정 근거 — 데이터 출처를 드러내는 문단이라 따로 묶는다 */}
+          {noteNational.length > 0 && (
+            <section>
+              <h2 className="mb-2 text-base font-semibold text-slate-900">
+                국가건강검진 지정 근거
+              </h2>
+              <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-4">
+                {noteNational.map((block, i) => (
+                  <p
+                    key={i}
+                    className="text-sm leading-relaxed text-emerald-900"
+                  >
+                    {block.text}
+                  </p>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/*
             6) 공단 지정 검진 종류 칩 — 만들지 않았다.
