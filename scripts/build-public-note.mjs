@@ -53,7 +53,9 @@ const MEMO_RE = [
   // 자료·규칙·필드를 가리키는 말
   /CSV|명단|필드|규칙|항목 번호|README|심사평가원|심평원|HIRA|요양기관기호|사업자(?:등록)?번호|푸터|퓨니코드|리다이렉트/,
   // 필드 기입 설명
-  /priceRange|bookingUrl|bookingType|resultNotice|accessInfo|mealProvided|examDuration|waitingPeriod|verifiedAt|note에|미게시|넣지 않|쓰지 않|비웠다|적지 않|생략했다|으로 남긴다|채웠다|그대로 옮겼|옮기지 않|근거로 적었|정정했다/,
+  /priceRange|bookingUrl|bookingType|resultNotice|accessInfo|mealProvided|examDuration|waitingPeriod|verifiedAt|phone|note에|미게시|넣지 않|쓰지 않|비웠다|적지 않|생략했다|으로 남긴다|채웠다|그대로 옮겼|옮기지 않|근거로 적었|정정했다|에 썼다|으로 썼다|가장 포괄적/,
+  // 조사자가 "이렇게 본다"고 적은 말
+  /로 본다|으로 본다|확인되지 않|확인 불가|확인하지 못|볼 수 없|보기 어렵/,
   // 좌표·주소 판정
   /OSM|Nominatim|좌표|lat\/lng|WGS84|지도 마커|자릿수|법정동|행정동/,
   // 판단·선례·동명 대조
@@ -195,6 +197,8 @@ if (invokedDirectly) {
   const args = process.argv.slice(2);
   const dry = args.includes("--dry");
   const all = args.includes("--all");
+  // --force: 이미 있는 publicNote를 규칙이 바뀐 뒤 다시 만든다(기존 줄을 지우고 새로 넣는다)
+  const force = args.includes("--force");
   const only = args.find((a) => a.startsWith("--id="))?.slice(5);
 
   const raw = fs.readFileSync(FILE, "utf8");
@@ -205,13 +209,21 @@ if (invokedDirectly) {
   let skipped = 0;
   let out = raw;
 
+  if (force && !dry) {
+    // 기존 publicNote 줄 제거 — 값에 줄바꿈이 없으므로 한 줄씩 지우면 된다
+    const before = out.length;
+    out = out.replace(/^ {4}"publicNote": .*\n/gm, "");
+    console.log("기존 publicNote 줄 제거:", before - out.length, "바이트");
+  }
+
+
   for (const id of targetIds) {
     const h = data.find((x) => x.id === id);
     if (!h) {
       console.log(`!!! 없는 id: ${id}`);
       continue;
     }
-    if (h.publicNote !== undefined) {
+    if (h.publicNote !== undefined && !force) {
       skipped += 1;
       continue;
     }
