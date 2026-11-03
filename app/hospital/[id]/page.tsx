@@ -14,7 +14,7 @@ import {
 import { INFO_ICONS } from "@/lib/infoIcons";
 import { sidoPath } from "@/lib/sidoSlugs";
 import { splitAccessInfo } from "@/lib/noteChips";
-import { pilotNoteBody } from "@/lib/noteBody";
+import { nationalStatement } from "@/lib/nationalStatement";
 import { articlePath, relatedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
@@ -135,11 +135,14 @@ export default async function HospitalDetailPage({
   // 두 화면이 같은 문장을 같은 칸에 넣는다.
   const { parking, transit } = splitAccessInfo(hospital.accessInfo);
 
-  // note 본문화 시범(10곳)에서만 값이 들어온다. 나머지 병원은 빈 배열이라
-  // 아래 섹션 자체가 그려지지 않는다.
-  const noteBlocks = pilotNoteBody(hospital).blocks;
-  const noteProse = noteBlocks.filter((b) => b.kind === "prose");
-  const noteNational = noteBlocks.filter((b) => b.kind === "national");
+  // 화면용 문장(publicNote)은 note에서 방문자용 문장만 그대로 옮겨 둔 필드다.
+  // 아직 만들지 않은 병원은 값이 없고, 그러면 아래 섹션이 그려지지 않는다.
+  const publicParagraphs = (hospital.publicNote ?? "")
+    .split(/\n\s*\n/)
+    .map((t) => t.trim())
+    .filter(Boolean);
+  // 국가검진 상자는 note 원문이 아니라 정해진 문장으로 쓴다(조사 과정 비노출).
+  const national = nationalStatement(hospital);
 
   // 이 병원과 이어지는 검진 안내 글 2편
   const related = relatedArticles(hospital);
@@ -289,40 +292,36 @@ export default async function HospitalDetailPage({
             **원문 그대로** 내보낸다(요약·재작성 없음). 문단이 하나도 통과하지
             않으면 섹션을 만들지 않는다.
           */}
-          {noteProse.length > 0 && (
+          {publicParagraphs.length > 0 && (
             <section>
               <h2 className="mb-2 text-base font-semibold text-slate-900">
                 {`${hospital.name} 검진 안내`}
               </h2>
               <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4">
-                {noteProse.map((block, i) => (
-                  <p
-                    key={i}
-                    className="text-sm leading-relaxed text-slate-700"
-                  >
-                    {block.text}
+                {publicParagraphs.map((text, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-slate-700">
+                    {text}
                   </p>
                 ))}
               </div>
             </section>
           )}
 
-          {/* 5-3) 국가검진 지정 근거 — 데이터 출처를 드러내는 문단이라 따로 묶는다 */}
-          {noteNational.length > 0 && (
+          {/* 5-3) 국가건강검진 — 지정 여부·범위·기준일만 정해진 문장으로 */}
+          {national && (
             <section>
               <h2 className="mb-2 text-base font-semibold text-slate-900">
-                국가건강검진 지정 근거
+                국가건강검진
               </h2>
-              <div className="flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-4">
-                {noteNational.map((block, i) => (
-                  <p
-                    key={i}
-                    className="text-sm leading-relaxed text-emerald-900"
-                  >
-                    {block.text}
-                  </p>
-                ))}
-              </div>
+              <p
+                className={`rounded-xl border px-4 py-3 text-sm leading-relaxed ${
+                  hospital.nationalScreeningDesignated === true
+                    ? "border-emerald-200 bg-emerald-50/60 text-emerald-900"
+                    : "border-amber-200 bg-amber-50/60 text-amber-900"
+                }`}
+              >
+                {national}
+              </p>
             </section>
           )}
 

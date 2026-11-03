@@ -53,6 +53,13 @@ export interface Hospital {
   /** 검진센터 전용 번호 → 없으면 대표번호 → 그마저 없으면 "". 규칙은 README.md 참고 */
   phone: string;
   note?: string;
+  /**
+   * **화면에 그대로 내보내는 문장들.** `note`에서 방문자에게 쓸모 있는 문장만
+   * 글자 그대로 복사한 것이고(요약·재작성 없음), 조사 과정·필드 설명·판단 근거는
+   * 들어가지 않는다. `scripts/build-public-note.mjs`가 만든다. note는 조사 기록
+   * 그대로 두고, 이 필드만 화면이 읽는다.
+   */
+  publicNote?: string;
   /** 데이터 확인 시점의 출처 페이지 URL */
   sourceUrl: string;
   /** phone/reservationMethod/note를 확인한 날짜 (YYYY-MM-DD) */
