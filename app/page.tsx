@@ -6,7 +6,7 @@ import HospitalMap from "@/components/HospitalMapLazy";
 import SiteNav from "@/components/SiteNav";
 import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
 import { sidoFromSlug, sidoPath } from "@/lib/sidoSlugs";
-import { articlePath, publishedArticles } from "@/lib/articles";
+import { articlePath, articlesByRecency } from "@/lib/articles";
 import { sidoShort } from "@/lib/detailPages";
 import { sidosWithHospitals } from "@/lib/regionStats";
 import BgmPlayer from "@/components/BgmPlayer";
@@ -41,7 +41,7 @@ const FOOTER_LINKS = [
  * 홈에 거는 검진 안내 글 4편. 글에 작성일 필드가 없어 "최신순"을 만들 수 없으므로
  * `ARTICLE_GROUPS`에 적힌 순서(국가건강검진 → 암검진 → 검진 전후)의 앞 4편을 쓴다.
  */
-const HOME_ARTICLES = publishedArticles().slice(0, 4);
+const HOME_ARTICLES = articlesByRecency().slice(0, 4);
 
 /** 홈에 거는 시·도 링크 — 병원이 한 곳이라도 있는 시·도만 */
 const HOME_SIDOS = sidosWithHospitals();

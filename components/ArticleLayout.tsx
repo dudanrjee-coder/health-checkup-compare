@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import InfoPage, { INFO_ARTICLE, INFO_FINE, InfoSection } from "@/components/InfoPage";
-import { ARTICLE_GROUPS, articlePath } from "@/lib/articles";
+import { ARTICLE_GROUPS, articleBySlug, articlePath, formatArticleDate } from "@/lib/articles";
 
 /**
  * 검진 안내 글 공통 틀. 모든 글이 같은 순서로 그려진다:
@@ -34,6 +34,9 @@ export default function ArticleLayout({
   checkedAt: string;
 }) {
   const related = ARTICLE_GROUPS.flatMap((g) => g.articles).filter((a) => a.slug && a.slug !== slug);
+  const meta = articleBySlug(slug);
+  const published = formatArticleDate(meta?.publishedAt);
+  const updated = formatArticleDate(meta?.updatedAt);
   return (
     <InfoPage
       title={title}
@@ -67,6 +70,19 @@ export default function ArticleLayout({
 
           <div className={`${INFO_FINE} flex flex-col gap-1`}>
             <p className="m-0">출처: {sources}</p>
+            {/* 발행·수정 날짜 — 언제 쓴 글이고 언제 고쳤는지 드러낸다 */}
+            {published && (
+              <p className="m-0">
+                발행{" "}
+                <time dateTime={meta?.publishedAt}>{published}</time>
+                {updated && updated !== published && (
+                  <>
+                    {" · 최종 수정 "}
+                    <time dateTime={meta?.updatedAt}>{updated}</time>
+                  </>
+                )}
+              </p>
+            )}
             <p className="m-0">작성 건강검진병원.com 운영자 · 확인일 {checkedAt}</p>
             <p className="m-0">검진 제도는 바뀔 수 있으니 정확한 내용은 공단에 확인해 주세요.</p>
           </div>
