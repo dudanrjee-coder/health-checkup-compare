@@ -12,6 +12,10 @@ import type { Hospital } from "@/types/hospital";
  * 날짜는 **우리가 공단 명단을 확인한 날**이다. 명단 자체의 기준일이 아니므로
  * "기준"이 아니라 "확인"으로 적는다.
  * 범위를 분명하게 읽어 내지 못하면 범위 없이 지정 여부와 확인일만 쓴다.
+ *
+ * 지정·미지정 두 문장은 **같은 꼴**로 쓴다 — 본문을 먼저 쓰고 확인일을 괄호로
+ * 뒤에 붙인다. 한쪽만 괄호가 문장 가운데 들어가면 같은 상자에서 두 문장이
+ * 다른 종류의 안내처럼 읽힌다.
  */
 
 /** 범위에 섞이면 안 되는 말 — 조사 과정이 드러나는 표현 */
@@ -61,7 +65,7 @@ export function nationalStatement(hospital: Hospital): string | undefined {
       : `국가건강검진 지정기관입니다 (국민건강보험공단 명단 ${date} 확인)`;
   }
   if (hospital.nationalScreeningDesignated === false) {
-    return `국민건강보험공단 검진기관 명단(${date} 확인)에서 확인되지 않습니다`;
+    return `국민건강보험공단 검진기관 명단에서 확인되지 않습니다 (${date} 확인)`;
   }
   return undefined;
 }
