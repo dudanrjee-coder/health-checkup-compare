@@ -104,7 +104,8 @@ export default function Home() {
    *
    * 멈추는 이유가 두 가지이고, **되돌릴 수 있는지가 서로 다르다.**
    *
-   * - `userStoppedCycle`(영구): 필터 버튼 클릭, 지도 드래그/줌, 마커 클릭.
+   * - `userStoppedCycle`(영구): 필터 버튼 클릭, 지도 드래그/줌, 마커 클릭,
+   *   **시·도 선택**(드롭다운과 검색창 엔터 양쪽).
    *   사용자가 직접 고른 상태를 자동으로 덮어쓰지 않는다. 새로고침 전까지 재개 안 함.
    * - **검색 중**(일시): 검색어가 한 글자라도 있으면 멈춘다. 검색어를 다 지우면
    *   (그리고 등급을 직접 고른 적이 없으면) 다시 돈다.
@@ -244,8 +245,14 @@ export default function Home() {
    *
    * 예전에는 타이핑 중 자동 전환 때문에 blur로 조합을 강제 확정시키고 포커스를
    * 되돌리는 우회로가 있었는데, 자동 전환을 없애면서 함께 걷어냈다(43번 항목).
+   *
+   * 지역을 고른 것도 사용자가 직접 한 선택이므로 **등급 자동 순환을 영구히
+   * 멈춘다**(2026-11-09). 멈추지 않으면 "부산"을 고른 뒤에도 5초마다 등급이
+   * 바뀌어 부산 목록 수가 저절로 오르내린다. 등급은 "전체"로 맞춰, 전환하는
+   * 순간 순환이 어느 등급에 있었든 그 지역 병원이 다 보이게 한다.
    */
   function switchToSido(sido: Sido) {
+    stopIdleCycle();
     setSelectedSido(sido);
     setSelectedTier(null);
     setSelectedHospitalId(null);
@@ -301,7 +308,13 @@ export default function Home() {
     if (submittedNoMatch) setSubmittedNoMatch(false);
   }
 
+  /**
+   * 시·도 드롭다운. switchToSido와 같은 이유로 등급 자동 순환을 멈추고 등급을
+   * "전체"로 맞춘다(2026-11-09). 검색창을 비우지 않는 것만 다르다 — 이 함수는
+   * 검색 중이 아닐 때 쓰이고, 마운트 때 `?sido=` 파라미터를 읽는 경로도 여기로 온다.
+   */
   function handleSidoChange(sido: Sido) {
+    stopIdleCycle();
     setSelectedSido(sido);
     setSelectedTier(null);
     setSelectedHospitalId(null);
@@ -655,14 +668,12 @@ export default function Home() {
                * 같은 이유로 줌도 고정한다 — 순환 중에는 등급이 바뀌어도 전국
                * 범위를 유지하고, 순환이 멈추면 선택된 병원들에 맞춰 확대한다.
                *
-               * 단 **시·도를 고르면 고정하지 않는다.** 시·도 선택은 stopIdleCycle을
-               * 부르지 않아 순환이 계속 돌기 때문에, idleCycleActive만 보면 서울을
-               * 골라도 지도가 전국에 묶여 버린다.
-               *
-               * 검색 중에는 idleCycleActive가 이미 false이므로(2026-11-09) `!isSearching`은
-               * 사실상 중복이다. 그래도 남겨 둔다 — 검색어를 지운 직후 디바운스 200ms
-               * 동안은 query에 옛 검색어가 남아 있어서, 이 조건이 그 사이 전국 범위로
-               * 되돌아가는 것을 한 박자 늦춘다. 지도가 두 번 움직이지 않는다.
+               * `!selectedSido`와 `!isSearching`은 2026-11-09 이후 **둘 다 중복이다** —
+               * 시·도 선택과 검색이 모두 순환을 멈추므로 그 상황에서는 idleCycleActive가
+               * 이미 false다. 그래도 남겨 둔다. 검색어를 지우거나 지역을 푸는 찰나에
+               * (디바운스 200ms 동안 query에 옛 검색어가 남는다) 전국 범위로 되돌아가는
+               * 것을 한 박자 늦춰, 지도가 두 번 움직이지 않게 해 준다.
+               * 순환 재개 조건이 나중에 느슨해져도 이 두 조건이 안전망으로 남는다.
                */
               lockNationwideView={
                 idleCycleActive && !selectedSido && !isSearching
