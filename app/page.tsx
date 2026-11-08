@@ -100,13 +100,30 @@ export default function Home() {
   /**
    * 유휴 상태 등급 필터 자동 순환. 페이지가 켜져 있는 동안 상호작용이 한
    * 번도 없으면 "전체 → 상급종합병원 → 종합병원 → 병원 → 의료원 → 전체"를
-   * 2초마다 반복한다. 필터 버튼 클릭, 지도 드래그/줌, 마커 클릭 중 하나라도
-   * 감지되면 `stopIdleCycle`로 영구히 멈추고(새로고침 전까지 재개 안 함)
-   * 그 시점의 선택 상태를 그대로 둔다.
+   * 5초마다 반복한다.
+   *
+   * 멈추는 이유가 두 가지이고, **되돌릴 수 있는지가 서로 다르다.**
+   *
+   * - `userStoppedCycle`(영구): 필터 버튼 클릭, 지도 드래그/줌, 마커 클릭.
+   *   사용자가 직접 고른 상태를 자동으로 덮어쓰지 않는다. 새로고침 전까지 재개 안 함.
+   * - **검색 중**(일시): 검색어가 한 글자라도 있으면 멈춘다. 검색어를 다 지우면
+   *   (그리고 등급을 직접 고른 적이 없으면) 다시 돈다.
+   *
+   * 검색 중 멈추는 이유: `results`는 검색어와 등급 필터를 **함께** 적용하므로,
+   * 순환이 등급을 바꾸는 순간 검색 결과가 사라졌다. "삼성서"를 입력하면 상급종합
+   * 구간에서는 삼성서울병원이 보이다가 종합병원 구간으로 넘어가면 "검색 병원 0곳"이
+   * 됐다. 검색어를 넣은 사람이 기대하는 건 전국·전체 등급에서 이름으로 찾는 것이다.
    */
-  const [idleCycleActive, setIdleCycleActive] = useState(true);
+  const [userStoppedCycle, setUserStoppedCycle] = useState(false);
   const idleCycleIndexRef = useRef(0);
-  const stopIdleCycle = () => setIdleCycleActive(false);
+  const stopIdleCycle = () => setUserStoppedCycle(true);
+  /**
+   * 순환 중단 판정은 **디바운스 전 `searchInput`**으로 한다. `query`(200ms 뒤)로
+   * 하면 첫 글자를 넣은 직후 200ms 동안 순환이 살아 있어, 그 사이 타이머가 돌면
+   * 등급이 한 번 더 바뀐다.
+   */
+  const isSearchTyping = searchInput.trim().length > 0;
+  const idleCycleActive = !userStoppedCycle && !isSearchTyping;
 
   useEffect(() => {
     if (!idleCycleActive) return;
@@ -263,7 +280,23 @@ export default function Home() {
   }
 
   function handleSearchChange(value: string) {
+    const wasEmpty = searchInput.trim().length === 0;
+    const nowTyping = value.trim().length > 0;
     setSearchInput(value);
+    /**
+     * **검색을 시작하는 순간에만** 등급을 "전체"로 되돌린다.
+     *
+     * 빈 칸 → 글자가 들어온 전환에서만 하는 것이 중요하다. 글자가 들어올 때마다
+     * 되돌리면, 검색 중에 사용자가 등급을 직접 고른 것(상급종합병원만 보기)이
+     * 다음 타이핑에 지워진다.
+     *
+     * 순환 색인도 처음으로 돌린다 — 검색어를 다 지워 순환이 재개될 때 화면의
+     * 등급("전체")과 순환이 가리키는 자리가 어긋나지 않게 한다.
+     */
+    if (wasEmpty && nowTyping) {
+      setSelectedTier(null);
+      idleCycleIndexRef.current = 0;
+    }
     // 다시 입력하기 시작하면 이전 엔터의 안내 문구는 걷는다.
     if (submittedNoMatch) setSubmittedNoMatch(false);
   }
@@ -622,9 +655,14 @@ export default function Home() {
                * 같은 이유로 줌도 고정한다 — 순환 중에는 등급이 바뀌어도 전국
                * 범위를 유지하고, 순환이 멈추면 선택된 병원들에 맞춰 확대한다.
                *
-               * 단 **시·도를 고르거나 검색 중이면 고정하지 않는다.** 시·도 선택과
-               * 검색은 stopIdleCycle을 부르지 않아 순환이 계속 돌기 때문에,
-               * idleCycleActive만 보면 서울을 골라도 지도가 전국에 묶여 버린다.
+               * 단 **시·도를 고르면 고정하지 않는다.** 시·도 선택은 stopIdleCycle을
+               * 부르지 않아 순환이 계속 돌기 때문에, idleCycleActive만 보면 서울을
+               * 골라도 지도가 전국에 묶여 버린다.
+               *
+               * 검색 중에는 idleCycleActive가 이미 false이므로(2026-11-09) `!isSearching`은
+               * 사실상 중복이다. 그래도 남겨 둔다 — 검색어를 지운 직후 디바운스 200ms
+               * 동안은 query에 옛 검색어가 남아 있어서, 이 조건이 그 사이 전국 범위로
+               * 되돌아가는 것을 한 박자 늦춘다. 지도가 두 번 움직이지 않는다.
                */
               lockNationwideView={
                 idleCycleActive && !selectedSido && !isSearching
