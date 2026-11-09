@@ -91,6 +91,29 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * publicNote 한 문단을 그린다. note를 글자 그대로 옮긴 필드라 `**강조**` 표시가
+ * 섞여 있는데, 화면에 별표가 그대로 나가지 않도록 굵은 글씨로 바꾼다(2026-11-09).
+ * 문자열 자체는 고치지 않는다 — 짝이 맞지 않는 별표는 별표만 지우고 글은 그대로 둔다.
+ */
+function PublicNoteText({ text }: { text: string }) {
+  const parts = text.split("**");
+  if (parts.length % 2 === 0) return <>{parts.join("")}</>;
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 === 1 ? (
+          <strong key={i} className="font-semibold text-slate-800">
+            {part}
+          </strong>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+}
+
 /** 검진 정보 표의 한 줄. 값이 없어도 행을 숨기지 않는다(카드와 같은 규칙). */
 function InfoRow({
   icon,
@@ -300,7 +323,7 @@ export default async function HospitalDetailPage({
               <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4">
                 {publicParagraphs.map((text, i) => (
                   <p key={i} className="text-sm leading-relaxed text-slate-700">
-                    {text}
+                    <PublicNoteText text={text} />
                   </p>
                 ))}
               </div>
