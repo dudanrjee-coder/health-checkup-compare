@@ -45,6 +45,22 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         publishedAt: "2026-10-02",
         updatedAt: "2026-10-02",
       },
+      // 2026-11-09 초안 3편 — publishedAt/updatedAt은 **실제로 push해 공개하는 날**로 바꾼다
+      // (사용자 사실 확인 후 push. 지금 값은 초안을 쓴 날이다).
+      {
+        title: "국가건강검진 받을 병원, 어떻게 찾고 고를까",
+        summary: "지정 검진기관 찾기, 평가정보 보는 법, 예약 전 확인할 것",
+        slug: "finding-checkup-center",
+        publishedAt: "2026-11-09",
+        updatedAt: "2026-11-09",
+      },
+      {
+        title: "영유아 건강검진, 언제 무엇을 받을까",
+        summary: "생후 14일~71개월, 건강검진 8번·구강검진 4번의 시기와 항목",
+        slug: "infant-checkup",
+        publishedAt: "2026-11-09",
+        updatedAt: "2026-11-09",
+      },
     ],
   },
   {
@@ -75,6 +91,13 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         slug: "checkup-preparation",
         publishedAt: "2026-10-02",
         updatedAt: "2026-10-02",
+      },
+      {
+        title: "대장내시경 장 정결, 언제부터 무엇을 할까",
+        summary: "3일 전 음식, 하루 전 식사, 장정결제 나눠 마시기, 검사 뒤 주의",
+        slug: "colonoscopy-bowel-prep",
+        publishedAt: "2026-11-09", // 공개(push)하는 날로 바꾼다
+        updatedAt: "2026-11-09",
       },
       {
         title: "국가검진과 종합검진은 무엇이 다를까",

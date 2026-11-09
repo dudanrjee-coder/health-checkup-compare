@@ -14,6 +14,7 @@ import {
   hospitalsInSido,
   sidosWithHospitals,
 } from "@/lib/regionStats";
+import { regionSummary } from "@/lib/regionSummary";
 import { SIDO_SLUG, homeWithSidoPath, sidoFromSlug, sidoPath } from "@/lib/sidoSlugs";
 import { SITE_URL } from "@/lib/site";
 
@@ -89,6 +90,19 @@ export default async function SidoPage({ params }: { params: Promise<{ sido: str
           </div>
         </header>
 
+        {/* 지역 데이터 해설 — 숫자는 전부 hospitals.json에서 계산(lib/regionSummary.ts) */}
+        <section className="rounded-[18px] border border-slate-200 bg-white px-5 py-4">
+          <h2 className="m-0 text-base font-semibold text-slate-900">
+            {`${sidoShort(sido)} 검진 병원 한눈에`}
+          </h2>
+          <div className="mt-2 flex flex-col gap-1.5 text-[14px] leading-relaxed text-slate-700">
+            {regionSummary(sido).map((s) => (
+              <p key={s} className="m-0">
+                {s}
+              </p>
+            ))}
+          </div>
+        </section>
         <SidoDistrictList
           districts={districts}
           mapHref={homeWithSidoPath(sido)}
