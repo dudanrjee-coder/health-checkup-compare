@@ -5,6 +5,7 @@ import { useId, useState } from "react";
 import { Hospital } from "@/types/hospital";
 import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
 import { detailPath, hasDetailPage } from "@/lib/detailPages";
+import { displayAddress } from "@/lib/displayAddress";
 import { INFO_ICONS } from "@/lib/infoIcons";
 import { tierBadgeStyle } from "@/lib/tierColors";
 
@@ -93,7 +94,7 @@ export default function HospitalCardChips({
     price: hospital.priceRange,
     result: hospital.resultNotice,
     meal: hospital.mealProvided,
-    address: hospital.address,
+    address: displayAddress(hospital.address),
   };
 
   const nearbyFoodUrl = `https://map.kakao.com/?q=${encodeURIComponent(

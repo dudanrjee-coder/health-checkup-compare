@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ArticleLayout, { ArticleLink, ArticleTable } from "@/components/ArticleLayout";
-import { ArticleRegionLinks, ScopeExampleLinks } from "@/components/ArticleRegionLinks";
+import { ArticleRegionLinks } from "@/components/ArticleRegionLinks";
 import { INFO_LIST, INFO_P } from "@/components/InfoPage";
 import { articlePath } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
@@ -247,12 +247,9 @@ export default function InfantCheckupPage() {
                 <li>궁금한 점은 공단 고객센터(1577-1000)에 물어볼 수 있습니다.</li>
               </ul>
               <p className={INFO_P}>
-                이 사이트의 병원 페이지에서도 국가건강검진 상자에 지정 범위가 표시됩니다. 범위에
-                ‘영유아’가 보이는 병원의 예입니다(범위를 확인한 병원 중 등급·가나다순 앞쪽이며, 지역별
-                전체 목록은 아닙니다).
+                이 사이트의 병원 페이지에서도 국가건강검진 상자에 지정 범위가 표시됩니다. 지역별 병원
+                목록에서 가까운 곳을 찾아볼 수 있습니다.
               </p>
-              <ScopeExampleLinks keyword="영유아" />
-              <p className={INFO_P}>지역별 병원 목록에서 가까운 곳을 찾아볼 수도 있습니다.</p>
               <ArticleRegionLinks />
             </>
           ),

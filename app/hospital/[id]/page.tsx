@@ -18,6 +18,7 @@ import { nationalStatement } from "@/lib/nationalStatement";
 import { articlePath, relatedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
+import { displayAddress } from "@/lib/displayAddress";
 import { Hospital, hasCoords, toMapHospital } from "@/types/hospital";
 
 /**
@@ -228,7 +229,7 @@ export default async function HospitalDetailPage({
             </div>
             {hospital.address && (
               <p className="text-sm leading-relaxed text-slate-600">
-                📍 {hospital.address}
+                📍 {displayAddress(hospital.address)}
               </p>
             )}
           </section>
@@ -372,7 +373,7 @@ export default async function HospitalDetailPage({
               </div>
             ) : (
               <p className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm leading-relaxed text-slate-600">
-                📍 {hospital.address || `${sido} ${sigungu}`.trim()}
+                📍 {displayAddress(hospital.address) || `${sido} ${sigungu}`.trim()}
               </p>
             )}
           </section>
