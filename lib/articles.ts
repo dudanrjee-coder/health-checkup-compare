@@ -61,6 +61,21 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         publishedAt: "2026-11-10",
         updatedAt: "2026-11-10",
       },
+      // 2026-11-12 공개
+      {
+        title: "직장인 건강검진, 회사 검진과 국가검진은 어떻게 이어지나",
+        summary: "두 제도의 관계, 사무직 2년·비사무직 1년 주기, 채용 신체검사 대체",
+        slug: "workplace-checkup",
+        publishedAt: "2026-11-12",
+        updatedAt: "2026-11-12",
+      },
+      {
+        title: "학생 건강검진과 학교 밖 청소년 건강검진",
+        summary: "초1~고1 학년별 시기와 검사 항목, 학교 밖 청소년 신청 방법",
+        slug: "student-checkup",
+        publishedAt: "2026-11-12",
+        updatedAt: "2026-11-12",
+      },
     ],
   },
   {
@@ -79,6 +94,14 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         slug: "endoscopy-vs-upper-gi",
         publishedAt: "2026-10-02",
         updatedAt: "2026-10-02",
+      },
+      // 2026-11-12 공개
+      {
+        title: "폐암 검진, 누가 받고 무엇을 하나",
+        summary: "54~74세 고위험군 기준, 갑년 계산, 저선량 흉부 CT",
+        slug: "lung-cancer-screening",
+        publishedAt: "2026-11-12",
+        updatedAt: "2026-11-12",
       },
     ],
   },
