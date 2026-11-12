@@ -14,11 +14,13 @@ import {
 import { INFO_ICONS } from "@/lib/infoIcons";
 import { sidoPath } from "@/lib/sidoSlugs";
 import { splitAccessInfo } from "@/lib/noteChips";
-import { nationalStatement } from "@/lib/nationalStatement";
+import { nationalExtras, nationalStatement } from "@/lib/nationalStatement";
 import { articlePath, relatedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 import { tierBadgeStyle } from "@/lib/tierColors";
+import BoldText from "@/components/BoldText";
 import { displayAddress } from "@/lib/displayAddress";
+import { publicFieldText } from "@/lib/publicField";
 import { Hospital, hasCoords, toMapHospital } from "@/types/hospital";
 
 /**
@@ -92,29 +94,6 @@ export async function generateMetadata({
   };
 }
 
-/**
- * publicNote 한 문단을 그린다. note를 글자 그대로 옮긴 필드라 `**강조**` 표시가
- * 섞여 있는데, 화면에 별표가 그대로 나가지 않도록 굵은 글씨로 바꾼다(2026-11-09).
- * 문자열 자체는 고치지 않는다 — 짝이 맞지 않는 별표는 별표만 지우고 글은 그대로 둔다.
- */
-function PublicNoteText({ text }: { text: string }) {
-  const parts = text.split("**");
-  if (parts.length % 2 === 0) return <>{parts.join("")}</>;
-  return (
-    <>
-      {parts.map((part, i) =>
-        i % 2 === 1 ? (
-          <strong key={i} className="font-semibold text-slate-800">
-            {part}
-          </strong>
-        ) : (
-          part
-        )
-      )}
-    </>
-  );
-}
-
 /** 검진 정보 표의 한 줄. 값이 없어도 행을 숨기지 않는다(카드와 같은 규칙). */
 function InfoRow({
   icon,
@@ -139,7 +118,7 @@ function InfoRow({
           filled ? "text-slate-800" : "text-slate-400"
         }`}
       >
-        {filled ? value : EMPTY_TEXT}
+        {filled ? <BoldText text={value as string} /> : EMPTY_TEXT}
       </dd>
     </div>
   );
@@ -157,7 +136,9 @@ export default async function HospitalDetailPage({
   const { sido, sigungu } = hospital.region;
   // 주차·교통은 accessInfo 한 필드에 합쳐져 있다. 카드와 같은 함수로 나눠야
   // 두 화면이 같은 문장을 같은 칸에 넣는다.
-  const { parking, transit } = splitAccessInfo(hospital.accessInfo);
+  const { parking, transit } = splitAccessInfo(
+    publicFieldText(hospital.accessInfo)
+  );
 
   // 화면용 문장(publicNote)은 note에서 방문자용 문장만 그대로 옮겨 둔 필드다.
   // 아직 만들지 않은 병원은 값이 없고, 그러면 아래 섹션이 그려지지 않는다.
@@ -167,6 +148,7 @@ export default async function HospitalDetailPage({
     .filter(Boolean);
   // 국가검진 상자는 note 원문이 아니라 정해진 문장으로 쓴다(조사 과정 비노출).
   const national = nationalStatement(hospital);
+  const extras = nationalExtras(hospital);
 
   // 이 병원과 이어지는 검진 안내 글 2편
   const related = relatedArticles(hospital);
@@ -282,12 +264,12 @@ export default async function HospitalDetailPage({
               <InfoRow
                 icon={INFO_ICONS.price}
                 label="검진비용"
-                value={hospital.priceRange}
+                value={publicFieldText(hospital.priceRange)}
               />
               <InfoRow
                 icon={INFO_ICONS.result}
                 label="결과통보"
-                value={hospital.resultNotice}
+                value={publicFieldText(hospital.resultNotice)}
               />
               {/* 검진 소요시간은 examDuration 필드다. waitingPeriod("예약 대기
                   기간")와는 다른 개념이라 섞어 쓰지 않는다. */}
@@ -299,7 +281,7 @@ export default async function HospitalDetailPage({
               <InfoRow
                 icon={INFO_ICONS.meal}
                 label="식사제공"
-                value={hospital.mealProvided}
+                value={publicFieldText(hospital.mealProvided)}
               />
               <InfoRow icon={INFO_ICONS.parking} label="주차" value={parking} />
               <InfoRow icon={INFO_ICONS.transit} label="교통" value={transit} />
@@ -324,7 +306,7 @@ export default async function HospitalDetailPage({
               <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4">
                 {publicParagraphs.map((text, i) => (
                   <p key={i} className="text-sm leading-relaxed text-slate-700">
-                    <PublicNoteText text={text} />
+                    <BoldText text={text} />
                   </p>
                 ))}
               </div>
@@ -346,6 +328,13 @@ export default async function HospitalDetailPage({
               >
                 {national}
               </p>
+              {/* 범위에 들어가지 않는 다른 지정(공휴일·학교 밖 청소년)은
+                  버리지 않고 상자 아래 한 줄로 둔다(2026-11-12, 독립 점검 ③). */}
+              {extras && (
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {extras}
+                </p>
+              )}
             </section>
           )}
 

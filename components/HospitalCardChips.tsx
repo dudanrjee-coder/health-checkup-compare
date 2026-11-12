@@ -5,7 +5,9 @@ import { useId, useState } from "react";
 import { Hospital } from "@/types/hospital";
 import { Chip, deriveChips, splitAccessInfo } from "@/lib/noteChips";
 import { detailPath, hasDetailPage } from "@/lib/detailPages";
+import BoldText from "@/components/BoldText";
 import { displayAddress } from "@/lib/displayAddress";
+import { publicFieldText } from "@/lib/publicField";
 import { INFO_ICONS } from "@/lib/infoIcons";
 import { tierBadgeStyle } from "@/lib/tierColors";
 
@@ -82,7 +84,9 @@ export default function HospitalCardChips({
   const detailId = useId();
 
   const chips = deriveChips(hospital);
-  const { parking, transit } = splitAccessInfo(hospital.accessInfo);
+  const { parking, transit } = splitAccessInfo(
+    publicFieldText(hospital.accessInfo)
+  );
   /**
    * 상세 페이지가 만들어진 병원에만 링크를 붙인다(지금은 전체 병원).
    * 판단 기준은 lib/detailPages.ts 하나뿐이라, 페이지가 없는 병원에 링크가
@@ -91,9 +95,9 @@ export default function HospitalCardChips({
   const detailUrl = hasDetailPage(hospital.id) ? detailPath(hospital.id) : null;
 
   const values: Record<string, string | undefined> = {
-    price: hospital.priceRange,
-    result: hospital.resultNotice,
-    meal: hospital.mealProvided,
+    price: publicFieldText(hospital.priceRange),
+    result: publicFieldText(hospital.resultNotice),
+    meal: publicFieldText(hospital.mealProvided),
     address: displayAddress(hospital.address),
   };
 
@@ -306,13 +310,13 @@ export default function HospitalCardChips({
                           {transit && (
                             <span>
                               <span className="text-slate-400">교통 </span>
-                              {transit}
+                              <BoldText text={transit} className="font-semibold text-slate-900" />
                             </span>
                           )}
                           {parking && (
                             <span>
                               <span className="text-slate-400">주차 </span>
-                              {parking}
+                              <BoldText text={parking} className="font-semibold text-slate-900" />
                             </span>
                           )}
                         </dd>
@@ -332,7 +336,11 @@ export default function HospitalCardChips({
                           value ? "text-slate-700" : "text-slate-400"
                         }`}
                       >
-                        {value || EMPTY_TEXT}
+                        {value ? (
+                          <BoldText text={value} className="font-semibold text-slate-900" />
+                        ) : (
+                          EMPTY_TEXT
+                        )}
                       </dd>
                     </div>
                   );
