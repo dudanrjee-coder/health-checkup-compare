@@ -76,6 +76,21 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         publishedAt: "2026-11-12",
         updatedAt: "2026-11-12",
       },
+      // 2026-11-15 공개
+      {
+        title: "국가건강검진의 구강검진, 무엇을 보나",
+        summary: "일반검진에 들어 있는 구강검진, 40세 치면세균막검사, 구강 검진기관 찾기",
+        slug: "oral-checkup",
+        publishedAt: "2026-11-15",
+        updatedAt: "2026-11-15",
+      },
+      {
+        title: "의료급여 생애전환기검진, 누가 무엇을 받나",
+        summary: "66세 이상 의료급여수급권자 2년마다, 검사 항목과 일반검진과 다른 점",
+        slug: "medicaid-transition-checkup",
+        publishedAt: "2026-11-15",
+        updatedAt: "2026-11-15",
+      },
     ],
   },
   {
@@ -102,6 +117,14 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         slug: "lung-cancer-screening",
         publishedAt: "2026-11-12",
         updatedAt: "2026-11-12",
+      },
+      // 2026-11-15 공개
+      {
+        title: "간암 검진, 고위험군은 6개월마다",
+        summary: "40세 이상 고위험군 두 가지 기준, 6개월 주기, 간 초음파와 혈액검사",
+        slug: "liver-cancer-screening",
+        publishedAt: "2026-11-15",
+        updatedAt: "2026-11-15",
       },
     ],
   },
