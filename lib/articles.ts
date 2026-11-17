@@ -82,7 +82,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         summary: "일반검진에 들어 있는 구강검진, 40세 치면세균막검사, 구강 검진기관 찾기",
         slug: "oral-checkup",
         publishedAt: "2026-11-15",
-        updatedAt: "2026-11-15",
+        updatedAt: "2026-11-18", // 질병관리청 인용 축소·재작성
       },
       {
         title: "의료급여 생애전환기검진, 누가 무엇을 받나",
@@ -124,7 +124,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         summary: "40세 이상 고위험군 두 가지 기준, 6개월 주기, 간 초음파와 혈액검사",
         slug: "liver-cancer-screening",
         publishedAt: "2026-11-15",
-        updatedAt: "2026-11-15",
+        updatedAt: "2026-11-18", // 질병관리청 인용 축소·재작성
       },
     ],
   },
@@ -143,7 +143,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         summary: "3일 전 음식, 하루 전 식사, 장정결제 나눠 마시기, 검사 뒤 주의",
         slug: "colonoscopy-bowel-prep",
         publishedAt: "2026-11-10", // 2026-11-09 초안, 2026-11-10 공개
-        updatedAt: "2026-11-10",
+        updatedAt: "2026-11-18", // 질병관리청 인용 축소·재작성
       },
       {
         title: "국가검진과 종합검진은 무엇이 다를까",
@@ -157,7 +157,7 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         summary: "결과 받는 시기, 판정 구분, 확진검사 안내",
         slug: "reading-checkup-results",
         publishedAt: "2026-10-02",
-        updatedAt: "2026-10-02",
+        updatedAt: "2026-11-18", // 404 근거 링크 교체 + 판정 구분 뜻 보강
       },
     ],
   },
