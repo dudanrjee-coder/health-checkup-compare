@@ -30,6 +30,8 @@ const TARGETS = {
   "oral-checkup": ["6671", "6884"],
   "liver-cancer-screening": ["6560", "6672", "1061"],
   "colonoscopy-bowel-prep": ["5254"],
+  "mental-health-checkup": ["6788"],
+  "colorectal-cancer-screening": ["3435"],
 };
 
 function stripTags(html) {

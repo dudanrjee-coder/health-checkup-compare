@@ -91,6 +91,21 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         publishedAt: "2026-11-15",
         updatedAt: "2026-11-15",
       },
+      // 2026-11-18 공개
+      {
+        title: "일반건강검진의 정신건강검사, 우울증과 조기정신증",
+        summary: "20~34세 2년마다 두 검사, 35세 이후 연령대별 1회, 질환의심 때 받는 확진검사",
+        slug: "mental-health-checkup",
+        publishedAt: "2026-11-18",
+        updatedAt: "2026-11-18",
+      },
+      {
+        title: "장애인 건강검진기관, 어떻게 지정되고 무엇이 다른가",
+        summary: "지정 근거와 절차, 지참하는 증명서, 안전·편의관리비, 기관 목록 두 곳",
+        slug: "disability-checkup",
+        publishedAt: "2026-11-18",
+        updatedAt: "2026-11-18",
+      },
     ],
   },
   {
@@ -125,6 +140,14 @@ export const ARTICLE_GROUPS: ArticleGroup[] = [
         slug: "liver-cancer-screening",
         publishedAt: "2026-11-15",
         updatedAt: "2026-11-18", // 질병관리청 인용 축소·재작성
+      },
+      // 2026-11-18 공개
+      {
+        title: "대장암 검진, 분변잠혈검사부터 대장내시경까지",
+        summary: "50세 이상 1년마다, 유예 세 가지, 1단계 대변검사의 뜻과 2단계 대장내시경",
+        slug: "colorectal-cancer-screening",
+        publishedAt: "2026-11-18",
+        updatedAt: "2026-11-18",
       },
     ],
   },
