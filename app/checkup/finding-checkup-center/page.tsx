@@ -210,6 +210,10 @@ export default function FindingCheckupCenterPage() {
                 지역별 병원 수와 지정이 확인된 병원 수입니다. 지역을 누르면 시·군·구별 목록으로 갑니다.
               </p>
               <ArticleRegionLinks />
+              <p className={INFO_P}>
+                제도는 해마다 바뀔 수 있습니다. 이 글은 2026년 기준이며, 받기 전에 공단 누리집이나
+                검진표로 그해 기준을 한 번 더 확인하세요.
+              </p>
             </>
           ),
         },

@@ -52,9 +52,18 @@ export default function PrivacyPage() {
 
       <InfoSection heading="4. 광고">
         <p className={INFO_P}>
-          앞으로 Google 애드센스 광고를 게재할 수 있습니다. 이 경우 Google을 포함한 제3자
-          광고 업체가 쿠키를 사용해 방문자의 이전 방문 기록을 바탕으로 광고를 보여줄 수
-          있습니다. 맞춤 광고는 Google 광고 설정(
+          이 사이트는 Google 애드센스를 사용해 광고를 게재합니다. Google을 포함한 제3자
+          광고 업체는 쿠키를 사용해 방문자의 이 사이트 및 다른 사이트 방문 기록을 바탕으로
+          광고를 보여줍니다. Google이 광고에 쿠키를 어떻게 쓰는지는 Google 광고 쿠키 정책(
+          <a
+            href="https://policies.google.com/technologies/ads?hl=ko"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#2563eb] underline underline-offset-2 hover:text-blue-700"
+          >
+            policies.google.com/technologies/ads
+          </a>
+          )에서 볼 수 있습니다. 맞춤 광고는 Google 광고 설정(
           <a
             href="https://adssettings.google.com"
             target="_blank"
@@ -77,7 +86,7 @@ export default function PrivacyPage() {
         </p>
       </InfoSection>
 
-      <p className={INFO_FINE}>시행일 2026년 10월 1일 · 내용이 바뀌면 이 페이지에 공지합니다.</p>
+      <p className={INFO_FINE}>시행일 2026년 10월 1일 · 개정 2026년 11월 21일(4. 광고) · 내용이 바뀌면 이 페이지에 공지합니다.</p>
     </InfoPage>
   );
 }

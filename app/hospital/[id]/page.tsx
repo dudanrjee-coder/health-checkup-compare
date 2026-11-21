@@ -113,8 +113,11 @@ function InfoRow({
         <span aria-hidden>{icon}</span>
         {label}
       </dt>
+      {/* min-w-0 + overflow-wrap:anywhere: "340·350·3314·…"처럼 띄어쓰기 없이 이어진
+          버스 번호가 한 덩어리로 남아 375px에서 가로 스크롤을 만들었다(59곳, 2026-11-21 점검).
+          줄을 넘칠 때만 끊으므로 보통 문장의 줄바꿈은 그대로다. */}
       <dd
-        className={`text-sm leading-relaxed ${
+        className={`min-w-0 text-sm leading-relaxed [overflow-wrap:anywhere] ${
           filled ? "text-slate-800" : "text-slate-400"
         }`}
       >

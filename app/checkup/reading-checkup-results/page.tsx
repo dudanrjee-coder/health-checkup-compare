@@ -150,10 +150,16 @@ export default function ReadingCheckupResultsPage() {
           id: "symptom",
           heading: "증상이 있다면",
           body: (
-            <p className={INFO_P}>
-              판정 결과와 관계없이 몸에 증상이 있다면 검진을 기다리지 말고 병원 진료를
-              받으세요. 결과 해석과 이후 관리는 의사와 상담하세요.
-            </p>
+            <>
+              <p className={INFO_P}>
+                판정 결과와 관계없이 몸에 증상이 있다면 검진을 기다리지 말고 병원 진료를
+                받으세요. 결과 해석과 이후 관리는 의사와 상담하세요.
+              </p>
+              <p className={INFO_P}>
+                제도는 해마다 바뀔 수 있습니다. 이 글은 2026년 기준이며, 받기 전에 공단 누리집이나
+                검진표로 그해 기준을 한 번 더 확인하세요.
+              </p>
+            </>
           ),
         },
       ]}

@@ -125,6 +125,10 @@ export default function CheckupPreparationPage() {
                 <ArticleLink slug="general-checkup-items">일반검진에서 받는 검사 항목</ArticleLink>에
                 정리했습니다.
               </p>
+              <p className={INFO_P}>
+                제도는 해마다 바뀔 수 있습니다. 이 글은 2026년 기준이며, 받기 전에 공단 누리집이나
+                검진표로 그해 기준을 한 번 더 확인하세요.
+              </p>
             </>
           ),
         },

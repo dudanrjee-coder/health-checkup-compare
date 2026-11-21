@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CSSProperties, Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import HospitalMap from "@/components/HospitalMapLazy";
 import SiteNav from "@/components/SiteNav";
 import { CONTACT_EMAIL, useCopyEmail } from "@/lib/useCopyEmail";
@@ -29,13 +29,6 @@ import {
   getTiersWithData,
   SortOption,
 } from "@/lib/hospitals";
-
-/** 홈 맨 아래 운영 안내 링크 줄 */
-const FOOTER_LINKS = [
-  { label: "사이트 소개", href: "/about" },
-  { label: "개인정보처리방침", href: "/privacy" },
-  { label: "문의", href: "/contact" },
-];
 
 /**
  * 홈에 거는 검진 안내 글 4편. 글에 작성일 필드가 없어 "최신순"을 만들 수 없으므로
@@ -760,27 +753,6 @@ export default function Home() {
             복사됨
           </span>
         </div>
-
-        {/* 운영 안내 링크 — 문의 이메일 상자 아래에 둔다 */}
-        <footer className="mt-8 flex flex-col items-center gap-2 border-t border-slate-200 pt-6 pb-2 text-center">
-          <nav aria-label="운영 안내" className="flex flex-wrap items-center justify-center gap-x-1 text-sm text-slate-600">
-            {FOOTER_LINKS.map((link, i) => (
-              <Fragment key={link.href}>
-                {i > 0 && <span aria-hidden="true" className="text-slate-300">·</span>}
-                <Link
-                  href={link.href}
-                  className="rounded px-1.5 py-1 hover:text-slate-900 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
-                >
-                  {link.label}
-                </Link>
-              </Fragment>
-            ))}
-          </nav>
-          <p className="m-0 break-keep text-xs leading-relaxed text-slate-500">
-            검진 비용과 운영 방식은 병원 사정에 따라 바뀔 수 있으니, 예약 전에 병원에 직접
-            확인해 주세요.
-          </p>
-        </footer>
       </div>
     </main>
   );

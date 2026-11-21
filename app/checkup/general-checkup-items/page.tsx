@@ -123,13 +123,19 @@ export default function GeneralCheckupItemsPage() {
           id: "more",
           heading: "함께 알아두면 좋은 것",
           body: (
-            <p className={INFO_P}>
-              암검진은 일반검진과 따로 대상과 주기가 정해져 있습니다.{" "}
-              <ArticleLink slug="six-cancer-screenings">6대 암검진 한눈에 보기</ArticleLink>를
-              참고하세요. 검진 당일 금식과 준비물은{" "}
-              <ArticleLink slug="checkup-preparation">검진 전날과 당일 준비사항</ArticleLink>에
-              정리했습니다.
-            </p>
+            <>
+              <p className={INFO_P}>
+                암검진은 일반검진과 따로 대상과 주기가 정해져 있습니다.{" "}
+                <ArticleLink slug="six-cancer-screenings">6대 암검진 한눈에 보기</ArticleLink>를
+                참고하세요. 검진 당일 금식과 준비물은{" "}
+                <ArticleLink slug="checkup-preparation">검진 전날과 당일 준비사항</ArticleLink>에
+                정리했습니다.
+              </p>
+              <p className={INFO_P}>
+                제도는 해마다 바뀔 수 있습니다. 이 글은 2026년 기준이며, 받기 전에 공단 누리집이나
+                검진표로 그해 기준을 한 번 더 확인하세요.
+              </p>
+            </>
           ),
         },
       ]}

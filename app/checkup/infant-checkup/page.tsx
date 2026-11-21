@@ -251,6 +251,10 @@ export default function InfantCheckupPage() {
                 목록에서 가까운 곳을 찾아볼 수 있습니다.
               </p>
               <ArticleRegionLinks />
+              <p className={INFO_P}>
+                제도는 해마다 바뀔 수 있습니다. 이 글은 2026년 기준이며, 받기 전에 공단 누리집이나
+                검진표로 그해 기준을 한 번 더 확인하세요.
+              </p>
             </>
           ),
         },

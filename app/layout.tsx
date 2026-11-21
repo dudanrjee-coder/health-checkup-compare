@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import SiteFooter from "@/components/SiteFooter";
 
 const KEYWORDS = [
   "건강검진",
@@ -75,7 +76,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="bg-white text-slate-900 antialiased">{children}</body>
+      <body className="bg-white text-slate-900 antialiased">
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }
